@@ -1,5 +1,5 @@
-import re
 import json
+import re
 from collections import Counter
 
 
@@ -18,7 +18,7 @@ class Tokenizer(object):
     def create_vocabulary(self):
         total_tokens = []
 
-        for example in self.ann['train'] + self.ann['val']:
+        for example in self.ann['train']:
             tokens = self.clean_report(example['report']).split()
             for token in tokens:
                 total_tokens.append(token)
@@ -29,13 +29,13 @@ class Tokenizer(object):
         token2idx, idx2token = {}, {}
         for idx, token in enumerate(vocab):
             token2idx[token] = idx + 1
-            idx2token[idx+1] = token
+            idx2token[idx + 1] = token
         return token2idx, idx2token
 
     def clean_report_iu_xray(self, report):
-        report_cleaner = lambda t: t.replace('..', '.').replace('..', '.').replace('..', '.').replace('1. ', '')\
-            .replace('. 2. ', '. ').replace('. 3. ', '. ').replace('. 4. ', '. ').replace('. 5. ', '. ')\
-            .replace(' 2. ', '. ').replace(' 3. ', '. ').replace(' 4. ', '. ').replace(' 5. ', '. ')\
+        report_cleaner = lambda t: t.replace('..', '.').replace('..', '.').replace('..', '.').replace('1. ', '') \
+            .replace('. 2. ', '. ').replace('. 3. ', '. ').replace('. 4. ', '. ').replace('. 5. ', '. ') \
+            .replace(' 2. ', '. ').replace(' 3. ', '. ').replace(' 4. ', '. ').replace(' 5. ', '. ') \
             .strip().lower().split('. ')
         sent_cleaner = lambda t: re.sub('[.,?;*!%^&_+():-\[\]{}]', '', t.replace('"', '').replace('/', '').
                                         replace('\\', '').replace("'", '').strip().lower())
@@ -44,12 +44,12 @@ class Tokenizer(object):
         return report
 
     def clean_report_mimic_cxr(self, report):
-        report_cleaner = lambda t: t.replace('\n', ' ').replace('__', '_').replace('__', '_').replace('__', '_')\
+        report_cleaner = lambda t: t.replace('\n', ' ').replace('__', '_').replace('__', '_').replace('__', '_') \
             .replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_').replace('  ', ' ') \
             .replace('  ', ' ').replace('  ', ' ').replace('  ', ' ').replace('  ', ' ').replace('  ', ' ') \
             .replace('..', '.').replace('..', '.').replace('..', '.').replace('..', '.').replace('..', '.') \
             .replace('..', '.').replace('..', '.').replace('..', '.').replace('1. ', '').replace('. 2. ', '. ') \
-            .replace('. 3. ', '. ').replace('. 4. ', '. ').replace('. 5. ', '. ').replace(' 2. ', '. ')\
+            .replace('. 3. ', '. ').replace('. 4. ', '. ').replace('. 5. ', '. ').replace(' 2. ', '. ') \
             .replace(' 3. ', '. ').replace(' 4. ', '. ').replace(' 5. ', '. ') \
             .strip().lower().split('. ')
         sent_cleaner = lambda t: re.sub('[.,?;*!%^&_+():-\[\]{}]', '', t.replace('"', '').replace('/', '')

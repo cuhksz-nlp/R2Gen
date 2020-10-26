@@ -9,6 +9,7 @@ from modules.trainer import Trainer
 from modules.loss import compute_loss
 from models.r2gen import R2GenModel
 
+
 def parse_agrs():
     parser = argparse.ArgumentParser()
 
@@ -17,7 +18,7 @@ def parse_agrs():
     parser.add_argument('--ann_path', type=str, default='data/iu_xray/annotation.json', help='path to the directory containing the data.')
 
     # Data loader settings
-    parser.add_argument('--dataset_name', type=str, default='iu_xray', help='.', choices=['iu_xray', 'mimic_cxr'])
+    parser.add_argument('--dataset_name', type=str, default='iu_xray', choices=['iu_xray', 'mimic_cxr'], help='.')
     parser.add_argument('--max_seq_length', type=int, default=60, help='.')
     parser.add_argument('--threshold', type=int, default=3, help='.')
     parser.add_argument('--num_workers', type=int, default=2, help='.')
@@ -34,7 +35,7 @@ def parse_agrs():
     parser.add_argument('--num_heads', type=int, default=8, help='.')
     parser.add_argument('--num_layers', type=int, default=3, help='.')
     parser.add_argument('--dropout', type=float, default=0.1, help='.')
-    parser.add_argument('--logit_layers', type=int, default=3, help='.')
+    parser.add_argument('--logit_layers', type=int, default=1, help='.')
     parser.add_argument('--bos_idx', type=int, default=0, help='.')
     parser.add_argument('--eos_idx', type=int, default=0, help='.')
     parser.add_argument('--pad_idx', type=int, default=0, help='.')
@@ -44,7 +45,6 @@ def parse_agrs():
     parser.add_argument('--rm_num_slots', type=int, default=3, help='.')
     parser.add_argument('--rm_num_heads', type=int, default=8, help='.')
     parser.add_argument('--rm_d_model', type=int, default=512, help='.')
-
 
     # Sample related
     parser.add_argument('--sample_method', type=str, default='beam_search', help='.')
@@ -60,6 +60,7 @@ def parse_agrs():
     parser.add_argument('--n_gpu', type=int, default=1, help='.')
     parser.add_argument('--epochs', type=int, default=100, help='.')
     parser.add_argument('--save_dir', type=str, default='results/iu_xray', help='.')
+    parser.add_argument('--record_dir', type=str, default='records/', help='.')
     parser.add_argument('--save_period', type=int, default=1, help='.')
     parser.add_argument('--verbosity', type=int, default=2, help='.')
     parser.add_argument('--monitor_mode', type=str, default='max', help='.', choices=['min', 'max'])
@@ -80,7 +81,7 @@ def parse_agrs():
     parser.add_argument('--resume', type=str, help='.')
 
     # Others
-    parser.add_argument('--seed', type=int, default=789, help='.')
+    parser.add_argument('--seed', type=int, default=123456, help='.')
 
     args = parser.parse_args()
     return args

@@ -1,48 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-import six
 import torch
-from six.moves import cPickle
-
-
-def pickle_load(f):
-    """ Load a pickle.
-    Parameters
-    ----------
-    f: file-like object
-    """
-    if six.PY3:
-        return cPickle.load(f, encoding='latin-1')
-    else:
-        return cPickle.load(f)
-
-
-def pickle_dump(obj, f):
-    """ Dump a pickle.
-    Parameters
-    ----------
-    obj: pickled object
-    f: file-like object
-    """
-    if six.PY3:
-        return cPickle.dump(obj, f, protocol=2)
-    else:
-        return cPickle.dump(obj, f)
-
-
-def if_use_feat(caption_model):
-    # Decide if load attention feature according to caption model
-    if caption_model in ['show_tell', 'all_img', 'fc', 'newfc']:
-        use_att, use_fc = False, True
-    elif caption_model == 'language_model':
-        use_att, use_fc = False, False
-    elif caption_model == 'topdown':
-        use_fc, use_att = True, True
-    else:
-        use_att, use_fc = True, False
-    return use_fc, use_att
 
 
 def penalty_builder(penalty_config):

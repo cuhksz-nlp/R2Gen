@@ -2,282 +2,351 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from torch.nn.utils.rnn import PackedSequence, pack_padded_sequence, pad_packed_sequence
+import copy
+import math
 
+import numpy as np
+import torch
 import torch.nn as nn
-import modules.utils as utils
-from modules.layers import *
+import torch.nn.functional as F
+
+from .att_model import pack_wrapper, AttModel
 
 
-class BaseLanguageModel(nn.Module):
-    def __init__(self):
-        super(BaseLanguageModel, self).__init__()
-
-    def forward(self, *args, **kwargs):
-        mode = kwargs.get('mode', 'forward')
-        if 'mode' in kwargs:
-            del kwargs['mode']
-        return getattr(self, '_' + mode)(*args, **kwargs)
-
-    def beam_search(self, init_state, init_logprobs, *args, **kwargs):
-        def add_diversity(beam_seq_table, logprobs, t, divm, diversity_lambda, bdash):
-            local_time = t - divm
-            unaug_logprobs = logprobs.clone()
-            batch_size = beam_seq_table[0].shape[0]
-
-            if divm > 0:
-                change = logprobs.new_zeros(batch_size, logprobs.shape[-1])
-                for prev_choice in range(divm):
-                    prev_decisions = beam_seq_table[prev_choice][:, :, local_time]  # Nxb
-                    for prev_labels in range(bdash):
-                        change.scatter_add_(1, prev_decisions[:, prev_labels].unsqueeze(-1),
-                                            change.new_ones(batch_size, 1))
-
-                if local_time == 0:
-                    logprobs = logprobs - change * diversity_lambda
-                else:
-                    logprobs = logprobs - self.repeat_tensor(bdash, change) * diversity_lambda
-
-            return logprobs, unaug_logprobs
-
-        def beam_step(logprobs, unaug_logprobs, beam_size, t, beam_seq, beam_seq_logprobs, beam_logprobs_sum, state):
-            batch_size = beam_logprobs_sum.shape[0]
-            vocab_size = logprobs.shape[-1]
-            logprobs = logprobs.reshape(batch_size, -1, vocab_size)  # NxbxV
-            if t == 0:
-                assert logprobs.shape[1] == 1
-                beam_logprobs_sum = beam_logprobs_sum[:, :1]
-            candidate_logprobs = beam_logprobs_sum.unsqueeze(-1) + logprobs  # beam_logprobs_sum Nxb logprobs is NxbxV
-            ys, ix = torch.sort(candidate_logprobs.reshape(candidate_logprobs.shape[0], -1), -1, True)
-            ys, ix = ys[:, :beam_size], ix[:, :beam_size]
-            beam_ix = ix // vocab_size  # Nxb which beam
-            selected_ix = ix % vocab_size  # Nxb # which world
-            state_ix = (beam_ix + torch.arange(batch_size).type_as(beam_ix).unsqueeze(-1) * logprobs.shape[1]).reshape(-1)
-
-            if t > 0:
-                assert (beam_seq.gather(1, beam_ix.unsqueeze(-1).expand_as(beam_seq)) ==
-                        beam_seq.reshape(-1, beam_seq.shape[-1])[state_ix].view_as(beam_seq)).all()
-                beam_seq = beam_seq.gather(1, beam_ix.unsqueeze(-1).expand_as(beam_seq))
-
-                beam_seq_logprobs = beam_seq_logprobs.gather(1, beam_ix.unsqueeze(-1).unsqueeze(-1).expand_as(
-                    beam_seq_logprobs))
-
-            beam_seq = torch.cat([beam_seq, selected_ix.unsqueeze(-1)], -1)  # beam_seq Nxbxl
-            beam_logprobs_sum = beam_logprobs_sum.gather(1, beam_ix) + \
-                                logprobs.reshape(batch_size, -1).gather(1, ix)
-            assert (beam_logprobs_sum == ys).all()
-            _tmp_beam_logprobs = unaug_logprobs[state_ix].reshape(batch_size, -1, vocab_size)
-            beam_logprobs = unaug_logprobs.reshape(batch_size, -1, vocab_size).gather(1,
-                                                                                      beam_ix.unsqueeze(-1).expand(-1, -1, vocab_size))
-            assert (_tmp_beam_logprobs == beam_logprobs).all()
-            beam_seq_logprobs = torch.cat([beam_seq_logprobs, beam_logprobs.reshape(batch_size, -1, 1, vocab_size)], 2)
-
-            new_state = [None for _ in state]
-            for _ix in range(len(new_state)):
-                new_state[_ix] = state[_ix][:, state_ix]
-            state = new_state
-            return beam_seq, beam_seq_logprobs, beam_logprobs_sum, state
-
-        # Start diverse_beam_search
-        temperature = getattr(self.args, 'temperature', 1)
-        beam_size = getattr(self.args, 'beam_size', 10)
-        group_size = getattr(self.args, 'group_size', 1)
-        diversity_lambda = getattr(self.args, 'diversity_lambda', 0.5)
-        decoding_constraint = getattr(self.args, 'decoding_constraint', 0)
-        suppress_UNK = getattr(self.args, 'suppress_UNK', 0)
-        length_penalty = utils.penalty_builder(getattr(self.args, 'length_penalty', ''))
-        bdash = beam_size // group_size  # beam per group
-
-        batch_size = init_logprobs.shape[0]
-        device = init_logprobs.device
-        beam_seq_table = [torch.LongTensor(batch_size, bdash, 0).to(device) for _ in range(group_size)]
-        beam_seq_logprobs_table = [torch.FloatTensor(batch_size, bdash, 0, self.vocab_size + 1).to(device) for _ in
-                                   range(group_size)]
-        beam_logprobs_sum_table = [torch.zeros(batch_size, bdash).to(device) for _ in range(group_size)]
-
-        done_beams_table = [[[] for __ in range(group_size)] for _ in range(batch_size)]
-        state_table = [[_.clone() for _ in init_state] for _ in range(group_size)]
-        logprobs_table = [init_logprobs.clone() for _ in range(group_size)]
-
-        # Chunk elements in the args
-        args = list(args)
-        args = utils.split_tensors(group_size, args)  # For each arg, turn (Bbg)x... to (Bb)x(g)x...
-        if self.__class__.__name__ == 'AttEnsemble':
-            args = [[[args[j][i][k] for i in range(len(self.models))] for j in range(len(args))] for k in
-                    range(group_size)]  # group_name, arg_name, model_name
-        else:
-            args = [[args[i][j] for i in range(len(args))] for j in range(group_size)]
-
-        for t in range(self.max_seq_length + group_size - 1):
-            for divm in range(group_size):
-                if t >= divm and t <= self.max_seq_length + divm - 1:
-                    # add diversity
-                    logprobs = logprobs_table[divm]
-                    # suppress previous word
-                    if decoding_constraint and t - divm > 0:
-                        logprobs.scatter_(1, beam_seq_table[divm][:, :, t - divm - 1].reshape(-1, 1).to(device),
-                                          float('-inf'))
-                    # suppress UNK tokens in the decoding
-                    if suppress_UNK and hasattr(self, 'vocab') and self.vocab[str(logprobs.size(1) - 1)] == 'UNK':
-                        logprobs[:, logprobs.size(1) - 1] = logprobs[:, logprobs.size(1) - 1] - 1000
-                    logprobs, unaug_logprobs = add_diversity(beam_seq_table, logprobs, t, divm, diversity_lambda, bdash)
-
-                    # infer new beams
-                    beam_seq_table[divm], \
-                    beam_seq_logprobs_table[divm], \
-                    beam_logprobs_sum_table[divm], \
-                    state_table[divm] = beam_step(logprobs,
-                                                  unaug_logprobs,
-                                                  bdash,
-                                                  t - divm,
-                                                  beam_seq_table[divm],
-                                                  beam_seq_logprobs_table[divm],
-                                                  beam_logprobs_sum_table[divm],
-                                                  state_table[divm])
-
-                    # if time's up... or if end token is reached then copy beams
-                    for b in range(batch_size):
-                        is_end = beam_seq_table[divm][b, :, t - divm] == self.eos_idx
-                        assert beam_seq_table[divm].shape[-1] == t - divm + 1
-                        if t == self.max_seq_length + divm - 1:
-                            is_end.fill_(1)
-                        for vix in range(bdash):
-                            if is_end[vix]:
-                                final_beam = {
-                                    'seq': beam_seq_table[divm][b, vix].clone(),
-                                    'logps': beam_seq_logprobs_table[divm][b, vix].clone(),
-                                    'unaug_p': beam_seq_logprobs_table[divm][b, vix].sum().item(),
-                                    'p': beam_logprobs_sum_table[divm][b, vix].item()
-                                }
-                                final_beam['p'] = length_penalty(t - divm + 1, final_beam['p'])
-                                done_beams_table[b][divm].append(final_beam)
-                        beam_logprobs_sum_table[divm][b, is_end] -= 1000
-
-                    # move the current group one step forward in time
-
-                    it = beam_seq_table[divm][:, :, t - divm].reshape(-1)
-                    logprobs_table[divm], state_table[divm] = self.get_logprobs_state(it.cuda(), *(
-                            args[divm] + [state_table[divm]]))
-                    logprobs_table[divm] = F.log_softmax(logprobs_table[divm] / temperature, dim=-1)
-
-        # all beams are sorted by their log-probabilities
-        done_beams_table = [[sorted(done_beams_table[b][i], key=lambda x: -x['p'])[:bdash] for i in range(group_size)]
-                            for b in range(batch_size)]
-        done_beams = [sum(_, []) for _ in done_beams_table]
-        return done_beams
-
-    def sample_next_word(self, logprobs, sample_method, temperature):
-        if sample_method == 'greedy':
-            sampleLogprobs, it = torch.max(logprobs.data, 1)
-            it = it.view(-1).long()
-        elif sample_method == 'gumbel':
-            def sample_gumbel(shape, eps=1e-20):
-                U = torch.rand(shape).cuda()
-                return -torch.log(-torch.log(U + eps) + eps)
-
-            def gumbel_softmax_sample(logits, temperature):
-                y = logits + sample_gumbel(logits.size())
-                return F.log_softmax(y / temperature, dim=-1)
-
-            _logprobs = gumbel_softmax_sample(logprobs, temperature)
-            _, it = torch.max(_logprobs.data, 1)
-            sampleLogprobs = logprobs.gather(1, it.unsqueeze(1))
-        else:
-            logprobs = logprobs / temperature
-            if sample_method.startswith('top'):
-                top_num = float(sample_method[3:])
-                if 0 < top_num < 1:
-                    probs = F.softmax(logprobs, dim=1)
-                    sorted_probs, sorted_indices = torch.sort(probs, descending=True, dim=1)
-                    _cumsum = sorted_probs.cumsum(1)
-                    mask = _cumsum < top_num
-                    mask = torch.cat([torch.ones_like(mask[:, :1]), mask[:, :-1]], 1)
-                    sorted_probs = sorted_probs * mask.float()
-                    sorted_probs = sorted_probs / sorted_probs.sum(1, keepdim=True)
-                    logprobs.scatter_(1, sorted_indices, sorted_probs.log())
-                else:
-                    the_k = int(top_num)
-                    tmp = torch.empty_like(logprobs).fill_(float('-inf'))
-                    topk, indices = torch.topk(logprobs, the_k, dim=1)
-                    tmp = tmp.scatter(1, indices, topk)
-                    logprobs = tmp
-            it = torch.distributions.Categorical(logits=logprobs.detach()).sample()
-            sampleLogprobs = logprobs.gather(1, it.unsqueeze(1))  # gather the logprobs at sampled positions
-        return it, sampleLogprobs
+def clones(module, N):
+    return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
 
 
-def sort_pack_padded_sequence(input, lengths):
-    sorted_lengths, indices = torch.sort(lengths, descending=True)
-    tmp = pack_padded_sequence(input[indices], sorted_lengths, batch_first=True)
-    inv_ix = indices.clone()
-    inv_ix[indices] = torch.arange(0, len(indices)).type_as(inv_ix)
-    return tmp, inv_ix
+def attention(query, key, value, mask=None, dropout=None):
+    d_k = query.size(-1)
+    scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+    p_attn = F.softmax(scores, dim=-1)
+    if dropout is not None:
+        p_attn = dropout(p_attn)
+    return torch.matmul(p_attn, value), p_attn
 
 
-def pad_unsort_packed_sequence(input, inv_ix):
-    tmp, _ = pad_packed_sequence(input, batch_first=True)
-    tmp = tmp[inv_ix]
-    return tmp
+def subsequent_mask(size):
+    attn_shape = (1, size, size)
+    subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype('uint8')
+    return torch.from_numpy(subsequent_mask) == 0
 
 
-def pack_wrapper(module, att_feats, att_masks):
-    if att_masks is not None:
-        packed, inv_ix = sort_pack_padded_sequence(att_feats, att_masks.data.long().sum(1))
-        return pad_unsort_packed_sequence(PackedSequence(module(packed[0]), packed[1]), inv_ix)
-    else:
-        return module(att_feats)
+class Transformer(nn.Module):
+    def __init__(self, encoder, decoder, src_embed, tgt_embed, rm):
+        super(Transformer, self).__init__()
+        self.encoder = encoder
+        self.decoder = decoder
+        self.src_embed = src_embed
+        self.tgt_embed = tgt_embed
+        self.rm = rm
+
+    def forward(self, src, tgt, src_mask, tgt_mask):
+        return self.decode(self.encode(src, src_mask), src_mask, tgt, tgt_mask)
+
+    def encode(self, src, src_mask):
+        return self.encoder(self.src_embed(src), src_mask)
+
+    def decode(self, hidden_states, src_mask, tgt, tgt_mask):
+        memory = self.rm.init_memory(hidden_states.size(0)).to(hidden_states)
+        memory = self.rm(self.tgt_embed(tgt), memory)
+        return self.decoder(self.tgt_embed(tgt), hidden_states, src_mask, tgt_mask, memory)
 
 
-class EncoderDecoder(BaseLanguageModel):
+class Encoder(nn.Module):
+    def __init__(self, layer, N):
+        super(Encoder, self).__init__()
+        self.layers = clones(layer, N)
+        self.norm = LayerNorm(layer.d_model)
+
+    def forward(self, x, mask):
+        for layer in self.layers:
+            x = layer(x, mask)
+        return self.norm(x)
+
+
+class EncoderLayer(nn.Module):
+    def __init__(self, d_model, self_attn, feed_forward, dropout):
+        super(EncoderLayer, self).__init__()
+        self.self_attn = self_attn
+        self.feed_forward = feed_forward
+        self.sublayer = clones(SublayerConnection(d_model, dropout), 2)
+        self.d_model = d_model
+
+    def forward(self, x, mask):
+        x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, mask))
+        return self.sublayer[1](x, self.feed_forward)
+
+
+class SublayerConnection(nn.Module):
+    def __init__(self, d_model, dropout):
+        super(SublayerConnection, self).__init__()
+        self.norm = LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, sublayer):
+        return x + self.dropout(sublayer(self.norm(x)))
+
+
+class LayerNorm(nn.Module):
+    def __init__(self, features, eps=1e-6):
+        super(LayerNorm, self).__init__()
+        self.gamma = nn.Parameter(torch.ones(features))
+        self.beta = nn.Parameter(torch.zeros(features))
+        self.eps = eps
+
+    def forward(self, x):
+        mean = x.mean(-1, keepdim=True)
+        std = x.std(-1, keepdim=True)
+        return self.gamma * (x - mean) / (std + self.eps) + self.beta
+
+
+class Decoder(nn.Module):
+    def __init__(self, layer, N):
+        super(Decoder, self).__init__()
+        self.layers = clones(layer, N)
+        self.norm = LayerNorm(layer.d_model)
+
+    def forward(self, x, hidden_states, src_mask, tgt_mask, memory):
+        for layer in self.layers:
+            x = layer(x, hidden_states, src_mask, tgt_mask, memory)
+        return self.norm(x)
+
+
+class DecoderLayer(nn.Module):
+    def __init__(self, d_model, self_attn, src_attn, feed_forward, dropout, rm_num_slots, rm_d_model):
+        super(DecoderLayer, self).__init__()
+        self.d_model = d_model
+        self.self_attn = self_attn
+        self.src_attn = src_attn
+        self.feed_forward = feed_forward
+        self.sublayer = clones(ConditionalSublayerConnection(d_model, dropout, rm_num_slots, rm_d_model), 3)
+
+    def forward(self, x, hidden_states, src_mask, tgt_mask, memory):
+        m = hidden_states
+        x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, tgt_mask), memory)
+        x = self.sublayer[1](x, lambda x: self.src_attn(x, m, m, src_mask), memory)
+        return self.sublayer[2](x, self.feed_forward, memory)
+
+
+class ConditionalSublayerConnection(nn.Module):
+    def __init__(self, d_model, dropout, rm_num_slots, rm_d_model):
+        super(ConditionalSublayerConnection, self).__init__()
+        self.norm = ConditionalLayerNorm(d_model, rm_num_slots, rm_d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, sublayer, memory):
+        return x + self.dropout(sublayer(self.norm(x, memory)))
+
+
+class ConditionalLayerNorm(nn.Module):
+    def __init__(self, d_model, rm_num_slots, rm_d_model, eps=1e-6):
+        super(ConditionalLayerNorm, self).__init__()
+        self.gamma = nn.Parameter(torch.ones(d_model))
+        self.beta = nn.Parameter(torch.zeros(d_model))
+        self.rm_d_model = rm_d_model
+        self.rm_num_slots = rm_num_slots
+        self.eps = eps
+
+        self.mlp_gamma = nn.Sequential(nn.Linear(rm_num_slots * rm_d_model, d_model),
+                                       nn.ReLU(inplace=True),
+                                       nn.Linear(rm_d_model, rm_d_model))
+
+        self.mlp_beta = nn.Sequential(nn.Linear(rm_num_slots * rm_d_model, d_model),
+                                      nn.ReLU(inplace=True),
+                                      nn.Linear(d_model, d_model))
+
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+                nn.init.constant_(m.bias, 0.1)
+
+    def forward(self, x, memory):
+        mean = x.mean(-1, keepdim=True)
+        std = x.std(-1, keepdim=True)
+        delta_gamma = self.mlp_gamma(memory)
+        delta_beta = self.mlp_beta(memory)
+        gamma_hat = self.gamma.clone()
+        beta_hat = self.beta.clone()
+        gamma_hat = torch.stack([gamma_hat] * x.size(0), dim=0)
+        gamma_hat = torch.stack([gamma_hat] * x.size(1), dim=1)
+        beta_hat = torch.stack([beta_hat] * x.size(0), dim=0)
+        beta_hat = torch.stack([beta_hat] * x.size(1), dim=1)
+        gamma_hat += delta_gamma
+        beta_hat += delta_beta
+        return gamma_hat * (x - mean) / (std + self.eps) + beta_hat
+
+
+class MultiHeadedAttention(nn.Module):
+    def __init__(self, h, d_model, dropout=0.1):
+        super(MultiHeadedAttention, self).__init__()
+        assert d_model % h == 0
+        self.d_k = d_model // h
+        self.h = h
+        self.linears = clones(nn.Linear(d_model, d_model), 4)
+        self.attn = None
+        self.dropout = nn.Dropout(p=dropout)
+
+    def forward(self, query, key, value, mask=None):
+        if mask is not None:
+            mask = mask.unsqueeze(1)
+        nbatches = query.size(0)
+        query, key, value = \
+            [l(x).view(nbatches, -1, self.h, self.d_k).transpose(1, 2)
+             for l, x in zip(self.linears, (query, key, value))]
+
+        x, self.attn = attention(query, key, value, mask=mask, dropout=self.dropout)
+
+        x = x.transpose(1, 2).contiguous().view(nbatches, -1, self.h * self.d_k)
+        return self.linears[-1](x)
+
+
+class PositionwiseFeedForward(nn.Module):
+    def __init__(self, d_model, d_ff, dropout=0.1):
+        super(PositionwiseFeedForward, self).__init__()
+        self.w_1 = nn.Linear(d_model, d_ff)
+        self.w_2 = nn.Linear(d_ff, d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        return self.w_2(self.dropout(F.relu(self.w_1(x))))
+
+
+class Embeddings(nn.Module):
+    def __init__(self, d_model, vocab):
+        super(Embeddings, self).__init__()
+        self.lut = nn.Embedding(vocab, d_model)
+        self.d_model = d_model
+
+    def forward(self, x):
+        return self.lut(x) * math.sqrt(self.d_model)
+
+
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, dropout, max_len=5000):
+        super(PositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len).unsqueeze(1).float()
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() *
+                             -(math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + self.pe[:, :x.size(1)]
+        return self.dropout(x)
+
+
+class RelationalMemory(nn.Module):
+
+    def __init__(self, num_slots, d_model, num_heads=1):
+        super(RelationalMemory, self).__init__()
+        self.num_slots = num_slots
+        self.num_heads = num_heads
+        self.d_model = d_model
+
+        self.attn = MultiHeadedAttention(num_heads, d_model)
+        self.mlp = nn.Sequential(nn.Linear(self.d_model, self.d_model),
+                                 nn.ReLU(),
+                                 nn.Linear(self.d_model, self.d_model),
+                                 nn.ReLU())
+
+        self.W = nn.Linear(self.d_model, self.d_model * 2)
+        self.U = nn.Linear(self.d_model, self.d_model * 2)
+
+    def init_memory(self, batch_size):
+        memory = torch.stack([torch.eye(self.num_slots)] * batch_size)
+        if self.d_model > self.num_slots:
+            diff = self.d_model - self.num_slots
+            pad = torch.zeros((batch_size, self.num_slots, diff))
+            memory = torch.cat([memory, pad], -1)
+        elif self.d_model < self.num_slots:
+            memory = memory[:, :, :self.d_model]
+
+        return memory
+
+    def forward_step(self, input, memory):
+        memory = memory.reshape(-1, self.num_slots, self.d_model)
+        q = memory
+        k = torch.cat([memory, input.unsqueeze(1)], 1)
+        v = torch.cat([memory, input.unsqueeze(1)], 1)
+        next_memory = memory + self.attn(q, k, v)
+        next_memory = next_memory + self.mlp(next_memory)
+
+        gates = self.W(input.unsqueeze(1)) + self.U(torch.tanh(memory))
+        gates = torch.split(gates, split_size_or_sections=self.d_model, dim=2)
+        input_gate, forget_gate = gates
+        input_gate = torch.sigmoid(input_gate)
+        forget_gate = torch.sigmoid(forget_gate)
+
+        next_memory = input_gate * torch.tanh(next_memory) + forget_gate * memory
+        next_memory = next_memory.reshape(-1, self.num_slots * self.d_model)
+
+        return next_memory
+
+    def forward(self, inputs, memory):
+        outputs = []
+        for i in range(inputs.shape[1]):
+            memory = self.forward_step(inputs[:, i], memory)
+            outputs.append(memory)
+        outputs = torch.stack(outputs, dim=1)
+
+        return outputs
+
+
+class EncoderDecoder(AttModel):
+
+    def make_model(self, tgt_vocab):
+        c = copy.deepcopy
+        attn = MultiHeadedAttention(self.num_heads, self.d_model)
+        ff = PositionwiseFeedForward(self.d_model, self.d_ff, self.dropout)
+        position = PositionalEncoding(self.d_model, self.dropout)
+        rm = RelationalMemory(num_slots=self.rm_num_slots, d_model=self.rm_d_model, num_heads=self.rm_num_heads)
+        model = Transformer(
+            Encoder(EncoderLayer(self.d_model, c(attn), c(ff), self.dropout), self.num_layers),
+            Decoder(
+                DecoderLayer(self.d_model, c(attn), c(attn), c(ff), self.dropout, self.rm_num_slots, self.rm_d_model),
+                self.num_layers),
+            lambda x: x,
+            nn.Sequential(Embeddings(self.d_model, tgt_vocab), c(position)),
+            rm)
+        for p in model.parameters():
+            if p.dim() > 1:
+                nn.init.xavier_uniform_(p)
+        return model
+
     def __init__(self, args, tokenizer):
-        super(EncoderDecoder, self).__init__()
+        super(EncoderDecoder, self).__init__(args, tokenizer)
         self.args = args
-        self.vocab_size = tokenizer.get_vocab_size()
-        self.d_model = self.args.d_model
-        self.d_ff = self.args.d_ff
-        self.num_layers = self.args.num_layers
-        self.drop_prob_lm = self.args.drop_prob_lm
-        self.max_seq_length = self.args.max_seq_length
-        self.d_vf = self.args.d_vf
+        self.num_layers = args.num_layers
+        self.d_model = args.d_model
+        self.d_ff = args.d_ff
+        self.num_heads = args.num_heads
+        self.dropout = args.dropout
+        self.rm_num_slots = args.rm_num_slots
+        self.rm_num_heads = args.rm_num_heads
+        self.rm_d_model = args.rm_d_model
 
-        self.bos_idx = self.args.bos_idx
-        self.eos_idx = self.args.eos_idx
-        self.pad_idx = self.args.pad_idx
+        tgt_vocab = self.vocab_size + 1
 
-        self.use_bn = getattr(self.args, 'use_bn', 0)
-
-        self.ss_prob = 0.0  # Schedule sampling probability
-
-        self.embed = lambda x: x
-        self.att_embed = nn.Sequential(*(
-                ((nn.BatchNorm1d(self.d_vf),) if self.use_bn else ()) +
-                (nn.Linear(self.d_vf, self.d_model),
-                 nn.ReLU(),
-                 nn.Dropout(self.drop_prob_lm)) +
-                ((nn.BatchNorm1d(self.d_model),) if self.use_bn == 2 else ())))
-
-        self.logit = nn.Linear(self.d_model, self.vocab_size + 1)
-
-        self.tokenizer = tokenizer
-        self.model = make_model(self.args, self.vocab_size + 1)
+        self.model = self.make_model(tgt_vocab)
+        self.logit = nn.Linear(args.d_model, tgt_vocab)
 
     def init_hidden(self, bsz):
         return []
 
-    def clip_att(self, att_feats, att_masks):
-        # Clip the length of att_masks and att_feats to the maximum length
-        if att_masks is not None:
-            max_len = att_masks.data.long().sum(1).max()
-            att_feats = att_feats[:, :max_len].contiguous()
-            att_masks = att_masks[:, :max_len].contiguous()
-        return att_feats, att_masks
-
     def _prepare_feature(self, fc_feats, att_feats, att_masks):
 
         att_feats, seq, att_masks, seq_mask = self._prepare_feature_forward(att_feats, att_masks)
-        hidden_states = self.model.encode(att_feats, att_masks)
+        memory = self.model.encode(att_feats, att_masks)
 
-        return fc_feats[..., :1], att_feats[..., :1], hidden_states, att_masks
+        return fc_feats[..., :1], att_feats[..., :1], memory, att_masks
 
     def _prepare_feature_forward(self, att_feats, att_masks=None, seq=None):
         att_feats, att_masks = self.clip_att(att_feats, att_masks)
@@ -303,251 +372,15 @@ class EncoderDecoder(BaseLanguageModel):
     def _forward(self, fc_feats, att_feats, seq, att_masks=None):
 
         att_feats, seq, att_masks, seq_mask = self._prepare_feature_forward(att_feats, att_masks, seq)
-
         out = self.model(att_feats, seq, att_masks, seq_mask)
-        outputs = F.log_softmax(self.logit(out), dim=1)
-
+        outputs = F.log_softmax(self.logit(out), dim=-1)
         return outputs
 
-    def core(self, it, fc_feats_ph, att_feats_ph, hidden_states, state, mask):
-        """
-        state = [ys.unsqueeze(0)]
-        """
+    def core(self, it, fc_feats_ph, att_feats_ph, memory, state, mask):
+
         if len(state) == 0:
             ys = it.unsqueeze(1)
         else:
             ys = torch.cat([state[0][0], it.unsqueeze(1)], dim=1)
-        out = self.model.decode(hidden_states, mask, ys, subsequent_mask(ys.size(1)).to(hidden_states.device))
+        out = self.model.decode(memory, mask, ys, subsequent_mask(ys.size(1)).to(memory.device))
         return out[:, -1], [ys.unsqueeze(0)]
-
-    def get_logprobs_state(self, it, fc_feats, att_feats, p_att_feats, att_masks, state, output_logsoftmax=1):
-        # 'it' contains a word index
-        xt = self.embed(it)
-
-        output, state = self.core(xt, fc_feats, att_feats, p_att_feats, state, att_masks)
-        if output_logsoftmax:
-            logprobs = F.log_softmax(self.logit(output), dim=1)
-        else:
-            logprobs = self.logit(output)
-
-        return logprobs, state
-
-    def _sample_beam(self, fc_feats, att_feats, att_masks=None):
-        beam_size = getattr(self.args, 'beam_size', 10)
-        group_size = getattr(self.args, 'group_size', 1)
-        sample_n = getattr(self.args, 'sample_n', 10)
-        # when sample_n == beam_size then each beam is a sample.
-        assert sample_n == 1 or sample_n == beam_size // group_size, 'when beam search, sample_n == 1 or beam search'
-        batch_size = fc_feats.size(0)
-
-        p_fc_feats, p_att_feats, pp_att_feats, p_att_masks = self._prepare_feature(fc_feats, att_feats, att_masks)
-
-        assert beam_size <= self.vocab_size + 1, 'lets assume this for now, otherwise this corner case causes a few headaches down the road. can be dealt with in future if needed'
-        seq = fc_feats.new_full((batch_size * sample_n, self.max_seq_length), self.pad_idx, dtype=torch.long)
-        seqLogprobs = fc_feats.new_zeros(batch_size * sample_n, self.max_seq_length, self.vocab_size + 1)
-        # lets process every image independently for now, for simplicity
-
-        self.done_beams = [[] for _ in range(batch_size)]
-
-        state = self.init_hidden(batch_size)
-
-        # first step, feed bos
-        it = fc_feats.new_full([batch_size], self.bos_idx, dtype=torch.long)
-        logprobs, state = self.get_logprobs_state(it, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks, state)
-
-        p_fc_feats, p_att_feats, pp_att_feats, p_att_masks = utils.repeat_tensors(beam_size,
-                                                                                  [p_fc_feats, p_att_feats,
-                                                                                   pp_att_feats, p_att_masks]
-                                                                                  )
-        self.done_beams = self.beam_search(state, logprobs, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks)
-        for k in range(batch_size):
-            if sample_n == beam_size:
-                for _n in range(sample_n):
-                    seq_len = self.done_beams[k][_n]['seq'].shape[0]
-                    seq[k * sample_n + _n, :seq_len] = self.done_beams[k][_n]['seq']
-                    seqLogprobs[k * sample_n + _n, :seq_len] = self.done_beams[k][_n]['logps']
-            else:
-                seq_len = self.done_beams[k][0]['seq'].shape[0]
-                seq[k, :seq_len] = self.done_beams[k][0]['seq']  # the first beam has highest cumulative score
-                seqLogprobs[k, :seq_len] = self.done_beams[k][0]['logps']
-        # return the samples and their log likelihoods
-        return seq, seqLogprobs
-
-    def _sample(self, fc_feats, att_feats, att_masks=None):
-        sample_method = getattr(self.args, 'sample_method', 'greedy')
-        beam_size = getattr(self.args, 'beam_size', 1)
-        temperature = getattr(self.args, 'temperature', 1.0)
-        sample_n = int(getattr(self.args, 'sample_n', 1))
-        group_size = getattr(self.args, 'group_size', 1)
-        output_logsoftmax = getattr(self.args, 'output_logsoftmax', 1)
-        decoding_constraint = getattr(self.args, 'decoding_constraint', 0)
-        block_trigrams = getattr(self.args, 'block_trigrams', 0)
-
-        if beam_size > 1 and sample_method in ['greedy', 'beam_search']:
-            return self._sample_beam(fc_feats, att_feats, att_masks)
-        if group_size > 1:
-            return self._diverse_sample(fc_feats, att_feats, att_masks)
-
-        batch_size = fc_feats.size(0)
-        state = self.init_hidden(batch_size * sample_n)
-
-        p_fc_feats, p_att_feats, pp_att_feats, p_att_masks = self._prepare_feature(fc_feats, att_feats, att_masks)
-
-        if sample_n > 1:
-            p_fc_feats, p_att_feats, pp_att_feats, p_att_masks = utils.repeat_tensors(sample_n,
-                                                                                      [p_fc_feats, p_att_feats,
-                                                                                       pp_att_feats, p_att_masks]
-                                                                                      )
-
-        trigrams = []  # will be a list of batch_size dictionaries
-
-        seq = fc_feats.new_full((batch_size * sample_n, self.max_seq_length), self.pad_idx, dtype=torch.long)
-        seqLogprobs = fc_feats.new_zeros(batch_size * sample_n, self.max_seq_length, self.vocab_size + 1)
-        for t in range(self.max_seq_length + 1):
-            if t == 0:  # input <bos>
-                it = fc_feats.new_full([batch_size * sample_n], self.bos_idx, dtype=torch.long)
-
-            logprobs, state = self.get_logprobs_state(it, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks, state,
-                                                      output_logsoftmax=output_logsoftmax)
-
-            if decoding_constraint and t > 0:
-                tmp = logprobs.new_zeros(logprobs.size())
-                tmp.scatter_(1, seq[:, t - 1].data.unsqueeze(1), float('-inf'))
-                logprobs = logprobs + tmp
-
-            # Mess with trigrams
-            # Copy from https://github.com/lukemelas/image-paragraph-captioning
-            if block_trigrams and t >= 3:
-                # Store trigram generated at last step
-                prev_two_batch = seq[:, t - 3:t - 1]
-                for i in range(batch_size):  # = seq.size(0)
-                    prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
-                    current = seq[i][t - 1]
-                    if t == 3:  # initialize
-                        trigrams.append({prev_two: [current]})  # {LongTensor: list containing 1 int}
-                    elif t > 3:
-                        if prev_two in trigrams[i]:  # add to list
-                            trigrams[i][prev_two].append(current)
-                        else:  # create list
-                            trigrams[i][prev_two] = [current]
-                # Block used trigrams at next step
-                prev_two_batch = seq[:, t - 2:t]
-                mask = torch.zeros(logprobs.size(), requires_grad=False).cuda()  # batch_size x vocab_size
-                for i in range(batch_size):
-                    prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
-                    if prev_two in trigrams[i]:
-                        for j in trigrams[i][prev_two]:
-                            mask[i, j] += 1
-                # Apply mask to log probs
-                # logprobs = logprobs - (mask * 1e9)
-                alpha = 2.0  # = 4
-                logprobs = logprobs + (mask * -0.693 * alpha)  # ln(1/2) * alpha (alpha -> infty works best)
-
-            # sample the next word
-            if t == self.max_seq_length:  # skip if we achieve maximum length
-                break
-            it, sampleLogprobs = self.sample_next_word(logprobs, sample_method, temperature)
-
-            # stop when all finished
-            if t == 0:
-                unfinished = it != self.eos_idx
-            else:
-                it[~unfinished] = self.pad_idx  # This allows eos_idx not being overwritten to 0
-                logprobs = logprobs * unfinished.unsqueeze(1).float()
-                unfinished = unfinished * (it != self.eos_idx)
-            seq[:, t] = it
-            seqLogprobs[:, t] = logprobs
-            # quit loop if all sequences have finished
-            if unfinished.sum() == 0:
-                break
-
-        return seq, seqLogprobs
-
-    def _diverse_sample(self, fc_feats, att_feats, att_masks=None):
-        sample_method = getattr(self.args, 'sample_method', 'greedy')
-        beam_size = getattr(self.args, 'beam_size', 1)
-        temperature = getattr(self.args, 'temperature', 1.0)
-        group_size = getattr(self.args, 'group_size', 1)
-        diversity_lambda = getattr(self.args, 'diversity_lambda', 0.5)
-        decoding_constraint = getattr(self.args, 'decoding_constraint', 0)
-        block_trigrams = getattr(self.args, 'block_trigrams', 0)
-
-        batch_size = fc_feats.size(0)
-        state = self.init_hidden(batch_size)
-
-        p_fc_feats, p_att_feats, pp_att_feats, p_att_masks = self._prepare_feature(fc_feats, att_feats, att_masks)
-
-        trigrams_table = [[] for _ in range(group_size)]  # will be a list of batch_size dictionaries
-
-        seq_table = [fc_feats.new_full((batch_size, self.max_seq_length), self.pad_idx, dtype=torch.long) for _ in
-                     range(group_size)]
-        seqLogprobs_table = [fc_feats.new_zeros(batch_size, self.max_seq_length) for _ in range(group_size)]
-        state_table = [self.init_hidden(batch_size) for _ in range(group_size)]
-
-        for tt in range(self.max_seq_length + group_size):
-            for divm in range(group_size):
-                t = tt - divm
-                seq = seq_table[divm]
-                seqLogprobs = seqLogprobs_table[divm]
-                trigrams = trigrams_table[divm]
-                if t >= 0 and t <= self.max_seq_length - 1:
-                    if t == 0:  # input <bos>
-                        it = fc_feats.new_full([batch_size], self.bos_idx, dtype=torch.long)
-                    else:
-                        it = seq[:, t - 1]  # changed
-
-                    logprobs, state_table[divm] = self.get_logprobs_state(it, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks, state_table[divm])
-                    logprobs = F.log_softmax(logprobs / temperature, dim=-1)
-
-                    # Add diversity
-                    if divm > 0:
-                        unaug_logprobs = logprobs.clone()
-                        for prev_choice in range(divm):
-                            prev_decisions = seq_table[prev_choice][:, t]
-                            logprobs[:, prev_decisions] = logprobs[:, prev_decisions] - diversity_lambda
-
-                    if decoding_constraint and t > 0:
-                        tmp = logprobs.new_zeros(logprobs.size())
-                        tmp.scatter_(1, seq[:, t - 1].data.unsqueeze(1), float('-inf'))
-                        logprobs = logprobs + tmp
-
-                    # Mess with trigrams
-                    if block_trigrams and t >= 3:
-                        # Store trigram generated at last step
-                        prev_two_batch = seq[:, t - 3:t - 1]
-                        for i in range(batch_size):  # = seq.size(0)
-                            prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
-                            current = seq[i][t - 1]
-                            if t == 3:  # initialize
-                                trigrams.append({prev_two: [current]})  # {LongTensor: list containing 1 int}
-                            elif t > 3:
-                                if prev_two in trigrams[i]:  # add to list
-                                    trigrams[i][prev_two].append(current)
-                                else:  # create list
-                                    trigrams[i][prev_two] = [current]
-                        # Block used trigrams at next step
-                        prev_two_batch = seq[:, t - 2:t]
-                        mask = torch.zeros(logprobs.size(), requires_grad=False).cuda()  # batch_size x vocab_size
-                        for i in range(batch_size):
-                            prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
-                            if prev_two in trigrams[i]:
-                                for j in trigrams[i][prev_two]:
-                                    mask[i, j] += 1
-                        # Apply mask to log probs
-                        # logprobs = logprobs - (mask * 1e9)
-                        alpha = 2.0  # = 4
-                        logprobs = logprobs + (mask * -0.693 * alpha)  # ln(1/2) * alpha (alpha -> infty works best)
-
-                    it, sampleLogprobs = self.sample_next_word(logprobs, sample_method, 1)
-
-                    # stop when all finished
-                    if t == 0:
-                        unfinished = it != self.eos_idx
-                    else:
-                        unfinished = seq[:, t - 1] != self.pad_idx & seq[:, t - 1] != self.eos_idx
-                        it[~unfinished] = self.pad_idx
-                        unfinished = unfinished & (it != self.eos_idx)  # changed
-                    seq[:, t] = it
-                    seqLogprobs[:, t] = sampleLogprobs.view(-1)
-
-        return torch.stack(seq_table, 1).reshape(batch_size * group_size, -1), torch.stack(seqLogprobs_table, 1).reshape(batch_size * group_size, -1)
