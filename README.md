@@ -20,10 +20,17 @@ If you use or extend our work, please cite our paper at EMNLP-2020.
 
 ## Requirements
 
-- `torch==1.5.0`
-- `torchvision==0.6.0`
+- `torch==1.5.1`
+- `torchvision==0.6.1`
 - `opencv-python==4.4.0.42`
 
+
+## Datasets
+We use two datasets (IU X-Ray and MIMIC CXR) in our paper.
+
+For `IU X-Ray`, you can download the dataset from [here]() and then put the files in `data/iu_xray`.
+
+For `MIMIC CXR`, you can download the dataset from [here]() and then put the files in `data/mimic_cxr`.
 
 ## Run on IU X-Ray
 
