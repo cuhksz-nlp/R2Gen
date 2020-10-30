@@ -8,4 +8,5 @@ python main.py \
 --epochs 30 \
 --save_dir results/mimic_cxr \
 --step_size 1 \
---gamma 0.8
+--gamma 0.8 \
+--seed 456789

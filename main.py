@@ -79,7 +79,7 @@ def parse_agrs():
     parser.add_argument('--gamma', type=float, default=0.1, help='the gamma of the learning rate scheduler.')
 
     # Others
-    parser.add_argument('--seed', type=int, default=456789, help='.')
+    parser.add_argument('--seed', type=int, default=9233, help='.')
     parser.add_argument('--resume', type=str, help='whether to resume the training from existing checkpoints.')
 
     args = parser.parse_args()

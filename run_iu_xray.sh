@@ -8,4 +8,5 @@ python main.py \
 --epochs 100 \
 --save_dir results/iu_xray \
 --step_size 50 \
---gamma 0.1
+--gamma 0.1 \
+--seed 9223
