@@ -140,4 +140,6 @@ cython_debug/
 # Pycharm
 .idea/
 
-data/
+# Data
+data/iu_xray/
+data/mimic_cxr/
