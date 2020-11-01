@@ -26,7 +26,7 @@ If you use or extend our work, please cite our paper at EMNLP-2020.
 
 
 ## Download R2Gen
-You can download the models we trained for each dataset from [here](https://github.com/cuhksz-nlp/R2Gen/data/r2gen.md).
+You can download the models we trained for each dataset from [here](https://github.com/cuhksz-nlp/R2Gen/blob/main/data/r2gen.md).
 
 ## Datasets
 We use two datasets (IU X-Ray and MIMIC-CXR) in our paper.
