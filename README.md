@@ -1,6 +1,6 @@
 # R2Gen
 
-This is the implementation of [Generating Radiology Reports via Memory-driven Transformer]() at EMNLP-2020.
+This is the implementation of [Generating Radiology Reports via Memory-driven Transformer](https://arxiv.org/pdf/2010.16056.pdf) at EMNLP-2020.
 
 ## Citations
 
