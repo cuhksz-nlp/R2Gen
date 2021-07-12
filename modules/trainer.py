@@ -51,6 +51,7 @@ class BaseTrainer(object):
     def train(self):
         not_improved_count = 0
         for epoch in range(self.start_epoch, self.epochs + 1):
+            epoch_time = time.time()
             result = self._train_epoch(epoch)
 
             # save logged informations into log dict
@@ -89,6 +90,7 @@ class BaseTrainer(object):
 
             if epoch % self.save_period == 0:
                 self._save_checkpoint(epoch, save_best=best)
+            print(f"Time taken for epoch {epoch}: {(time.time() - epoch_time) // 60:.0f}m {(time.time() - epoch_time) % 60:.0f}")
         self._print_best()
         self._print_best_to_file()
 

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import argparse 
 
 from modules.visual_extractor import VisualExtractor
 from modules.encoder_decoder import EncoderDecoder
@@ -45,4 +46,26 @@ class R2GenModel(nn.Module):
         else:
             raise ValueError
         return output
+
+def parse_agrs():
+    parser = argparse.ArgumentParser()
+
+    # Model settings (for visual extractor)
+    parser.add_argument('--visual_extractor', type=str, default='resnet101', help='the visual extractor to be used.')
+    # parser.add_argument('--visual_extractor', type=str, default='deit_base_patch16_224', help='the visual extractor to be used.')
+    parser.add_argument('--visual_extractor_pretrained', type=bool, default = False, help='whether to load the pretrained visual extractor')
+
+    args = parser.parse_args()
+    
+    return args
+
+# if __name__ == "__main__":
+    
+#     img = torch.randn((1, 3, 224, 224))
+#     targets = torch.randint(1, 100, (1, 224))
+#     args = parse_agrs()
+#     vis = VisualExtractor(args)
+#     patch_feats, avg_feats = vis(img)
+#     print('patch_feats out ', patch_feats.shape)
+#     print('avg_features out ', avg_feats.shape)
 

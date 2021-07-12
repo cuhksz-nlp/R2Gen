@@ -8,7 +8,10 @@ from modules.optimizers import build_optimizer, build_lr_scheduler
 from modules.trainer import Trainer
 from modules.loss import compute_loss
 from models.r2gen import R2GenModel
-
+import timm
+import time
+from torch.cuda import amp
+import json
 
 def parse_agrs():
     parser = argparse.ArgumentParser()
@@ -85,6 +88,122 @@ def parse_agrs():
     args = parser.parse_args()
     return args
 
+def test_model(model, optimizer, metric_ftns, dataloader, epoch, device='cuda'):
+    
+  model.eval()
+  with torch.no_grad():
+    test_gts, test_res = [], []            
+
+    for batch_idx, (images_id, images, reports_ids, reports_masks) in enumerate(dataloader):
+
+      images, reports_ids, reports_masks = images.to(device), reports_ids.to(device), reports_masks.to(
+      device)
+      optimizer.zero_grad()
+      output = model(images, mode='sample')
+      reports = model.tokenizer.decode_batch(output.cpu().numpy())
+      ground_truths = model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
+      test_gts.extend(reports)
+      test_res.extend(ground_truths)
+      
+    gen_values = {i: [re] for i, re in enumerate(test_res)}
+    
+    filename = f"test_gen_values{epoch}.json"
+    with open(filename, "w") as write_file:
+        json.dump(gen_values, write_file, indent=4)
+
+    test_met = metric_ftns({i: [gt] for i, gt in enumerate(test_gts)},
+                           {i: [re] for i, re in enumerate(test_res)})
+    
+    print(test_met)
+    print()
+    
+def eval_model(model, criterion, optimizer, metric_ftns, scaler, epoch, scheduler, dataloader, device='cuda'):
+    
+  model.eval()
+  with torch.no_grad():
+    val_gts, val_res = [], []            
+
+    for batch_idx, (images_id, images, reports_ids, reports_masks) in enumerate(dataloader):
+
+      images, reports_ids, reports_masks = images.to(device), reports_ids.to(device), reports_masks.to(
+      device)
+      optimizer.zero_grad()
+      output = model(images, mode='sample')
+      reports = model.tokenizer.decode_batch(output.cpu().numpy())
+      ground_truths = model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
+      val_res.extend(reports)
+      val_gts.extend(ground_truths)
+
+    val_met = metric_ftns({i: [gt] for i, gt in enumerate(val_gts)},
+                          {i: [re] for i, re in enumerate(val_res)})
+    print(val_met)
+    print()
+    
+def train_model(model, criterion, optimizer, metric_ftns, scheduler, train_dataloader, val_dataloader, test_dataloader, 
+                scaler = None, num_epochs = 70, device='cuda', checkpoint = None):
+    since = time.time()
+    model = model.to(device)
+    model.train()
+    if checkpoint != None:
+        print('Checkpoint found')
+        start_epoch = checkpoint['epochs']
+        print(f"Resuming training from {start_epoch}")
+    else:
+        start_epoch = 0
+        print('------------TRAINING STARTED---------------------')
+
+    for epoch in range(start_epoch, num_epochs):
+        epoch_time = time.time()
+        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
+        print('-' * 10)
+
+        running_loss = 0.0
+        
+        # Iterate over data.
+        for batch_idx, (images_id, images, reports_ids, reports_masks) in enumerate(train_dataloader):
+            images, reports_ids, reports_masks = images.to(device), reports_ids.to(device), reports_masks.to(
+            device)
+            optimizer.zero_grad()
+
+            if scaler is not None:
+                with amp.autocast():
+                    output = model(images, reports_ids, mode='train')
+                    loss = criterion(output, reports_ids, reports_masks)
+                    scaler.scale(loss).backward()
+                    torch.nn.utils.clip_grad_value_(model.parameters(), 0.1)
+                    scaler.step(optimizer)
+                    scaler.update()
+            else:
+                with torch.set_grad_enabled(mode = True):
+                    output = model(images, reports_ids, mode='train')
+                    loss = criterion(output, reports_ids, reports_masks)
+                    loss.backward()
+                    torch.nn.utils.clip_grad_value_(model.parameters(), 0.1)
+                    optimizer.step()
+
+            running_loss += float(loss.item())
+        
+        epoch_loss = running_loss / len(train_dataloader)
+        
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer' : optimizer.state_dict(),
+                      'scheduler' : scheduler.state_dict(),
+                      'epochs' : epoch}
+
+        torch.save(checkpoint, '/content/drive/MyDrive/DL & ML Models/Automatic Medical Report Generation/R2Gen/ViTR2Gen/checkpoint_modified_vit_30epochs.pt')
+        del checkpoint
+
+        
+        
+        print('Train Loss: {:.4f}'.format(epoch_loss))
+        eval_model(model, criterion, optimizer, metric_ftns, scaler, epoch, scheduler, val_dataloader, device='cuda')
+        if epoch == 29:
+          test_model(model, optimizer, metric_ftns, test_dataloader, epoch, device='cuda')
+        print(f"Time taken for epoch {epoch}: {(time.time() - epoch_time) // 60:.0f}m {(time.time() - epoch_time) % 60:.0f}")
+        scheduler.step()
+
+    time_elapsed = time.time() - since
+    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 def main():
     # parse arguments
@@ -114,10 +233,17 @@ def main():
     # build optimizer, learning rate scheduler
     optimizer = build_optimizer(args, model)
     lr_scheduler = build_lr_scheduler(args, optimizer)
+    
+    scaler = amp.GradScaler()
+    
+    train_model(model, criterion, optimizer, metrics, lr_scheduler, train_dataloader, val_dataloader, test_dataloader, 
+                None, args.epochs, checkpoint = None)
 
     # build trainer and start to train
-    trainer = Trainer(model, criterion, metrics, optimizer, args, lr_scheduler, train_dataloader, val_dataloader, test_dataloader)
-    trainer.train()
+    # trainer = Trainer(model, criterion, metrics, optimizer, args, lr_scheduler, train_dataloader, val_dataloader, test_dataloader)
+    # trainer.train()
+    
+    
 
 
 if __name__ == '__main__':
