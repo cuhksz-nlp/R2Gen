@@ -16,7 +16,7 @@ dependencies:
   - libstdcxx-ng=9.3.0=hd4cf53a_17
   - libgomp=9.3.0=h5101ec6_17
   - mkl
-  - _openmp_mutex=4.5=1_gnu.tar.bz2
+  - _openmp_mutex=4.5=1_gnu
   - giflib=5.2.1=h7b6447c_0
   - jpeg=9d=h7f8727e_0
   - libwebp-base=1.2.2=h7f8727e_0
