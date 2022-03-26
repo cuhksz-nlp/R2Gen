@@ -9,7 +9,7 @@ eval "$(pyenv virtualenv-init -)"
 
 pyenv local miniconda3-latest
 
-cd "$HOME/gputest"
+cd "$HOME/projects/R2Gen"
 
 python main.py \
 --image_dir data/mimic_cxr/images/ \
