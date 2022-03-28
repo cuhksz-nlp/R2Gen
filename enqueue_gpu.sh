@@ -11,5 +11,4 @@
 #SBATCH -o logs/stdout_%j_%t
 
 srun $HOME/projects/R2Gen/run_iu_xray.sh
-#srun $HOME/projects/R2Gen/run_mimic_cxr.sh
 

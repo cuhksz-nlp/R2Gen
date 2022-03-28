@@ -1,8 +1,7 @@
 #!/bin/bash
 set -xe
 
-export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/versions/miniconda3-latest/bin:$HOME/
-.local/bin:$PATH"
+export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:$HOME/.local/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
