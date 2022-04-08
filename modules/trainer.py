@@ -1,3 +1,4 @@
+import time
 import os
 from abc import abstractmethod
 
@@ -5,6 +6,8 @@ import time
 import torch
 import pandas as pd
 from numpy import inf
+
+import timer
 
 
 class BaseTrainer(object):
@@ -51,6 +54,7 @@ class BaseTrainer(object):
     def train(self):
         not_improved_count = 0
         for epoch in range(self.start_epoch, self.epochs + 1):
+            start_time = time.time()
             result = self._train_epoch(epoch)
 
             # save logged informations into log dict
@@ -88,7 +92,7 @@ class BaseTrainer(object):
                     break
 
             if epoch % self.save_period == 0:
-                self._save_checkpoint(epoch, save_best=best)
+                self._save_checkpoint(epoch, start_time, save_best=best)
         self._print_best()
         self._print_best_to_file()
 
@@ -126,7 +130,7 @@ class BaseTrainer(object):
         list_ids = list(range(n_gpu_use))
         return device, list_ids
 
-    def _save_checkpoint(self, epoch, save_best=False):
+    def _save_checkpoint(self, epoch, start_time, save_best=False):
         state = {
             'epoch': epoch,
             'state_dict': self.model.state_dict(),
@@ -135,6 +139,7 @@ class BaseTrainer(object):
         }
         filename = os.path.join(self.checkpoint_dir, 'current_checkpoint.pth')
         torch.save(state, filename)
+        timer.time_executed(start_time, "epoch: " + epoch);
         print("Saving checkpoint: {} ...".format(filename))
         if save_best:
             best_path = os.path.join(self.checkpoint_dir, 'model_best.pth')
