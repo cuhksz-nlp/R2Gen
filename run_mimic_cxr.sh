@@ -10,7 +10,7 @@ pyenv local miniconda3-latest
 
 cd "$HOME/projects/R2Gen"
 
-python main.py \
+time python main.py \
 --image_dir data/mimic_cxr/images/ \
 --ann_path data/mimic_cxr/annotation.json \
 --dataset_name mimic_cxr \

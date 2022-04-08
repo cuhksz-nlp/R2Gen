@@ -10,7 +10,7 @@ pyenv local miniconda3-latest
 
 cd "$HOME/projects/R2Gen"
 
-python main.py \
+time python main.py \
 --image_dir data/iu_xray/images/ \
 --ann_path data/iu_xray/annotation.json \
 --dataset_name iu_xray \
