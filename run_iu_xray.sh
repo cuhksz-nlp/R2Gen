@@ -14,7 +14,7 @@ time python main.py \
 --image_dir data/iu_xray/images/ \
 --ann_path data/iu_xray/annotation.json \
 --dataset_name iu_xray \
---max_seq_length 60 \
+--max_seq_length 90 \
 --threshold 3 \
 --batch_size 16 \
 --epochs 100 \
