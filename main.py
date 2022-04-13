@@ -1,6 +1,10 @@
+import time
+
 import torch
 import argparse
 import numpy as np
+
+import timer
 from modules.tokenizers import Tokenizer
 from modules.dataloaders import R2DataLoader
 from modules.metrics import compute_scores
@@ -87,6 +91,7 @@ def parse_agrs():
 
 
 def main():
+    start_time = time.time()
     # parse arguments
     args = parse_agrs()
 
@@ -118,6 +123,8 @@ def main():
     # build trainer and start to train
     trainer = Trainer(model, criterion, metrics, optimizer, args, lr_scheduler, train_dataloader, val_dataloader, test_dataloader)
     trainer.train()
+    timer.time_executed(start_time, "IU-Xray with --max_seq_length 90 ")
+
 
 
 if __name__ == '__main__':
