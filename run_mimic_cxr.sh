@@ -16,7 +16,7 @@ time python main.py \
 --dataset_name mimic_cxr \
 --max_seq_length 100 \
 --threshold 10 \
---batch_size 16 \
+--batch_size 8 \
 --epochs 30 \
 --save_dir results/mimic_cxr \
 --step_size 1 \
