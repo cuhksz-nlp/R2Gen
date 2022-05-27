@@ -140,10 +140,12 @@ cython_debug/
 # Pycharm
 .idea/
 
-# Data
-data/iu_xray/
-data/mimic_cxr/
+# VSCode
+.vscode/
 
 # Results
 results/
+
+# Others
 *.python-version
+settings.json
