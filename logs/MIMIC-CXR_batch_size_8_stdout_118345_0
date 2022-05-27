@@ -1,0 +1,175 @@
++ export PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
++ PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ pyenv init -
++ eval 'export PYENV_SHELL=bash
+source '\''/media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command
+  command="${1:-}"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command
+++ command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
+++ pyenv virtualenv-init -
++ eval 'export PATH="/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "$VIRTUAL_ENV" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND";
+fi'
+++ export PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ pyenv local miniconda3-latest
++ local command
++ command=local
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv local miniconda3-latest
++ pyenv local miniconda3-latest
++ cd /media/compute/homes/tmandal/projects/R2Gen
++ python main.py --image_dir data/mimic_cxr/images/ --ann_path data/mimic_cxr/annotation.json --dataset_name mimic_cxr --max_seq_length 100 --threshold 10 --batch_size 8 --epochs 30 --save_dir results/mimic_cxr --step_size 1 --gamma 0.8 --seed 456789
+	epoch          : 1
+	train_loss     : 1.7256923308462022
+	val_BLEU_1     : 0.29681830787776997
+	val_BLEU_2     : 0.19352456270538587
+	val_BLEU_3     : 0.13565576894546533
+	val_BLEU_4     : 0.10116728123560362
+	val_METEOR     : 0.13171362982024623
+	val_ROUGE_L    : 0.30480603631706626
+	test_BLEU_1    : 0.24339898127438833
+	test_BLEU_2    : 0.1464260645775553
+	test_BLEU_3    : 0.09587854047253866
+	test_BLEU_4    : 0.06729883158021602
+	test_METEOR    : 0.10892343601701374
+	test_ROUGE_L   : 0.25123597831281447
+epoch: 1 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=21, tm_hour=19, tm_min=28, tm_sec=27, tm_wday=3, tm_yday=111, tm_isdst=1)
+('epoch: 1', ' executed for 06:12:07.53')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 2
+	train_loss     : 1.4118258340574832
+	val_BLEU_1     : 0.3574128568281885
+	val_BLEU_2     : 0.23245124090528027
+	val_BLEU_3     : 0.1626887442283553
+	val_BLEU_4     : 0.12047683291299535
+	val_METEOR     : 0.14464182273136678
+	val_ROUGE_L    : 0.3069406538944251
+	test_BLEU_1    : 0.2833540742390965
+	test_BLEU_2    : 0.17220085146423403
+	test_BLEU_3    : 0.1140269485167086
+	test_BLEU_4    : 0.08069009757613224
+	test_METEOR    : 0.11991054139778869
+	test_ROUGE_L   : 0.25935346238125656
+epoch: 2 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=22, tm_hour=1, tm_min=21, tm_sec=13, tm_wday=4, tm_yday=112, tm_isdst=1)
+('epoch: 2', ' executed for 05:52:33.66')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 3
+	train_loss     : 1.3359061684114422
+	val_BLEU_1     : 0.3630607049275548
+	val_BLEU_2     : 0.2362072687687631
+	val_BLEU_3     : 0.1652486087841543
+	val_BLEU_4     : 0.12166970656723808
+	val_METEOR     : 0.1488015381048241
+	val_ROUGE_L    : 0.3112333644912368
+	test_BLEU_1    : 0.2891335831810024
+	test_BLEU_2    : 0.1762376630480408
+	test_BLEU_3    : 0.11706798054544282
+	test_BLEU_4    : 0.08278557933487571
+	test_METEOR    : 0.12405478482248367
+	test_ROUGE_L   : 0.2567275864624824
+epoch: 3 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=22, tm_hour=7, tm_min=28, tm_sec=30, tm_wday=4, tm_yday=112, tm_isdst=1)
+('epoch: 3', ' executed for 06:07:05.25')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 4
+	train_loss     : 1.2875041440901873
+	val_BLEU_1     : 0.33094164194214865
+	val_BLEU_2     : 0.21407375214881363
+	val_BLEU_3     : 0.14889544890986342
+	val_BLEU_4     : 0.10908423977663591
+	val_METEOR     : 0.13820824877349297
+	val_ROUGE_L    : 0.3069591316751049
+	test_BLEU_1    : 0.27250843874053193
+	test_BLEU_2    : 0.1663525107681005
+	test_BLEU_3    : 0.11075848747205179
+	test_BLEU_4    : 0.07849530277731923
+	test_METEOR    : 0.11803667518512209
+	test_ROUGE_L   : 0.26098449130671236
+epoch: 4 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=22, tm_hour=13, tm_min=19, tm_sec=0, tm_wday=4, tm_yday=112, tm_isdst=1)
+('epoch: 4', ' executed for 05:50:17.40')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+	epoch          : 5
+	train_loss     : 1.25064184341569
+	val_BLEU_1     : 0.33558351877896964
+	val_BLEU_2     : 0.21965316895436296
+	val_BLEU_3     : 0.15528568497250153
+	val_BLEU_4     : 0.11596506816573172
+	val_METEOR     : 0.14114553436058688
+	val_ROUGE_L    : 0.30773844359448216
+	test_BLEU_1    : 0.2862883352897836
+	test_BLEU_2    : 0.1757738626362731
+	test_BLEU_3    : 0.11771354032634868
+	test_BLEU_4    : 0.0838947738340931
+	test_METEOR    : 0.12245157230751588
+	test_ROUGE_L   : 0.2586259709028785
+epoch: 5 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=22, tm_hour=19, tm_min=0, tm_sec=48, tm_wday=4, tm_yday=112, tm_isdst=1)
+('epoch: 5', ' executed for 05:41:48.29')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+	epoch          : 6
+	train_loss     : 1.22079260582804
+	val_BLEU_1     : 0.33609770825558216
+	val_BLEU_2     : 0.21435342059977044
+	val_BLEU_3     : 0.14850719674914153
+	val_BLEU_4     : 0.1085423629631308
+	val_METEOR     : 0.14023775921246223
+	val_ROUGE_L    : 0.30206640461094036
+	test_BLEU_1    : 0.2829344629531681
+	test_BLEU_2    : 0.1707597766142625
+	test_BLEU_3    : 0.11293717811318457
+	test_BLEU_4    : 0.07950145011624747
+	test_METEOR    : 0.12219488300074496
+	test_ROUGE_L   : 0.256661271627239
+epoch: 6 ended: time.struct_time(tm_year=2022, tm_mon=4, tm_mday=23, tm_hour=0, tm_min=42, tm_sec=42, tm_wday=5, tm_yday=113, tm_isdst=1)
+('epoch: 6', ' executed for 05:41:53.22')
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: *** STEP 118345.0 ON papaschlumpf CANCELLED AT 2022-04-23T01:15:28 DUE TO TIME LIMIT ***
+slurmstepd: *** JOB 118345 ON papaschlumpf CANCELLED AT 2022-04-23T01:15:28 DUE TO TIME LIMIT ***
+srun: got SIGCONT
+srun: forcing job termination

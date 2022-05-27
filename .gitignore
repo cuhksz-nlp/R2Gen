@@ -144,10 +144,6 @@ cython_debug/
 data/iu_xray/
 data/mimic_cxr/
 
-# Logs
-logs/
-
 # Results
 results/
-records/
 *.python-version

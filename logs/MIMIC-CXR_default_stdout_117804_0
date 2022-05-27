@@ -1,0 +1,217 @@
++ export PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
++ PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ pyenv init -
++ eval 'export PYENV_SHELL=bash
+source '\''/media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command
+  command="${1:-}"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command
+++ command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
+++ pyenv virtualenv-init -
++ eval 'export PATH="/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "$VIRTUAL_ENV" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND";
+fi'
+++ export PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ pyenv local miniconda3-latest
++ local command
++ command=local
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv local miniconda3-latest
++ pyenv local miniconda3-latest
++ cd /media/compute/homes/tmandal/projects/R2Gen
++ python main.py --image_dir data/mimic_cxr/images/ --ann_path data/mimic_cxr/annotation.json --dataset_name mimic_cxr --max_seq_length 100 --threshold 10 --batch_size 16 --epochs 30 --save_dir results/mimic_cxr --step_size 1 --gamma 0.8 --seed 456789
+	epoch          : 1
+	train_loss     : 1.8073906101187365
+	val_BLEU_1     : 0.3155150619877232
+	val_BLEU_2     : 0.20786916642949874
+	val_BLEU_3     : 0.1472344090397066
+	val_BLEU_4     : 0.11079314442624896
+	val_METEOR     : 0.13418193864641922
+	val_ROUGE_L    : 0.3040490687340727
+	test_BLEU_1    : 0.2567581821534855
+	test_BLEU_2    : 0.1558670909258543
+	test_BLEU_3    : 0.10233674398767541
+	test_BLEU_4    : 0.07180036223336189
+	test_METEOR    : 0.10949766558256249
+	test_ROUGE_L   : 0.24909127789493818
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 2
+	train_loss     : 1.4457052158217663
+	val_BLEU_1     : 0.3437532842731816
+	val_BLEU_2     : 0.22516166631292295
+	val_BLEU_3     : 0.15815691584535943
+	val_BLEU_4     : 0.11713987422494504
+	val_METEOR     : 0.1403652441198299
+	val_ROUGE_L    : 0.30780972605126955
+	test_BLEU_1    : 0.2786595493570605
+	test_BLEU_2    : 0.17186035336193467
+	test_BLEU_3    : 0.11467318849521932
+	test_BLEU_4    : 0.081336062394882
+	test_METEOR    : 0.11731311923910799
+	test_ROUGE_L   : 0.26346149654411327
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 3
+	train_loss     : 1.365189353655501
+	val_BLEU_1     : 0.34662709940108427
+	val_BLEU_2     : 0.22421926026274455
+	val_BLEU_3     : 0.1557203437748086
+	val_BLEU_4     : 0.11371454210014087
+	val_METEOR     : 0.14040226038988105
+	val_ROUGE_L    : 0.2977119029476232
+	test_BLEU_1    : 0.27866555871867826
+	test_BLEU_2    : 0.17076308911835616
+	test_BLEU_3    : 0.11417077694203227
+	test_BLEU_4    : 0.08159822791332842
+	test_METEOR    : 0.11983536586595869
+	test_ROUGE_L   : 0.253534159978742
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+	epoch          : 4
+	train_loss     : 1.3157680534400826
+	val_BLEU_1     : 0.3375907131847175
+	val_BLEU_2     : 0.21900863591771647
+	val_BLEU_3     : 0.1529850817380517
+	val_BLEU_4     : 0.11299680199986639
+	val_METEOR     : 0.14070307586037914
+	val_ROUGE_L    : 0.30566934296349146
+	test_BLEU_1    : 0.2675022392231183
+	test_BLEU_2    : 0.16222221717983695
+	test_BLEU_3    : 0.10689230734456884
+	test_BLEU_4    : 0.07527407328607612
+	test_METEOR    : 0.11657166064129122
+	test_ROUGE_L   : 0.25783126566019793
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+	epoch          : 5
+	train_loss     : 1.2792699241180363
+	val_BLEU_1     : 0.3534209692242846
+	val_BLEU_2     : 0.23023881754260675
+	val_BLEU_3     : 0.16164301584547572
+	val_BLEU_4     : 0.11979084320404236
+	val_METEOR     : 0.14404300681894244
+	val_ROUGE_L    : 0.3073107637804532
+	test_BLEU_1    : 0.30023312524877516
+	test_BLEU_2    : 0.18405849033465752
+	test_BLEU_3    : 0.12337410677872233
+	test_BLEU_4    : 0.08849498186204952
+	test_METEOR    : 0.12523907313709864
+	test_ROUGE_L   : 0.26355428721935625
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 6
+	train_loss     : 1.2511263382980706
+	val_BLEU_1     : 0.34587220120950946
+	val_BLEU_2     : 0.22530842562613046
+	val_BLEU_3     : 0.1580280833248749
+	val_BLEU_4     : 0.1165883139193433
+	val_METEOR     : 0.1428267891898899
+	val_ROUGE_L    : 0.3074031703850378
+	test_BLEU_1    : 0.28098471972194233
+	test_BLEU_2    : 0.17133150099500918
+	test_BLEU_3    : 0.11392252628885999
+	test_BLEU_4    : 0.08074716177429898
+	test_METEOR    : 0.12071011614664116
+	test_ROUGE_L   : 0.2590130629356438
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+	epoch          : 7
+	train_loss     : 1.2284593751828463
+	val_BLEU_1     : 0.365673403737631
+	val_BLEU_2     : 0.2367755828443983
+	val_BLEU_3     : 0.16558586532781028
+	val_BLEU_4     : 0.12184241126027935
+	val_METEOR     : 0.14667831678056117
+	val_ROUGE_L    : 0.3123398168390098
+	test_BLEU_1    : 0.3152941188617138
+	test_BLEU_2    : 0.19308850265386157
+	test_BLEU_3    : 0.1290167449170043
+	test_BLEU_4    : 0.09192851867481575
+	test_METEOR    : 0.12826692678564772
+	test_ROUGE_L   : 0.26850022609668217
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 8
+	train_loss     : 1.2093536959898876
+	val_BLEU_1     : 0.384685208289529
+	val_BLEU_2     : 0.24908753142469867
+	val_BLEU_3     : 0.17359810272975562
+	val_BLEU_4     : 0.1275572904175065
+	val_METEOR     : 0.15089843329788447
+	val_ROUGE_L    : 0.30601754651516005
+	test_BLEU_1    : 0.3235864082435643
+	test_BLEU_2    : 0.19718809961067307
+	test_BLEU_3    : 0.13163981644467704
+	test_BLEU_4    : 0.09404125642524987
+	test_METEOR    : 0.1302072098194433
+	test_ROUGE_L   : 0.2645808330894607
+Saving checkpoint: results/mimic_cxr/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+Traceback (most recent call last):
+  File "main.py", line 124, in <module>
+    main()
+  File "main.py", line 120, in main
+    trainer.train()
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/trainer.py", line 54, in train
+    result = self._train_epoch(epoch)
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/trainer.py", line 210, in _train_epoch
+    output = self.model(images, mode='sample')
+  File "/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/lib/python3.8/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/media/compute/homes/tmandal/projects/R2Gen/models/r2gen.py", line 44, in forward_mimic_cxr
+    output, _ = self.encoder_decoder(fc_feats, att_feats, mode='sample')
+  File "/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/lib/python3.8/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/caption_model.py", line 24, in forward
+    return getattr(self, '_' + mode)(*args, **kwargs)
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/att_model.py", line 149, in _sample
+    return self._sample_beam(fc_feats, att_feats, att_masks, opt)
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/att_model.py", line 124, in _sample_beam
+    self.done_beams = self.beam_search(state, logprobs, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks, opt=opt)
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/caption_model.py", line 164, in beam_search
+    state_table[divm] = beam_step(logprobs,
+  File "/media/compute/homes/tmandal/projects/R2Gen/modules/caption_model.py", line 90, in beam_step
+    assert (beam_logprobs_sum == ys).all()
+AssertionError
+srun: error: hefty: task 0: Exited with exit code 1
