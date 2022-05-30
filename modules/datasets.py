@@ -17,7 +17,7 @@ class BaseDataset(Dataset):
         self.ann = json.loads(open(self.ann_path, 'r').read())
 
         if args.dataset_name == 'iu_xray':
-            self.examples = self.ann[self.split]
+            self.examples = random.sample(self.ann[self.split], 1)
         else:
             if self.split == 'train':
                 self.examples = random.sample(self.ann[self.split], 5000)
