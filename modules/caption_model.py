@@ -141,7 +141,7 @@ class CaptionModel(nn.Module):
 
         for t in range(self.max_seq_length + group_size - 1):
             for divm in range(group_size):
-                if t >= divm and t <= self.max_seq_length + divm - 1:
+                if divm <= t <= self.max_seq_length + divm - 1:
                     # add diversity
                     logprobs = logprobs_table[divm]
                     # suppress previous word
