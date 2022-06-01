@@ -56,12 +56,12 @@ class BaseTrainer(object):
             start_time = time.time()
             result = self._train_epoch(epoch)
 
-            # save logged informations into log dict
+            # save logged information into log dict
             log = {'epoch': epoch}
             log.update(result)
             self._record_best(log)
 
-            # print logged informations to the screen
+            # print logged information to the screen
             for key, value in log.items():
                 print('\t{:15s}: {}'.format(str(key), value))
 
