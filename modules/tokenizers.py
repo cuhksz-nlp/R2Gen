@@ -83,7 +83,12 @@ class Tokenizer(object):
             if idx > 0:
                 if i >= 1:
                     txt += ' '
-                txt += self.idx2token[idx]
+
+                    # remove ontology annotization
+                    tkn = self.idx2token[idx]
+                    if "<" in tkn and '<unk>' is tkn:
+                        txt += tkn
+                    #################################
             else:
                 break
         return txt
