@@ -12,6 +12,9 @@ class DataProcessor(object):
         self.kaggle_iu_reports = csv.reader(self.kaggle_iu_reports_path)
 
     def associate_iu_r2gen_kaggle(self):
-        r2gen_splits_ids = {r2gen_split: {v["id"]: v["report"]} for r2gen_splits, values in self.r2gen_ann.items() for
-                            r2gen_split, v in values}
+        r2gen_splits_ids = {
+            r2gen_split: {v["id"]: v["report"]}
+            for r2gen_splits, values in self.r2gen_ann.items()
+            for r2gen_split, v in values.items()
+        }
         print(self.kaggle_iu_reports[0])
