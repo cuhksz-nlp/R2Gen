@@ -1,5 +1,5 @@
-import json
 import csv
+import json
 
 
 class DataProcessor(object):
@@ -9,12 +9,18 @@ class DataProcessor(object):
         self.kaggle_iu_projections_path = args.kaggle_iu_projections_path
         # self.kaggle_iu_projections = json.loads(open(self.kaggle_iu_projections_path, 'r').read())
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
-        self.kaggle_iu_reports = csv.reader(self.kaggle_iu_reports_path)
+        self.kaggle_iu_reports = csv.reader(open(self.kaggle_iu_reports_path, 'r'))
+        self.kaggle_iu_reports_header = next(self.kaggle_iu_reports)
 
     def associate_iu_r2gen_kaggle(self):
-        r2gen_splits_ids = {
-            r2gen_split: {v["id"]: v["report"]}
-            for r2gen_splits, values in self.r2gen_ann.items()
-            for r2gen_split, v in values.items()
+        r2gen_splits_ids_reports = {
+            r2gen_split: [{sample["id"]: sample["report"]} for sample in samples]
+            for r2gen_split, samples in self.r2gen_ann.items()
         }
-        print(self.kaggle_iu_reports[0])
+
+        kaggle_uids_mesh_impression = {
+            line[0]: [{"MeSH": line[1], "report": line[6], "impression": line[7]}]
+            for line in self.kaggle_iu_reports
+        }
+
+
