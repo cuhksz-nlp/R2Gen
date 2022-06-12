@@ -1,16 +1,18 @@
-import time
-import torch
 import argparse
+import time
+
 import numpy as np
+import torch
 
 import timer
-from modules.tokenizers import Tokenizer
+from data_processor.dataprocessor import DataProcessor
+from models.r2gen import R2GenModel
 from modules.dataloaders import R2DataLoader
+from modules.loss import compute_loss
 from modules.metrics import compute_scores
 from modules.optimizers import build_optimizer, build_lr_scheduler
+from modules.tokenizers import Tokenizer
 from modules.trainer import Trainer
-from modules.loss import compute_loss
-from models.r2gen import R2GenModel
 
 
 def parse_agrs():
@@ -106,6 +108,10 @@ def main():
     start_time = time.time()
     # parse arguments
     args = parse_agrs()
+
+    # Process data to get additional info
+    data_processor = DataProcessor(args)
+    data_processor.associateIuxrayR2genToKaggle()
 
     # fix random seeds
     torch.manual_seed(args.seed)
