@@ -109,15 +109,15 @@ def main():
     # parse arguments
     args = parse_agrs()
 
-    # Process data to get additional info
-    data_processor = DataProcessor(args)
-    data_processor.associateIuxrayR2genToKaggle()
-
     # fix random seeds
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
     np.random.seed(args.seed)
+
+    # Process data to get additional info
+    data_processor = DataProcessor(args)
+    data_processor.associateIuxrayR2genToKaggle()
 
     # create tokenizer
     tokenizer = Tokenizer(args)
