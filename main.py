@@ -19,9 +19,9 @@ def parse_agrs():
     parser = argparse.ArgumentParser()
 
     # Data input settings
-    parser.add_argument('--image_dir', type=str, default='../data/r2gen/iu_xray/images/',
+    parser.add_argument('--image_dir', type=str, default='../data/iu_xray/r2gen/images/',
                         help='the path to the directory containing the data.')
-    parser.add_argument('--ann_path', type=str, default='../data/r2gen/iu_xray/annotation.json',
+    parser.add_argument('--ann_path', type=str, default='../data/iu_xray/r2gen/annotation.json',
                         help='the path to the directory containing the data.')
 
     # Data loader settings
@@ -95,9 +95,9 @@ def parse_agrs():
     parser.add_argument('--resume', type=str, help='whether to resume the training from existing checkpoints.')
 
     # kaggle iuxray reports
-    parser.add_argument('--kaggle_iu_projections_path', type=str, default='../data/kaggle/iu_projections.csv',
+    parser.add_argument('--kaggle_iu_projections_path', type=str, default='../data/iu_xray/kaggle/iu_projections.csv',
                         help='the path to the directory containing the projections data.')
-    parser.add_argument('--kaggle_iu_reports_path', type=str, default='../data/kaggle/iu_reports.csv',
+    parser.add_argument('--kaggle_iu_reports_path', type=str, default='../data/iu_xray/kaggle/iu_reports.csv',
                         help='the path to the directory containing the reports.')
 
     args = parser.parse_args()
