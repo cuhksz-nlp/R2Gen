@@ -7,7 +7,7 @@ class DataProcessor(object):
         self.r2gen_ann_path = args.ann_path
         self.r2gen_ann = json.loads(open(self.r2gen_ann_path, 'r').read())
         self.kaggle_iu_projections_path = args.kaggle_iu_projections_path
-        self.kaggle_iu_projections = json.loads(open(self.kaggle_iu_projections_path, 'r').read())
+        # self.kaggle_iu_projections = json.loads(open(self.kaggle_iu_projections_path, 'r').read())
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.kaggle_iu_reports = csv.reader(self.kaggle_iu_reports_path)
 
