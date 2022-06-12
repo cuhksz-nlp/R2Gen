@@ -3,7 +3,7 @@ import csv
 
 
 class DataProcessor(object):
-    def __int__(self, args):
+    def __init__(self, args):
         self.r2gen_ann_path = args.ann_path
         self.r2gen_ann = json.loads(open(self.ann_path, 'r').read())
         # self.kaggle_iu_projections_path = args.kaggle_iu_projections_path

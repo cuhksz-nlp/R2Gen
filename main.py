@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 import timer
-from data_processor.dataprocessor import DataProcessor
+from data_processors.data_processors import DataProcessor
 from models.r2gen import R2GenModel
 from modules.dataloaders import R2DataLoader
 from modules.loss import compute_loss
@@ -116,8 +116,8 @@ def main():
     np.random.seed(args.seed)
 
     # Process data to get additional info
-    data_processor = DataProcessor(args)
-    data_processor.associateIuxrayR2genToKaggle()
+    data_processor = DataProcessor()
+    data_processor.associate_iu_r2gen_kaggle()
 
     # create tokenizer
     tokenizer = Tokenizer(args)
