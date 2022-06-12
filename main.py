@@ -116,7 +116,7 @@ def main():
     np.random.seed(args.seed)
 
     # Process data to get additional info
-    data_processor = DataProcessor()
+    data_processor = DataProcessor(args)
     data_processor.associate_iu_r2gen_kaggle()
 
     # create tokenizer
