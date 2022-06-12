@@ -18,7 +18,7 @@ time python main.py \
 --threshold 10 \
 --batch_size 12 \
 --epochs 30 \
---save_dir results/mimic_cxr \
+--save_dir ../r2gen_results/mimic_cxr \
 --step_size 1 \
 --gamma 0.8 \
 --seed 456789
