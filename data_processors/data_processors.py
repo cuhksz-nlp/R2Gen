@@ -49,8 +49,8 @@ class DataProcessor(object):
                                     attr_text += " <attr:{}>".format(mesh_attr[1])
                                     mesh_attr_text += " <mesh:{}> <attr:{}>".format(mesh_attr[0], mesh_attr[1])
                             matched_info = {
-                                r2gen_id: {"IU_MeSH": iu_mesh, "MeSH": mesh_text,
-                                           "ATTR": attr_text, "MeSH_ATTR": mesh_attr_text,
+                                r2gen_id: {"iu_mesh": iu_mesh, "mesh": mesh_text,
+                                           "attr": attr_text, "mesh_attr": mesh_attr_text,
                                            "impression": kaggle_uids_mesh_impression[uid]["impression"]}}
                             matched[split].append(matched_info)
                         else:
