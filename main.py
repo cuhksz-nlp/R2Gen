@@ -94,11 +94,26 @@ def parse_agrs():
     parser.add_argument('--seed', type=int, default=9233, help='.')
     parser.add_argument('--resume', type=str, help='whether to resume the training from existing checkpoints.')
 
-    # kaggle iuxray reports
+    # Reports path kaggle iu xray
     parser.add_argument('--kaggle_iu_projections_path', type=str, default='../data/iu_xray/kaggle/iu_projections.csv',
                         help='the path to the directory containing the projections data.')
     parser.add_argument('--kaggle_iu_reports_path', type=str, default='../data/iu_xray/kaggle/iu_reports.csv',
                         help='the path to the directory containing the reports.')
+
+    parser.add_argument('--iu_mesh_impression_path', type=str, default='../data/iu_xray/kaggle/iu_mesh_impression.json',
+                        help='the path to the directory containing the mesh and impression for r2gen dataset.')
+
+    # Experiment number
+    parser.add_argument('--exp', type=int, default=1,
+                        help='exp is between 1-8 '
+                             '1. Reproduce the result for R2Gen. '
+                             '2. Add `MeSH` information provided in the `IU-Xray` dataset from kaggle. '
+                             '3. Add `attributes` provided in the `IU-Xray` dataset from kaggle. '
+                             '4. Add `MeSH` and `attributes` both. '
+                             '5. Add `impression` provided in the `IU-Xray` dataset from kaggle. '
+                             '6. Add `MeSH` and `impression`. '
+                             '7. Add `attributes` and `impression`. '
+                             '8. Add `MeSH`, `attributes` and `impression`.')
 
     args = parser.parse_args()
     return args
@@ -117,7 +132,6 @@ def main():
 
     # Process data to get additional info
     data_processor = DataProcessor(args)
-    data_processor.associate_iu_r2gen_kaggle()
 
     # create tokenizer
     tokenizer = Tokenizer(args)
