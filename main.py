@@ -94,6 +94,7 @@ def parse_agrs():
     parser.add_argument('--seed', type=int, default=9233, help='.')
     parser.add_argument('--resume', type=str, help='whether to resume the training from existing checkpoints.')
 
+    # exp setup
     # Reports path kaggle iu xray
     parser.add_argument('--kaggle_iu_projections_path', type=str, default='../data/iu_xray/kaggle/iu_projections.csv',
                         help='the path to the directory containing the projections data.')
@@ -114,7 +115,7 @@ def parse_agrs():
                              '6. Add `MeSH` and `impression`. '
                              '7. Add `attributes` and `impression`. '
                              '8. Add `MeSH`, `attributes` and `impression`.')
-
+    ###################################################################################################################
     args = parser.parse_args()
     return args
 
@@ -130,8 +131,10 @@ def main():
     torch.backends.cudnn.benchmark = False
     np.random.seed(args.seed)
 
+    # exp setup
     # Process data to get additional info
     data_processor = DataProcessor(args)
+    ####################################
 
     # create tokenizer
     tokenizer = Tokenizer(args)
