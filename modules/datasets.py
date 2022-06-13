@@ -7,7 +7,11 @@ from torch.utils.data import Dataset
 
 
 class BaseDataset(Dataset):
-    def __init__(self, args, tokenizer, split, transform=None):
+    def __init__(self, args, data_processor, tokenizer, split, transform=None):
+        # exp setup
+        self.exp = args.exp
+        self.data_processor = data_processor
+        ####################################
         self.image_dir = args.image_dir
         self.ann_path = args.ann_path
         self.max_seq_length = args.max_seq_length
@@ -18,8 +22,9 @@ class BaseDataset(Dataset):
 
         # exp setup
         # random sample for smaller dataset
+        # self.examples = self.ann[self.split]
         if args.dataset_name == 'iu_xray':
-            self.examples = random.sample(self.ann[self.split], 1)
+            self.examples = random.sample(self.ann[self.split], 100)
         else:
             if self.split == 'train':
                 self.examples = random.sample(self.ann[self.split], 5000)
@@ -29,7 +34,8 @@ class BaseDataset(Dataset):
                 self.examples = random.sample(self.ann[self.split], 2000)
         ##################################################################
         for i in range(len(self.examples)):
-            self.examples[i]['ids'] = tokenizer(self.examples[i]['report'])[:self.max_seq_length]
+            self.examples[i]['ids'] = tokenizer(self.data_processor, self.exp, self.split, self.examples[i]['id'],
+                                                self.examples[i]['report'])[:self.max_seq_length]
             self.examples[i]['mask'] = [1] * len(self.examples[i]['ids'])
 
     def __len__(self):

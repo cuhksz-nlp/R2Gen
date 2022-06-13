@@ -140,9 +140,9 @@ def main():
     ####################################
 
     # create data loader
-    train_dataloader = R2DataLoader(args, tokenizer, split='train', shuffle=True)
-    val_dataloader = R2DataLoader(args, tokenizer, split='val', shuffle=False)
-    test_dataloader = R2DataLoader(args, tokenizer, split='test', shuffle=False)
+    train_dataloader = R2DataLoader(args, data_processor, tokenizer, split='train', shuffle=True)
+    val_dataloader = R2DataLoader(args, data_processor, tokenizer, split='val', shuffle=False)
+    test_dataloader = R2DataLoader(args, data_processor, tokenizer, split='test', shuffle=False)
 
     # build model architecture
     model = R2GenModel(args, tokenizer)

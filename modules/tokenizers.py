@@ -26,8 +26,11 @@ class Tokenizer(object):
         total_tokens = []
 
         for example in self.ann['train']:
-            reports_with_additional_info = self.data_processor.get_reports_by_exp(self.exp, 'train', example['id'], self.clean_report(example['report']))
+            # exp setup
+            reports_with_additional_info = self.data_processor.get_reports_by_exp(self.exp, 'train', example['id'],
+                                                                                  self.clean_report(example['report']))
             tokens = reports_with_additional_info.split()
+            #################################################
             for token in tokens:
                 total_tokens.append(token)
 
@@ -77,8 +80,10 @@ class Tokenizer(object):
     def get_vocab_size(self):
         return len(self.token2idx)
 
-    def __call__(self, report):
-        tokens = self.clean_report(report).split()
+    def __call__(self, data_processor, exp, split, r2gen_id, report):
+        # exp setup
+        tokens = data_processor.get_reports_by_exp(exp, split, r2gen_id, self.clean_report(report)).split()
+        #######################################################
         ids = []
         for token in tokens:
             ids.append(self.get_id_by_token(token))

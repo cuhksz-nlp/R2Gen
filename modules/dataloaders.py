@@ -6,8 +6,11 @@ from .datasets import IuxrayMultiImageDataset, MimiccxrSingleImageDataset
 
 
 class R2DataLoader(DataLoader):
-    def __init__(self, args, tokenizer, split, shuffle):
+    def __init__(self, args, data_processor, tokenizer, split, shuffle):
         self.args = args
+        # exp setup
+        self.data_processor = data_processor
+        #########################################
         self.dataset_name = args.dataset_name
         self.batch_size = args.batch_size
         self.shuffle = shuffle
@@ -31,7 +34,8 @@ class R2DataLoader(DataLoader):
                                      (0.229, 0.224, 0.225))])
 
         if self.dataset_name == 'iu_xray':
-            self.dataset = IuxrayMultiImageDataset(self.args, self.tokenizer, self.split, transform=self.transform)
+            self.dataset = IuxrayMultiImageDataset(self.args, self.data_processor, self.tokenizer, self.split,
+                                                   transform=self.transform)
         else:
             self.dataset = MimiccxrSingleImageDataset(self.args, self.tokenizer, self.split, transform=self.transform)
 
@@ -60,4 +64,3 @@ class R2DataLoader(DataLoader):
             targets_masks[i, :len(report_masks)] = report_masks
 
         return images_id, images, torch.LongTensor(targets), torch.FloatTensor(targets_masks)
-
