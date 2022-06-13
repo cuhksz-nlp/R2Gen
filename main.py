@@ -134,10 +134,10 @@ def main():
     # exp setup
     # Process data to get additional info
     data_processor = DataProcessor(args)
-    ####################################
 
     # create tokenizer
-    tokenizer = Tokenizer(args)
+    tokenizer = Tokenizer(args, data_processor)
+    ####################################
 
     # create data loader
     train_dataloader = R2DataLoader(args, tokenizer, split='train', shuffle=True)
@@ -164,3 +164,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# '<mesh:Airspace'

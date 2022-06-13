@@ -1,10 +1,17 @@
 import json
 import re
 from collections import Counter
+from data_processors.data_processors import DataProcessor
 
 
 class Tokenizer(object):
-    def __init__(self, args):
+    def __init__(self, args, data_processor):
+        # exp setup
+        self.exp = args.exp
+        self.iu_mesh_impression_path = args.iu_mesh_impression_path
+        self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
+        self.data_processor = data_processor
+        #############################################################
         self.ann_path = args.ann_path
         self.threshold = args.threshold
         self.dataset_name = args.dataset_name
@@ -19,7 +26,8 @@ class Tokenizer(object):
         total_tokens = []
 
         for example in self.ann['train']:
-            tokens = self.clean_report(example['report']).split()
+            reports_with_additional_info = self.data_processor.get_reports_by_exp(self.exp, 'train', example['id'], self.clean_report(example['report']))
+            tokens = reports_with_additional_info.split()
             for token in tokens:
                 total_tokens.append(token)
 
@@ -83,10 +91,10 @@ class Tokenizer(object):
             if idx > 0:
                 if i >= 1:
                     txt += ' '
-
+                    # exp setup
                     # remove ontology annotization
                     tkn = self.idx2token[idx]
-                    if "<" in tkn and '<unk>' is tkn:
+                    if "<" in tkn and '<unk>' == tkn:
                         txt += tkn
                     #################################
             else:
