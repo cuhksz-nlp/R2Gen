@@ -32,10 +32,10 @@ class BaseDataset(Dataset):
                 self.examples = random.sample(self.ann[self.split], 1000)
             elif self.split == 'test':
                 self.examples = random.sample(self.ann[self.split], 2000)
-        ##################################################################
         for i in range(len(self.examples)):
             self.examples[i]['ids'] = tokenizer(self.data_processor, self.exp, self.split, self.examples[i]['id'],
                                                 self.examples[i]['report'])[:self.max_seq_length]
+            ##################################################################
             self.examples[i]['mask'] = [1] * len(self.examples[i]['ids'])
 
     def __len__(self):

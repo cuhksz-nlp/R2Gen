@@ -4,6 +4,7 @@ import os
 
 
 class DataProcessor(object):
+    # exp setup
     def __init__(self, args):
         self.r2gen_ann_path = args.ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
@@ -76,7 +77,6 @@ class DataProcessor(object):
         json.dump(matched, open(self.iu_mesh_impression_path, 'w'))
         return matched
 
-    # exp setup
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if exp == 1:
             return report
