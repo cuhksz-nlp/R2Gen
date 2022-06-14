@@ -78,18 +78,20 @@ class DataProcessor(object):
         return matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
+        if exp == 1:
+            return report
         # only if split is train except for impression
-        if 4 < exp < 9:  # impression needs to be cleaned
+        elif 4 < exp < 9:  # impression needs to be cleaned
             report += self.iu_mesh_impression[split][r2gen_id]['impression']
         if split == 'train':
-            if exp == 1 or exp == 5:
-                return report
-            elif exp == 2:
+            if exp == 2:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
             elif exp == 3:
                 return report + self.iu_mesh_impression[split][r2gen_id]['attr']
             elif exp == 4:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
+            elif exp == 5:
+                return report
             elif exp == 6:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
             elif exp == 7:
