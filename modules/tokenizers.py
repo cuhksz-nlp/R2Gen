@@ -83,7 +83,7 @@ class Tokenizer(object):
     def __call__(self, data_processor, exp, split, r2gen_id, report):
         # exp setup
         tokens = data_processor.get_reports_by_exp(exp, split, r2gen_id, self.clean_report(report)).split()
-        #######################################################
+        ###################################################################################################
         ids = []
         for token in tokens:
             ids.append(self.get_id_by_token(token))
@@ -99,7 +99,7 @@ class Tokenizer(object):
                     # exp setup
                     # remove ontology annotization
                     tkn = self.idx2token[idx]
-                    if "<" in tkn and '<unk>' == tkn:
+                    if ':' not in tkn:
                         txt += tkn
                     #################################
             else:

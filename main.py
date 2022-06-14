@@ -27,7 +27,6 @@ def parse_agrs():
     # Data loader settings
     parser.add_argument('--dataset_name', type=str, default='iu_xray', choices=['iu_xray', 'mimic_cxr'],
                         help='the dataset to be used.')
-    parser.add_argument('--max_seq_length', type=int, default=60, help='the maximum sequence length of the reports.')
     parser.add_argument('--threshold', type=int, default=3, help='the cut off frequency for the words.')
     parser.add_argument('--num_workers', type=int, default=2, help='the number of workers for dataloader.')
     parser.add_argument('--batch_size', type=int, default=16, help='the number of samples for a batch')
@@ -115,6 +114,16 @@ def parse_agrs():
                              '6. Add `MeSH` and `impression`. '
                              '7. Add `attributes` and `impression`. '
                              '8. Add `MeSH`, `attributes` and `impression`.')
+    parser.add_argument('--remove_annotations_from text', type=bool, default=True, help='')
+    # dataloader settings
+    parser.add_argument('--max_seq_length', type=int, default=60, help='1. 120 or 125 or 60'
+                                                                       '2. 120 or 125 or 60'
+                                                                       '3. 120 or 125 or 60'
+                                                                       '4. 130 or 135 or 65'
+                                                                       '5. 145 or 150 or 75'
+                                                                       '6. 150 or 155 or 80'
+                                                                       '7. 150 or 155 or 80'
+                                                                       '8. 155 or 160 or 80')
     ###################################################################################################################
     args = parser.parse_args()
     return args
@@ -164,4 +173,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-# '<mesh:Airspace'
