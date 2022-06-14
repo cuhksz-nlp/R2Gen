@@ -78,9 +78,7 @@ class DataProcessor(object):
         return matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
-        if exp == 1:
-            return report
-        elif 4 < exp < 9:
+        if 4 < exp < 9:
             report += self.iu_mesh_impression[split][r2gen_id]['impression']
 
         if split == 'train':
@@ -90,12 +88,11 @@ class DataProcessor(object):
                 return report + self.iu_mesh_impression[split][r2gen_id]['attr']
             elif exp == 4:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
-            elif exp == 5:
-                return report
             elif exp == 6:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
             elif exp == 7:
                 return report + self.iu_mesh_impression[split][r2gen_id]['attr']
             elif exp == 8:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
+        return report
     ############################################
