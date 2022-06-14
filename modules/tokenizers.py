@@ -83,8 +83,9 @@ class Tokenizer(object):
 
     def __call__(self, data_processor, exp, split, r2gen_id, report):
         # exp setup
-        data_processor.iu_mesh_impression[split][r2gen_id]['impression'] = \
-            self.clean_report(data_processor.iu_mesh_impression[split][r2gen_id]['impression'])
+        if 4 < exp < 9:
+            data_processor.iu_mesh_impression[split][r2gen_id]['impression'] = \
+                self.clean_report(data_processor.iu_mesh_impression[split][r2gen_id]['impression'])
         tokens = data_processor.get_reports_by_exp(exp, split, r2gen_id, self.clean_report(report)).split()
         ###################################################################################################
         ids = []

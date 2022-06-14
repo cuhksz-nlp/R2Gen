@@ -80,9 +80,9 @@ class DataProcessor(object):
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if exp == 1:
             return report
-        # only if split is train except for impression
-        elif 4 < exp < 9:  # impression needs to be cleaned
+        elif 4 < exp < 9:
             report += self.iu_mesh_impression[split][r2gen_id]['impression']
+
         if split == 'train':
             if exp == 2:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
