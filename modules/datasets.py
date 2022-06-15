@@ -21,17 +21,17 @@ class BaseDataset(Dataset):
         self.ann = json.loads(open(self.ann_path, 'r').read())
 
         # exp setup
+        self.examples = self.ann[self.split]
         # random sample for smaller dataset
-        # self.examples = self.ann[self.split]
-        if args.dataset_name == 'iu_xray':
-            self.examples = random.sample(self.ann[self.split], 1)
-        else:
-            if self.split == 'train':
-                self.examples = random.sample(self.ann[self.split], 5000)
-            elif self.split == 'val':
-                self.examples = random.sample(self.ann[self.split], 1000)
-            elif self.split == 'test':
-                self.examples = random.sample(self.ann[self.split], 2000)
+        # if args.dataset_name == 'iu_xray':
+        #     self.examples = random.sample(self.ann[self.split], 1)
+        # else:
+        #     if self.split == 'train':
+        #         self.examples = random.sample(self.ann[self.split], 5000)
+        #     elif self.split == 'val':
+        #         self.examples = random.sample(self.ann[self.split], 1000)
+        #     elif self.split == 'test':
+        #         self.examples = random.sample(self.ann[self.split], 2000)
         for i in range(len(self.examples)):
             self.examples[i]['annotated_report'] = \
                 data_processor.get_reports_by_exp(self.exp, self.split, self.examples[i]['id'],
