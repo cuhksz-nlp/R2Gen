@@ -94,7 +94,7 @@ class Tokenizer(object):
         ids = [0] + ids + [0]
         return ids
 
-    def decode(self, ids):
+    def decode(self, ids, split, report_type):
         txt = ''
         flag = True
         for i, idx in enumerate(ids):
@@ -112,10 +112,11 @@ class Tokenizer(object):
                     #################################
             else:
                 break
+        print("[{}:{}]--> {}".format(split, report_type, txt))
         return txt
 
-    def decode_batch(self, ids_batch):
+    def decode_batch(self, ids_batch, split, report_type):
         out = []
         for ids in ids_batch:
-            out.append(self.decode(ids))
+            out.append(self.decode(ids, split, report_type))
         return out

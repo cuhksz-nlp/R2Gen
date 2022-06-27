@@ -213,10 +213,9 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
-                reports = self.model.tokenizer.decode_batch(output.cpu().numpy())
-                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
-                print(" ".join(reports))
-                print(" ".join(ground_truths))
+                reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), split='val', report_type='output')
+                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(), split='val',
+                                                                  report_type='ground_truth')
                 val_res.extend(reports)
                 val_gts.extend(ground_truths)
             val_met = self.metric_ftns({i: [gt] for i, gt in enumerate(val_gts)},
@@ -230,10 +229,9 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
-                reports = self.model.tokenizer.decode_batch(output.cpu().numpy())
-                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
-                print(" ".join(reports))
-                print(" ".join(ground_truths))
+                reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), split='test', report_type='output')
+                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(), split='test',
+                                                                  report_type='ground_truth')
                 test_res.extend(reports)
                 test_gts.extend(ground_truths)
             test_met = self.metric_ftns({i: [gt] for i, gt in enumerate(test_gts)},
