@@ -217,8 +217,8 @@ class Trainer(BaseTrainer):
                 ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
                 val_res.extend(reports)
                 val_gts.extend(ground_truths)
-                print("[val:output-{}]--> {}".format(images_id, " ".join(val_res)))
-                print("[val:ground_truth-{}]--> {}".format(images_id, " ".join(val_gts)))
+                # print("[val:output-{}]--> {}".format(images_id, " ".join(val_res)))
+                # print("[val:ground_truth-{}]--> {}".format(images_id, " ".join(val_gts)))
             val_met = self.metric_ftns({i: [gt] for i, gt in enumerate(val_gts)},
                                        {i: [re] for i, re in enumerate(val_res)})
             log.update(**{'val_' + k: v for k, v in val_met.items()})
@@ -234,8 +234,8 @@ class Trainer(BaseTrainer):
                 ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
                 test_res.extend(reports)
                 test_gts.extend(ground_truths)
-                print("[val:output-{}]--> {}".format(images_id, " ".join(test_res)))
-                print("[val:ground_truth-{}]--> {}".format(images_id, " ".join(test_gts)))
+                # print("[val:output-{}]--> {}".format(images_id, " ".join(test_res)))
+                # print("[val:ground_truth-{}]--> {}".format(images_id, " ".join(test_gts)))
             test_met = self.metric_ftns({i: [gt] for i, gt in enumerate(test_gts)},
                                         {i: [re] for i, re in enumerate(test_res)})
             log.update(**{'test_' + k: v for k, v in test_met.items()})

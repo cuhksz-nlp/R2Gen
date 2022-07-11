@@ -104,8 +104,8 @@ class Tokenizer(object):
                     # exp setup
                     # remove ontology annotization
                     tkn = self.idx2token[idx]
-                    # if '<sep>' not in tkn and '<mesh:' not in tkn and '<attr:' not in tkn:
-                    txt += tkn
+                    if '<sep>' not in tkn and '<mesh:' not in tkn and '<attr:' not in tkn:
+                        txt += tkn
                     # elif flag:
                     #     print(tkn)
                     #     flag = False
