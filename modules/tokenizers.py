@@ -96,19 +96,16 @@ class Tokenizer(object):
 
     def decode(self, ids):
         txt = ''
-        flag = True
         for i, idx in enumerate(ids):
             if idx > 0:
                 if i >= 1:
                     txt += ' '
                     # exp setup
-                    # remove ontology annotization
+                    # remove MeSH annotization
                     tkn = self.idx2token[idx]
-                    if '<sep>' not in tkn and '<mesh:' not in tkn and '<attr:' not in tkn:
-                        txt += tkn
-                    # elif flag:
-                    #     print(tkn)
-                    #     flag = False
+                    if '<sep>' in tkn:
+                        break
+                    txt += tkn
                     #################################
             else:
                 break
