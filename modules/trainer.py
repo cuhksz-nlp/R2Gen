@@ -220,7 +220,7 @@ class Trainer(BaseTrainer):
                 # exp  setup
                 ## debug: print val output
                 print("VAL-BATCH (output):\n", "\n ".join(
-                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + " GEN: " + out[1][1] for out in
+                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
                      zip(images_id, zip(val_gts[- len(images_id):], val_res[- len(images_id):]))]))
                 #########################################################################################
             val_met = self.metric_ftns({i: [gt] for i, gt in enumerate(val_gts)},
@@ -241,7 +241,7 @@ class Trainer(BaseTrainer):
                 # exp  setup
                 ## debug: print val output
                 print("TEST-BATCH (output):\n", "\n ".join(
-                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + " GEN: " + out[1][1] for out in
+                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
                      zip(images_id, zip(test_gts[- len(images_id):], test_res[- len(images_id):]))]))
                 #########################################################################################
             test_met = self.metric_ftns({i: [gt] for i, gt in enumerate(test_gts)},
