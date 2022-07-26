@@ -105,8 +105,8 @@ class Tokenizer(object):
                     tkn = self.idx2token[idx]
                     if '<sep>' in tkn:
                         break
-                    txt += tkn
                     #################################
+                    txt += tkn
             else:
                 break
         return txt
