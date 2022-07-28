@@ -1,9 +1,9 @@
-import time
 import os
+import time
 from abc import abstractmethod
 
-import torch
 import pandas as pd
+import torch
 from numpy import inf
 
 import timer
@@ -12,7 +12,10 @@ import timer
 class BaseTrainer(object):
     def __init__(self, model, criterion, metric_ftns, optimizer, args):
         self.args = args
-
+        # exp setup
+        self.is_print = self.args.is_print
+        self.remove_annotation = self.args.remove_annotation
+        ##################################################################
         # setup GPU device if available, move model into configured device
         self.device, device_ids = self._prepare_device(args.n_gpu)
         self.model = model.to(self.device)
@@ -213,15 +216,17 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
-                reports = self.model.tokenizer.decode_batch(output.cpu().numpy())
-                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
+                reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), self.remove_annotation)
+                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(),
+                                                                  self.remove_annotation)
                 val_res.extend(reports)
                 val_gts.extend(ground_truths)
                 # exp  setup
                 ## debug: print val output
-                print("VAL-BATCH (output):\n", "\n ".join(
-                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
-                     zip(images_id, zip(val_gts[- len(images_id):], val_res[- len(images_id):]))]))
+                if self.is_print:
+                    print("VAL-BATCH (output):\n", "\n ".join(
+                        [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
+                         zip(images_id, zip(val_gts[- len(images_id):], val_res[- len(images_id):]))]))
                 #########################################################################################
             val_met = self.metric_ftns({i: [gt] for i, gt in enumerate(val_gts)},
                                        {i: [re] for i, re in enumerate(val_res)})
@@ -234,15 +239,17 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
-                reports = self.model.tokenizer.decode_batch(output.cpu().numpy())
-                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy())
+                reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), self.remove_annotation)
+                ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(),
+                                                                  self.remove_annotation)
                 test_res.extend(reports)
                 test_gts.extend(ground_truths)
                 # exp  setup
                 ## debug: print val output
-                print("TEST-BATCH (output):\n", "\n ".join(
-                    [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
-                     zip(images_id, zip(test_gts[- len(images_id):], test_res[- len(images_id):]))]))
+                if self.is_print:
+                    print("TEST-BATCH (output):\n", "\n ".join(
+                        [out[0] + "->GT: " + out[1][0] + "\n " + out[0] + "->GEN: " + out[1][1] for out in
+                         zip(images_id, zip(test_gts[- len(images_id):], test_res[- len(images_id):]))]))
                 #########################################################################################
             test_met = self.metric_ftns({i: [gt] for i, gt in enumerate(test_gts)},
                                         {i: [re] for i, re in enumerate(test_res)})

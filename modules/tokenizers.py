@@ -94,7 +94,7 @@ class Tokenizer(object):
         ids = [0] + ids + [0]
         return ids
 
-    def decode(self, ids):
+    def decode(self, ids, remove_annotation):
         txt = ''
         for i, idx in enumerate(ids):
             if idx > 0:
@@ -103,16 +103,16 @@ class Tokenizer(object):
                     # exp setup
                     # remove MeSH annotization
                     tkn = self.idx2token[idx]
-                    # if '<sep>' in tkn:
-                    #     break
+                    if remove_annotation and '<sep>' in tkn:
+                        break
                     #################################
                     txt += tkn
             else:
                 break
         return txt
 
-    def decode_batch(self, ids_batch):
+    def decode_batch(self, ids_batch, remove_annotation):
         out = []
         for ids in ids_batch:
-            out.append(self.decode(ids))
+            out.append(self.decode(ids, remove_annotation))
         return out

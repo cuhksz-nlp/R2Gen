@@ -103,6 +103,13 @@ def parse_agrs():
     parser.add_argument('--iu_mesh_impression_path', type=str, default='../data/iu_xray/kaggle/iu_mesh_impression.json',
                         help='the path to the directory containing the mesh and impression for r2gen dataset.')
 
+    # To print and debug
+    parser.add_argument('--is_print', type=bool, default=False,
+                        help='print the validation and test output with ground truth')
+
+    parser.add_argument('--remove_annotation', type=bool, default=True,
+                        help='To remove annotation')
+
     # Experiment number
     parser.add_argument('--exp', type=int, default=1,
                         help='exp is between 1-8 '

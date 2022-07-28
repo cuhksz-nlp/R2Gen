@@ -14,6 +14,8 @@ time python main.py \
 --image_dir ../data/iu_xray/r2gen/images/ \
 --ann_path ../data/iu_xray/r2gen/annotation.json \
 --dataset_name iu_xray \
+--is_print false \
+--remove_annotation true \
 --max_seq_length 130 \
 --threshold 3 \
 --batch_size 16 \
