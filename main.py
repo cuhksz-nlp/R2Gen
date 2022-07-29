@@ -104,11 +104,15 @@ def parse_agrs():
                         help='the path to the directory containing the mesh and impression for r2gen dataset.')
 
     # To print and debug
-    parser.add_argument('--is_print', type=bool, default=False,
-                        help='print the validation and test output with ground truth')
+    parser.add_argument('--is_print', type=int, default=0,
+                        help='0 to not print the validation and test output with ground truth'
+                             '1 to print the validation and test output with ground truth'
+                        )
     # Remove annotation for evaluation
-    parser.add_argument('--remove_annotation', type=bool, default=True,
-                        help='To remove annotation')
+    parser.add_argument('--remove_annotation', type=int, default=1,
+                        help='0 to not remove annotation'
+                             '1 to remove annotation'
+                        )
     # specify sample size for train, val and test
     parser.add_argument('--train_sample', type=int, default=0, help='number of sample for training dataset')
     parser.add_argument('--val_sample', type=int, default=0, help='number of sample for validation dataset')
