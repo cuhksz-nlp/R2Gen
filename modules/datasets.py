@@ -33,6 +33,7 @@ class BaseDataset(Dataset):
             self.examples = random.sample(self.ann[self.split], self.test_sample)
         else:
             self.examples = self.ann[self.split]
+
         for i in range(len(self.examples)):
             self.examples[i]['annotated_report'] = \
                 data_processor.get_reports_by_exp(self.exp, self.split, self.examples[i]['id'],
