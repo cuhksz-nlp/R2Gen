@@ -104,7 +104,6 @@ class Tokenizer(object):
                     # remove MeSH annotization
                     tkn = self.idx2token[idx]
                     if remove_annotation == 1 and '<sep>' in tkn:
-                        print('removed')
                         break
                     #################################
                     txt += tkn
