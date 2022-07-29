@@ -106,9 +106,13 @@ def parse_agrs():
     # To print and debug
     parser.add_argument('--is_print', type=bool, default=False,
                         help='print the validation and test output with ground truth')
-
+    # Remove annotation for evaluation
     parser.add_argument('--remove_annotation', type=bool, default=True,
                         help='To remove annotation')
+    # specify sample size for train, val and test
+    parser.add_argument('--train_sample', type=int, default=0, help='number of sample for training dataset')
+    parser.add_argument('--val_sample', type=int, default=0, help='number of sample for validation dataset')
+    parser.add_argument('--test_sample', type=int, default=0, help='number of sample for test dataset')
 
     # Experiment number
     parser.add_argument('--exp', type=int, default=1,
@@ -121,7 +125,6 @@ def parse_agrs():
                              '6. Add `MeSH` and `impression`. '
                              '7. Add `attributes` and `impression`. '
                              '8. Add `MeSH`, `attributes` and `impression`.')
-    parser.add_argument('--remove_annotations_from text', type=bool, default=True, help='')
     # dataloader settings
     parser.add_argument('--max_seq_length', type=int, default=60,
                         help='1. 120 or 125 or 60'  # train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33

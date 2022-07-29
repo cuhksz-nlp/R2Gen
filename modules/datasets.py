@@ -11,6 +11,9 @@ class BaseDataset(Dataset):
         # exp setup
         self.exp = args.exp
         self.data_processor = data_processor
+        self.train_sample = args.train_sample
+        self.val_sample = args.val_sample
+        self.test_sample = args.test_sample
         ####################################
         self.image_dir = args.image_dir
         self.ann_path = args.ann_path
@@ -21,17 +24,15 @@ class BaseDataset(Dataset):
         self.ann = json.loads(open(self.ann_path, 'r').read())
 
         # exp setup
-        self.examples = self.ann[self.split]
         # random sample for smaller dataset
-        # if args.dataset_name == 'iu_xray':
-        #     self.examples = random.sample(self.ann[self.split], 10)
-        # else:
-        #     if self.split == 'train':
-        #         self.examples = random.sample(self.ann[self.split], 5000)
-        #     elif self.split == 'val':
-        #         self.examples = random.sample(self.ann[self.split], 1000)
-        #     elif self.split == 'test':
-        #         self.examples = random.sample(self.ann[self.split], 2000)
+        if self.split == 'train' and self.train_sample > 0:
+            self.examples = random.sample(self.ann[self.split], self.train_sample)
+        elif self.split == 'val' and self.val_sample > 0:
+            self.examples = random.sample(self.ann[self.split], self.val_sample)
+        elif self.split == 'test' and self.test_sample > 0:
+            self.examples = random.sample(self.ann[self.split], self.test_sample)
+        else:
+            self.examples = self.ann[self.split]
         for i in range(len(self.examples)):
             self.examples[i]['annotated_report'] = \
                 data_processor.get_reports_by_exp(self.exp, self.split, self.examples[i]['id'],
