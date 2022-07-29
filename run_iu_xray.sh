@@ -16,10 +16,10 @@ time python main.py \
 --dataset_name iu_xray \
 --is_print 0 \
 --remove_annotation 1 \
---train_sample 5 \
---val_sample 5 \
---test_sample 5 \
---max_seq_length 130 \
+--train_sample 0 \
+--val_sample 0 \
+--test_sample 0 \
+--max_seq_length 100 \
 --threshold 3 \
 --batch_size 16 \
 --epochs 100 \
