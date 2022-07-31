@@ -19,7 +19,7 @@ time python main.py \
 --train_sample 0 \
 --val_sample 0 \
 --test_sample 0 \
---max_seq_length 60 \
+--max_seq_length 90 \
 --threshold 3 \
 --batch_size 16 \
 --epochs 100 \
