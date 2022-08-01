@@ -78,8 +78,8 @@ class DataProcessor(object):
         return matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
-        if 4 < exp < 9:
-            report += self.iu_mesh_impression[split][r2gen_id]['impression']
+        if split == 'train' and 4 < exp < 9:
+            report += "<sep>" + self.iu_mesh_impression[split][r2gen_id]['impression']
 
         if split == 'train':
             if exp == 2:
