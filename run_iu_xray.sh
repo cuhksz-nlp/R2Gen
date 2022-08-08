@@ -19,6 +19,7 @@ time python main.py \
 --train_sample 0 \
 --val_sample 0 \
 --test_sample 0 \
+--create_r2gen_kaggle_association 1 \
 --max_seq_length 100 \
 --threshold 3 \
 --batch_size 16 \
