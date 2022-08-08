@@ -9,8 +9,9 @@ class DataProcessor(object):
         self.r2gen_ann_path = args.ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
+        self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression = dict()
-        if os.path.exists(self.iu_mesh_impression_path):
+        if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         else:
             self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
@@ -39,9 +40,9 @@ class DataProcessor(object):
                         kaggle_report = kaggle_uids_mesh_impression[uid]["report"]
                         if r2gen_report == kaggle_report:
                             iu_mesh = kaggle_uids_mesh_impression[uid]["MeSH"]
-                            mesh_text = " <sep>"
-                            attr_text = " <sep>"
-                            mesh_attr_text = " <sep>"
+                            mesh_text = ""
+                            attr_text = ""
+                            mesh_attr_text = ""
                             for mesh_info in iu_mesh.split(';'):
                                 if '/' in mesh_info:
                                     mesh_attr = mesh_info.split('/')
@@ -53,17 +54,12 @@ class DataProcessor(object):
                                         ma_text = " <mesh:{}>".format(mesh_attr[0].strip().replace(' ', '_'))
                                     mesh_text += ma_text
                                     attr_text += " <attr:{}>".format(mesh_attr[1].strip().replace(' ', '_'))
-                                    mesh_attr_text += "{} <attr:{}>".format(ma_text, mesh_attr[1].strip().replace(' ', '_'))
-                            if " <sep>" == mesh_attr_text:
-                                matched[split][r2gen_id] = {
-                                    "iu_mesh": iu_mesh, "mesh": "", "attr": "",
-                                    "mesh_attr": "",
-                                    "impression": kaggle_uids_mesh_impression[uid]["impression"]}
-                            else:
-                                matched[split][r2gen_id] = {
-                                    "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
-                                    "mesh_attr": mesh_attr_text,
-                                    "impression": kaggle_uids_mesh_impression[uid]["impression"]}
+                                    mesh_attr_text += "{} <attr:{}>".format(ma_text,
+                                                                            mesh_attr[1].strip().replace(' ', '_'))
+                            matched[split][r2gen_id] = {
+                                "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
+                                "mesh_attr": mesh_attr_text,
+                                "impression": kaggle_uids_mesh_impression[uid]["impression"]}
                             # matched[split].append(matched_info)
                         else:
                             unmatched[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
@@ -79,15 +75,15 @@ class DataProcessor(object):
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if split == 'train' and 4 < exp < 9:
-            report += "<sep>" + self.iu_mesh_impression[split][r2gen_id]['impression']
+            report += " <sep> " + self.iu_mesh_impression[split][r2gen_id]['impression']
 
         if split == 'train':
             if exp == 2:
-                return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
+                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['mesh']
             elif exp == 3:
-                return report + self.iu_mesh_impression[split][r2gen_id]['attr']
+                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['attr']
             elif exp == 4:
-                return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
+                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
             elif exp == 6:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
             elif exp == 7:

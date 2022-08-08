@@ -118,6 +118,12 @@ def parse_agrs():
     parser.add_argument('--val_sample', type=int, default=0, help='number of sample for validation dataset')
     parser.add_argument('--test_sample', type=int, default=0, help='number of sample for test dataset')
 
+    # Create iu_mesh_impression.json
+    parser.add_argument('--create_r2gen_kaggle_association', type=int, default=1,
+                        help='0 to not create association'
+                             '1 to create association'
+                        )
+
     # Experiment number
     parser.add_argument('--exp', type=int, default=1,
                         help='exp is between 1-8 '
