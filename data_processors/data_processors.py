@@ -69,7 +69,8 @@ class DataProcessor(object):
                         unmatched_info = {
                             r2gen_id: {"r2gen_uid": uid, "r2gen_report": r2gen_report, "kaggle_report": ""}}
                         unmatched[split].append(unmatched_info)
-        os.mknod(self.iu_mesh_impression_path)
+        if not os.path.exists(self.iu_mesh_impression_path):
+            os.mknod(self.iu_mesh_impression_path)
         json.dump(matched, open(self.iu_mesh_impression_path, 'w'))
         return matched
 
