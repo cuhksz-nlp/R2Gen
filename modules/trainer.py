@@ -109,7 +109,10 @@ class BaseTrainer(object):
 
         if not os.path.exists(self.args.record_dir):
             os.makedirs(self.args.record_dir)
-        record_path = os.path.join(self.args.record_dir, self.args.dataset_name + '.csv')
+        record_path = os.path.join(
+            self.args.record_dir, "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}.csv".format(
+                self.args.dataset_name, self.args.exp, self.args.max_seq_length, self.args.is_print,
+                self.args.remove_annotation))
         if not os.path.exists(record_path):
             record_table = pd.DataFrame()
         else:
