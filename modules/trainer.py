@@ -109,10 +109,12 @@ class BaseTrainer(object):
 
         if not os.path.exists(self.args.record_dir):
             os.makedirs(self.args.record_dir)
+        # exp setup
         record_path = os.path.join(
             self.args.record_dir, "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}.csv".format(
                 self.args.dataset_name, self.args.exp, self.args.max_seq_length, self.args.is_print,
                 self.args.remove_annotation))
+        ########################################################################################################
         if not os.path.exists(record_path):
             record_table = pd.DataFrame()
         else:
@@ -144,8 +146,10 @@ class BaseTrainer(object):
         }
         filename = os.path.join(self.checkpoint_dir, 'current_checkpoint.pth')
         torch.save(state, filename)
+        # exp setup
         process_name = "epoch: " + str(epoch)
         timer.time_executed(start_time, process_name)
+        ###################################################
         print("Saving checkpoint: {} ...".format(filename))
         if save_best:
             best_path = os.path.join(self.checkpoint_dir, 'model_best.pth')
@@ -219,9 +223,11 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
+                # exp setup
                 reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), self.remove_annotation)
                 ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(),
                                                                   self.remove_annotation)
+                ###########################################################################################
                 val_res.extend(reports)
                 val_gts.extend(ground_truths)
                 # exp  setup
@@ -242,9 +248,11 @@ class Trainer(BaseTrainer):
                 images, reports_ids, reports_masks = images.to(self.device), reports_ids.to(
                     self.device), reports_masks.to(self.device)
                 output = self.model(images, mode='sample')
+                # exp setup
                 reports = self.model.tokenizer.decode_batch(output.cpu().numpy(), self.remove_annotation)
                 ground_truths = self.model.tokenizer.decode_batch(reports_ids[:, 1:].cpu().numpy(),
                                                                   self.remove_annotation)
+                ###########################################################################################
                 test_res.extend(reports)
                 test_gts.extend(ground_truths)
                 # exp  setup
