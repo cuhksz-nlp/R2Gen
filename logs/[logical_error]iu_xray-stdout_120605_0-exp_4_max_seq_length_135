@@ -1378,12 +1378,12 @@ Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
 	test_ROUGE_L   : 0.32484259869095644
 Validation performance didn't improve for 50 epochs. Training stops.
 Best results (w.r.t BLEU_4) in validation set:
-	val_BLEU_4     : 0.1268310694824745
 	epoch          : 26
 	train_loss     : 0.4743025814111416
 	val_BLEU_1     : 0.4040293215778304
 	val_BLEU_2     : 0.24782476870103576
 	val_BLEU_3     : 0.17134099609031586
+	val_BLEU_4     : 0.1268310694824745
 	val_METEOR     : 0.16507477612205537
 	val_ROUGE_L    : 0.35095390649649527
 	test_BLEU_1    : 0.43041421870234514
@@ -1393,7 +1393,6 @@ Best results (w.r.t BLEU_4) in validation set:
 	test_METEOR    : 0.17595206437254712
 	test_ROUGE_L   : 0.36448898690009757
 Best results (w.r.t BLEU_4) in test set:
-	test_BLEU_4    : 0.15468512352498878
 	epoch          : 17
 	train_loss     : 0.9049198407393235
 	val_BLEU_1     : 0.36869083839812716
@@ -1405,6 +1404,7 @@ Best results (w.r.t BLEU_4) in test set:
 	test_BLEU_1    : 0.4256400088473288
 	test_BLEU_2    : 0.2700395514589674
 	test_BLEU_3    : 0.19746480779219808
+	test_BLEU_4    : 0.15468512352498878
 	test_METEOR    : 0.1720915131035861
 	test_ROUGE_L   : 0.3592738053020414
 R2Gen ended: time.struct_time(tm_year=2022, tm_mon=6, tm_mday=19, tm_hour=14, tm_min=21, tm_sec=29, tm_wday=6, tm_yday=170, tm_isdst=1)

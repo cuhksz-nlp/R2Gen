@@ -1774,12 +1774,12 @@ epoch: 100 ended: time.struct_time(tm_year=2022, tm_mon=6, tm_mday=18, tm_hour=5
 ('epoch: 100', ' executed for 00:17:50.46')
 Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
 Best results (w.r.t BLEU_4) in validation set:
-	val_BLEU_4     : 0.12063855687447939
 	epoch          : 91
 	train_loss     : 0.06711925984575198
 	val_BLEU_1     : 0.4033742331288018
 	val_BLEU_2     : 0.2481537574303548
 	val_BLEU_3     : 0.16785916106604443
+	val_BLEU_4     : 0.12063855687447939
 	val_METEOR     : 0.16339582327494684
 	val_ROUGE_L    : 0.3292898452297762
 	test_BLEU_1    : 0.3974481924696494
@@ -1789,7 +1789,6 @@ Best results (w.r.t BLEU_4) in validation set:
 	test_METEOR    : 0.17398797265023158
 	test_ROUGE_L   : 0.3435869125009738
 Best results (w.r.t BLEU_4) in test set:
-	test_BLEU_4    : 0.14115452391394653
 	epoch          : 23
 	train_loss     : 0.8096091641829564
 	val_BLEU_1     : 0.3621275747746258
@@ -1801,6 +1800,7 @@ Best results (w.r.t BLEU_4) in test set:
 	test_BLEU_1    : 0.40406225004117446
 	test_BLEU_2    : 0.25540419390935365
 	test_BLEU_3    : 0.18331076789715078
+	test_BLEU_4    : 0.14115452391394653
 	test_METEOR    : 0.17029362941155102
 	test_ROUGE_L   : 0.3647433840027416
 R2Gen ended: time.struct_time(tm_year=2022, tm_mon=6, tm_mday=18, tm_hour=5, tm_min=29, tm_sec=30, tm_wday=5, tm_yday=169, tm_isdst=1)
