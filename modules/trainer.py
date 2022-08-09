@@ -111,7 +111,7 @@ class BaseTrainer(object):
             os.makedirs(self.args.record_dir)
         # exp setup
         record_path = os.path.join(
-            self.args.record_dir, "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}.csv".format(
+            self.args.record_dir, "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}-.csv".format(
                 self.args.dataset_name, self.args.exp, self.args.max_seq_length, self.args.is_print,
                 self.args.remove_annotation))
         ########################################################################################################
