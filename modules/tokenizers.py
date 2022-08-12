@@ -36,7 +36,9 @@ class Tokenizer(object):
                 total_tokens.append(token)
 
         counter = Counter(total_tokens)
-        vocab = [k for k, v in counter.items() if v >= self.threshold] + ['<unk>']
+        # exp setup
+        vocab = [k for k, v in counter.items() if v >= self.threshold or "<" in k] + ['<unk>']
+        #######################################################################################
         vocab.sort()
         token2idx, idx2token = {}, {}
         for idx, token in enumerate(vocab):
