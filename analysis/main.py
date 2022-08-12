@@ -19,9 +19,13 @@ def main():
     # parse arguments
     args = parse_agrs()
     analysis = Analysis(args)
-    train_normal_prcn, val_normal_prcn, test_normal_prcn, dataset_normal_prcn = analysis.get_normal_sample_percentage()
-    print("train_normal: ", train_normal_prcn, "% ", "val_normal: ", val_normal_prcn, "% ", "test_normal: ",
-          test_normal_prcn, "% ", "dataset_normal: ", dataset_normal_prcn, "% ")
+    prcntg_dataclass = analysis.get_normal_sample_percentage()
+    print("train_normal: ", prcntg_dataclass.train_normal_prcn, "% ", "val_normal: ", prcntg_dataclass.val_normal_prcn,
+          "% ", "test_normal: ", prcntg_dataclass.test_normal_prcn, "% ", "dataset_normal: ",
+          prcntg_dataclass.dataset_normal_prcn, "% ")
+    print("train_no_index: ", prcntg_dataclass.train_no_index_prcn, "% ", "val_no_index: ",
+          prcntg_dataclass.val_no_index_prcn, "% ", "test_no_index: ", prcntg_dataclass.test_no_index_prcn, "% ",
+          "dataset_no_index: ", prcntg_dataclass.dataset_no_index_prcn, "% ")
     timer.time_executed(start_time, "R2Gen")
 
 
