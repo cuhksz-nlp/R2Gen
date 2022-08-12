@@ -44,18 +44,25 @@ class DataProcessor(object):
                             attr_text = ""
                             mesh_attr_text = ""
                             for mesh_info in iu_mesh.split(';'):
-                                if '/' in mesh_info:
+                                if 'normal' != mesh_info and 'No Indexing' != mesh_info:
                                     mesh_attr = mesh_info.split('/')
-                                    ma_text = ""
+                                    seq_mesh_text = ""
+                                    seq_attr_text = ""
                                     if ',' in mesh_attr[0]:
                                         for ma in mesh_attr[0].split(','):
-                                            ma_text += " <mesh:{}>".format(ma.strip().replace(' ', '_'))
+                                            seq_mesh_text += " <mesh:{}>".format(ma.strip().replace(' ', '_'))
                                     else:
-                                        ma_text = " <mesh:{}>".format(mesh_attr[0].strip().replace(' ', '_'))
-                                    mesh_text += ma_text
-                                    attr_text += " <attr:{}>".format(mesh_attr[1].strip().replace(' ', '_'))
-                                    mesh_attr_text += "{} <attr:{}>".format(ma_text,
-                                                                            mesh_attr[1].strip().replace(' ', '_'))
+                                        seq_mesh_text = " <mesh:{}>".format(mesh_attr[0].strip().replace(' ', '_'))
+                                    mesh_text += seq_mesh_text
+
+                                    if len(mesh_attr) == 2:
+                                        seq_attr_text = " <attr:{}>".format(mesh_attr[1].strip().replace(' ', '_'))
+                                    elif len(mesh_attr) > 2:
+                                        for i in range(1, len(mesh_attr)):
+                                            seq_attr_text += " <attr:{}>".format(mesh_attr[i].strip().replace(' ', '_'))
+                                    attr_text += seq_attr_text
+
+                                    mesh_attr_text += "{}{}".format(seq_mesh_text, seq_attr_text)
                             matched[split][r2gen_id] = {
                                 "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
                                 "mesh_attr": mesh_attr_text,
