@@ -19,7 +19,7 @@ time python main.py \
 --train_sample 0 \
 --val_sample 0 \
 --test_sample 0 \
---create_r2gen_kaggle_association 1 \
+--create_r2gen_kaggle_association 0 \
 --max_seq_length 100 \
 --threshold 3 \
 --batch_size 16 \
@@ -28,5 +28,4 @@ time python main.py \
 --step_size 50 \
 --gamma 0.1 \
 --seed 9223 \
---exp 4
-
+--exp 1
