@@ -1,5 +1,6 @@
 import argparse
 
+
 def parse_agrs():
     parser = argparse.ArgumentParser()
 
@@ -128,14 +129,14 @@ def parse_agrs():
                              '8. Add `MeSH`, `attributes` and `impression`.')
     # dataloader settings
     parser.add_argument('--max_seq_length', type=int, default=60,
-                        help='1. 120 or 125 or 60'  # train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33
-                             '2. 120 or 125 or 60'  # train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33
-                             '3. 120 or 125 or 60'  # train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33
-                             '4. 130 or 135 or 65'  # train max 165 mean 41 median 37 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33
-                             '5. 145 or 150 or 75'  # train max 191 mean 45 median 40 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38
-                             '6. 150 or 155 or 80'  # train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38
-                             '7. 150 or 155 or 80'  # train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38
-                             '8. 155 or 160 or 80')  # train max 202 mean 49 median 43 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38
+                        help='1. 60(paper) train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             '4. train max 165 mean 41 median 37 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             '5. train max 191 mean 45 median 40 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             '6. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             '7. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             '8. train max 202 mean 49 median 43 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38')
     ###################################################################################################################
     args = parser.parse_args()
     return args
@@ -144,4 +145,3 @@ def parse_agrs():
 class ArgumentParser(object):
     def __init__(self):
         self.args = parse_agrs()
-
