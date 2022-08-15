@@ -45,7 +45,8 @@ def main():
     print("train_no_index: ", prcntg_dataclass.train_no_index_prcn, "% ", "val_no_index: ",
           prcntg_dataclass.val_no_index_prcn, "% ", "test_no_index: ", prcntg_dataclass.test_no_index_prcn, "% ",
           "dataset_no_index: ", prcntg_dataclass.dataset_no_index_prcn, "% ")
-    timer.time_executed(start_time, "R2Gen")
+    print(analysis.validate_association())
+    timer.time_executed(start_time, "R2Gen.Analysis")
 
 
 if __name__ == '__main__':
