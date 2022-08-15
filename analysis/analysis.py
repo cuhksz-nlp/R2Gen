@@ -127,4 +127,8 @@ class Analysis(object):
         self.get_number_of_normal()
         self.get_number_of_no_index()
         self.get_number_of_empty_mesh_asc()
-        return self.total_number_of_empty_mesh == self.total_number_of_normal + self.total_number_of_no_index
+        
+        return (self.total_number_of_empty_mesh == self.total_number_of_normal + self.total_number_of_no_index
+                and self.train_number_of_empty_mesh == self.train_number_of_normal + self.train_number_of_no_index
+                and self.val_number_of_empty_mesh == self.val_number_of_normal + self.val_number_of_no_index
+                and self.test_number_of_empty_mesh == self.test_number_of_normal + self.test_number_of_no_index)
