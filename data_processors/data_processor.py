@@ -1,3 +1,4 @@
+# exp setup
 import csv
 import json
 import os
@@ -6,7 +7,6 @@ from analytics.analyze import Analyze
 
 
 class DataProcessor(object):
-    # exp setup
     def __init__(self, args):
         self.r2gen_ann_path = args.ann_path
         self.r2gen_kaggle_ann_path = args.r2gen_kaggle_ann_path

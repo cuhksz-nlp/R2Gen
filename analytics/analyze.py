@@ -1,3 +1,4 @@
+# exp setup
 import json
 
 
@@ -123,3 +124,4 @@ class Analyze(object):
             self.total_number_of_empty_mesh = \
                 self.train_number_of_empty_mesh + self.val_number_of_empty_mesh + self.test_number_of_empty_mesh
 
+################################################################################################################################
