@@ -28,7 +28,7 @@ class Analysis(object):
         with open(self.iu_mesh_impression_path, "rt") as datasetFile:
             self.dataset = json.load(datasetFile)
 
-    def get_normal_percentage(self):
+    def get_normal_ratio(self):
         self.get_samples_size()
         self.get_number_of_normal()
 
@@ -39,11 +39,11 @@ class Analysis(object):
         return train_normal_prcn, val_normal_prcn, test_normal_prcn, dataset_normal_prcn
 
     def print_normal_percentage(self):
-        normal_prcn_tuple = self.get_normal_percentage()
+        normal_prcn_tuple = self.get_normal_ratio()
         print("train_normal: ", normal_prcn_tuple[0] * 100, "% ", "val_normal: ", normal_prcn_tuple[1] * 100, "% ",
               "test_normal: ", normal_prcn_tuple[2] * 100, "% ", "dataset_normal: ", normal_prcn_tuple[3] * 100, "% ")
 
-    def get_no_index_percentage(self):
+    def get_no_index_ratio(self):
         self.get_samples_size()
         self.get_number_of_no_index()
 
@@ -54,12 +54,12 @@ class Analysis(object):
         return train_no_index_prcn, val_no_index_prcn, test_no_index_prcn, dataset_no_index_prcn
 
     def print_no_index_percentage(self):
-        no_index_prcn_tuple = self.get_no_index_percentage()
+        no_index_prcn_tuple = self.get_no_index_ratio()
         print("train_no_index: ", no_index_prcn_tuple[0] * 100, "% ", "val_no_index: ", no_index_prcn_tuple[1] * 100,
               "% ", "test_no_index: ", no_index_prcn_tuple[2] * 100, "% ", "dataset_no_index: ",
               no_index_prcn_tuple[3] * 100, "% ")
 
-    def get_empty_mesh_asc_percentage(self):
+    def get_empty_mesh_asc_ratio(self):
         self.get_samples_size()
         self.get_number_of_empty_mesh_asc()
 
@@ -70,7 +70,7 @@ class Analysis(object):
         return train_empty_mesh_prcn, val_empty_mesh_prcn, test_empty_mesh_prcn, dataset_empty_mesh_prcn
 
     def print_empty_mesh_asc_percentage(self):
-        empty_mesh_prcn_tuple = self.get_empty_mesh_asc_percentage()
+        empty_mesh_prcn_tuple = self.get_empty_mesh_asc_ratio()
         print("train_empty_mesh: ", empty_mesh_prcn_tuple[0] * 100, "% ", "val_empty_mesh: ",
               empty_mesh_prcn_tuple[1] * 100, "% ", "test_empty_mesh: ", empty_mesh_prcn_tuple[2] * 100, "% ",
               "dataset_empty_mesh: ", empty_mesh_prcn_tuple[3] * 100, "% ")
