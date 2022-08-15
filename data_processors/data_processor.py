@@ -33,8 +33,10 @@ class DataProcessor(object):
             for line in kaggle_iu_reports
         }
 
-        unmatched_split = dict(train=[], val=[], test=[])
+        unmatched_split = dict(train={}, val={}, test={})
         matched_split = dict(train={}, val={}, test={})
+        unmatched = dict()
+        matched = dict()
         for split, samples in r2gen_splits_ids_reports.items():
             for sample in samples:
                 for r2gen_id, r2gen_report in sample.items():
@@ -70,15 +72,20 @@ class DataProcessor(object):
                                 "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
                                 "mesh_attr": mesh_attr_text,
                                 "impression": kaggle_uids_mesh_impression[uid]["impression"]}
-                            # matched[split].append(matched_info)
+                            matched[r2gen_id] = {
+                                "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
+                                "mesh_attr": mesh_attr_text,
+                                "impression": kaggle_uids_mesh_impression[uid]["impression"]}
                         else:
                             unmatched_split[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
-                                                          "kaggle_report": kaggle_report}
-                            # unmatched[split].append(unmatched_info)
+                                                                "kaggle_report": kaggle_report}
+                            unmatched[r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
+                                                   "kaggle_report": kaggle_report}
                     else:
-                        unmatched_info = {
-                            r2gen_id: {"r2gen_uid": uid, "r2gen_report": r2gen_report, "kaggle_report": ""}}
-                        unmatched_split[split].append(unmatched_info)
+                        unmatched_split[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
+                                                            "kaggle_report": ""}
+                        unmatched[r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
+                                               "kaggle_report": ""}
         if not os.path.exists(self.iu_mesh_impression_path_split):
             os.mknod(self.iu_mesh_impression_path_split)
         json.dump(matched_split, open(self.iu_mesh_impression_path_split, 'w'))
