@@ -108,7 +108,8 @@ class DataProcessor(object):
         self.analyze.get_number_of_no_index()
         self.analyze.get_number_of_empty_mesh_asc()
 
-        return (self.analyze.total_number_of_empty_mesh == self.analyze.total_number_of_normal + self.analyze.total_number_of_no_index
+        return (
+                    self.analyze.total_number_of_empty_mesh == self.analyze.total_number_of_normal + self.analyze.total_number_of_no_index
                     and self.analyze.train_number_of_empty_mesh == self.analyze.train_number_of_normal + self.analyze.train_number_of_no_index
                     and self.analyze.val_number_of_empty_mesh == self.analyze.val_number_of_normal + self.analyze.val_number_of_no_index
                     and self.analyze.test_number_of_empty_mesh == self.analyze.test_number_of_normal + self.analyze.test_number_of_no_index)
