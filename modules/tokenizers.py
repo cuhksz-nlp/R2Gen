@@ -26,8 +26,8 @@ class Tokenizer(object):
 
         for example in self.ann['train']:
             # exp setup
-            self.data_processor.iu_mesh_impression['train'][example['id']]['impression'] = \
-                self.clean_report(self.data_processor.iu_mesh_impression['train'][example['id']]['impression'])
+            self.data_processor.iu_mesh_impression_split['train'][example['id']]['impression'] = \
+                self.clean_report(self.data_processor.iu_mesh_impression_split['train'][example['id']]['impression'])
             reports_with_additional_info = self.data_processor.get_reports_by_exp(self.exp, 'train', example['id'],
                                                                                   self.clean_report(example['report']))
             tokens = reports_with_additional_info.split()
@@ -87,8 +87,8 @@ class Tokenizer(object):
     def __call__(self, data_processor, exp, split, r2gen_id, report):
         # exp setup
         if 4 < exp < 9:
-            data_processor.iu_mesh_impression[split][r2gen_id]['impression'] = \
-                self.clean_report(data_processor.iu_mesh_impression[split][r2gen_id]['impression'])
+            data_processor.iu_mesh_impression_split[split][r2gen_id]['impression'] = \
+                self.clean_report(data_processor.iu_mesh_impression_split[split][r2gen_id]['impression'])
         tokens = data_processor.get_reports_by_exp(exp, split, r2gen_id, self.clean_report(report)).split()
         ###################################################################################################
         ids = []

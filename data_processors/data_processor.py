@@ -12,11 +12,11 @@ class DataProcessor(object):
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
-        self.iu_mesh_impression = dict()
+        self.iu_mesh_impression_split = dict()
         if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path_split):
-            self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
+            self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
         else:
-            self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
+            self.iu_mesh_impression_split = self.associate_iu_r2gen_kaggle_by_id()
         self.analyze = Analyze(args)
 
     def associate_iu_r2gen_kaggle_by_id(self):
@@ -86,21 +86,21 @@ class DataProcessor(object):
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if split == 'train' and 4 < exp < 9:
-            report += " <sep> " + self.iu_mesh_impression[split][r2gen_id]['impression']
+            report += " <sep> " + self.iu_mesh_impression_split[split][r2gen_id]['impression']
 
         if split == 'train':
             if exp == 2:
-                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['mesh']
+                return report + " <sep>" + self.iu_mesh_impression_split[split][r2gen_id]['mesh']
             elif exp == 3:
-                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['attr']
+                return report + " <sep>" + self.iu_mesh_impression_split[split][r2gen_id]['attr']
             elif exp == 4:
-                return report + " <sep>" + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
+                return report + " <sep>" + self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
             elif exp == 6:
-                return report + self.iu_mesh_impression[split][r2gen_id]['mesh']
+                return report + self.iu_mesh_impression_split[split][r2gen_id]['mesh']
             elif exp == 7:
-                return report + self.iu_mesh_impression[split][r2gen_id]['attr']
+                return report + self.iu_mesh_impression_split[split][r2gen_id]['attr']
             elif exp == 8:
-                return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
+                return report + self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
         return report
 
     def validate_association(self):
