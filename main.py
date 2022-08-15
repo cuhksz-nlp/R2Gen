@@ -18,12 +18,6 @@ from modules.trainer import Trainer
 def parse_agrs():
     parser = argparse.ArgumentParser()
 
-    # Data input settings
-    parser.add_argument('--image_dir', type=str, default='../data/iu_xray/r2gen/images/',
-                        help='the path to the directory containing the data.')
-    parser.add_argument('--ann_path', type=str, default='../data/iu_xray/r2gen/annotation.json',
-                        help='the path to the directory containing the data.')
-
     # Data loader settings
     parser.add_argument('--dataset_name', type=str, default='iu_xray', choices=['iu_xray', 'mimic_cxr'],
                         help='the dataset to be used.')
@@ -94,6 +88,12 @@ def parse_agrs():
     parser.add_argument('--resume', type=str, help='whether to resume the training from existing checkpoints.')
 
     # exp setup
+    # Data input settings
+    parser.add_argument('--image_dir', type=str, default='../data/iu_xray/r2gen/images/',
+                        help='the path to the directory containing the data.')
+    parser.add_argument('--ann_path', type=str, default='../data/iu_xray/r2gen/annotation.json',
+                        help='the path to the directory containing the data.')
+
     # Reports path kaggle iu xray
     parser.add_argument('--kaggle_iu_projections_path', type=str, default='../data/iu_xray/kaggle/iu_projections.csv',
                         help='the path to the directory containing the projections data.')
