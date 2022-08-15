@@ -33,8 +33,8 @@ class DataProcessor(object):
             for line in kaggle_iu_reports
         }
 
-        unmatched = dict(train=[], val=[], test=[])
-        matched = dict(train={}, val={}, test={})
+        unmatched_split = dict(train=[], val=[], test=[])
+        matched_split = dict(train={}, val={}, test={})
         for split, samples in r2gen_splits_ids_reports.items():
             for sample in samples:
                 for r2gen_id, r2gen_report in sample.items():
@@ -66,23 +66,23 @@ class DataProcessor(object):
                                     attr_text += seq_attr_text
 
                                     mesh_attr_text += "{}{}".format(seq_mesh_text, seq_attr_text)
-                            matched[split][r2gen_id] = {
+                            matched_split[split][r2gen_id] = {
                                 "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
                                 "mesh_attr": mesh_attr_text,
                                 "impression": kaggle_uids_mesh_impression[uid]["impression"]}
                             # matched[split].append(matched_info)
                         else:
-                            unmatched[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
+                            unmatched_split[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
                                                           "kaggle_report": kaggle_report}
                             # unmatched[split].append(unmatched_info)
                     else:
                         unmatched_info = {
                             r2gen_id: {"r2gen_uid": uid, "r2gen_report": r2gen_report, "kaggle_report": ""}}
-                        unmatched[split].append(unmatched_info)
+                        unmatched_split[split].append(unmatched_info)
         if not os.path.exists(self.iu_mesh_impression_path_split):
             os.mknod(self.iu_mesh_impression_path_split)
-        json.dump(matched, open(self.iu_mesh_impression_path_split, 'w'))
-        return matched
+        json.dump(matched_split, open(self.iu_mesh_impression_path_split, 'w'))
+        return matched_split
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if split == 'train' and 4 < exp < 9:
