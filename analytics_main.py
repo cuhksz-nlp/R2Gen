@@ -14,9 +14,16 @@ def main():
 
     # Process data to get additional info
     data_processor = DataProcessor(args)
-
     # analytics
     analysis = Analyze(args)
+    print("######### before split#########")
+    analysis.print_normal_percentage()
+    analysis.print_no_index_percentage()
+    analysis.print_empty_mesh_asc_percentage()
+    print("Is association file valid: ", data_processor.validate_association())
+    data_processor.split_dataset()
+    analysis = Analyze(args)
+    print("######### after split#########")
     analysis.print_normal_percentage()
     analysis.print_no_index_percentage()
     analysis.print_empty_mesh_asc_percentage()

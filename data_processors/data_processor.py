@@ -3,6 +3,8 @@ import csv
 import json
 import os
 
+from torch.utils.data import random_split
+
 from analytics.analyze import Analyze
 
 
@@ -114,6 +116,22 @@ class DataProcessor(object):
             elif exp == 8:
                 return report + self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
         return report
+
+    def split_dataset(self):
+        dataset_keys = list(self.iu_mesh_impression.keys())
+        train_size = int(0.7 * len(dataset_keys))  # 2068
+        test_size = int(0.2 * len(dataset_keys))  # 591
+        val_size = len(dataset_keys) - train_size - test_size  # 296
+
+        train_set, val_set, test_set = random_split(dataset_keys, [train_size, val_size, test_size])
+        split_data = dict(train={}, val={}, test={})
+        split_data["train"] = {k: self.iu_mesh_impression[k] for k in train_set}
+        split_data["val"] = {k: self.iu_mesh_impression[k] for k in val_set}
+        split_data["test"] = {k: self.iu_mesh_impression[k] for k in test_set}
+
+        if not os.path.exists(self.iu_mesh_impression_path_split):
+            os.mknod(self.iu_mesh_impression_path_split)
+        json.dump(split_data, open(self.iu_mesh_impression_path_split, 'w'))
 
     def validate_association(self):
         self.analyze.get_number_of_normal()
