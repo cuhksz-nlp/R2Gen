@@ -20,7 +20,7 @@ time python main.py \
 --val_sample 0 \
 --test_sample 0 \
 --create_r2gen_kaggle_association 0 \
---max_seq_length 100 \
+--max_seq_length 60 \
 --threshold 3 \
 --batch_size 16 \
 --epochs 100 \
@@ -28,4 +28,4 @@ time python main.py \
 --step_size 50 \
 --gamma 0.1 \
 --seed 9223 \
---exp 1
+--exp 4
