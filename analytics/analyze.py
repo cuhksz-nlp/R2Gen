@@ -3,7 +3,7 @@ import json
 
 class Analyze(object):
     def __init__(self, args):
-        self.iu_mesh_impression_path = args.iu_mesh_impression_path
+        self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
         # size
         self.dataset_size = 0
         self.train_size = 0
@@ -25,7 +25,7 @@ class Analyze(object):
         self.val_number_of_empty_mesh = 0
         self.test_number_of_empty_mesh = 0
 
-        with open(self.iu_mesh_impression_path, "rt") as datasetFile:
+        with open(self.iu_mesh_impression_path_split, "rt") as datasetFile:
             self.dataset = json.load(datasetFile)
 
     def get_normal_ratio(self):
