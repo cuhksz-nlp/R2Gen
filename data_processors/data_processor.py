@@ -13,11 +13,11 @@ class DataProcessor(object):
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression = dict()
-        self.analyze = Analyze(args)
         if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         else:
             self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
+        self.analyze = Analyze(args)
 
     def associate_iu_r2gen_kaggle_by_id(self):
         kaggle_iu_reports = csv.reader(open(self.kaggle_iu_reports_path, 'r'))
