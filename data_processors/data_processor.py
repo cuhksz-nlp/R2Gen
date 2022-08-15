@@ -10,11 +10,11 @@ class DataProcessor(object):
     def __init__(self, args):
         self.r2gen_ann_path = args.ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
-        self.iu_mesh_impression_path = args.iu_mesh_impression_path
+        self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression = dict()
-        if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path):
-            self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
+        if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path_split):
+            self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
         else:
             self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
         self.analyze = Analyze(args)
@@ -79,9 +79,9 @@ class DataProcessor(object):
                         unmatched_info = {
                             r2gen_id: {"r2gen_uid": uid, "r2gen_report": r2gen_report, "kaggle_report": ""}}
                         unmatched[split].append(unmatched_info)
-        if not os.path.exists(self.iu_mesh_impression_path):
-            os.mknod(self.iu_mesh_impression_path)
-        json.dump(matched, open(self.iu_mesh_impression_path, 'w'))
+        if not os.path.exists(self.iu_mesh_impression_path_split):
+            os.mknod(self.iu_mesh_impression_path_split)
+        json.dump(matched, open(self.iu_mesh_impression_path_split, 'w'))
         return matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
@@ -109,8 +109,8 @@ class DataProcessor(object):
         self.analyze.get_number_of_empty_mesh_asc()
 
         return (
-                    self.analyze.total_number_of_empty_mesh == self.analyze.total_number_of_normal + self.analyze.total_number_of_no_index
-                    and self.analyze.train_number_of_empty_mesh == self.analyze.train_number_of_normal + self.analyze.train_number_of_no_index
-                    and self.analyze.val_number_of_empty_mesh == self.analyze.val_number_of_normal + self.analyze.val_number_of_no_index
-                    and self.analyze.test_number_of_empty_mesh == self.analyze.test_number_of_normal + self.analyze.test_number_of_no_index)
+                self.analyze.total_number_of_empty_mesh == self.analyze.total_number_of_normal + self.analyze.total_number_of_no_index
+                and self.analyze.train_number_of_empty_mesh == self.analyze.train_number_of_normal + self.analyze.train_number_of_no_index
+                and self.analyze.val_number_of_empty_mesh == self.analyze.val_number_of_normal + self.analyze.val_number_of_no_index
+                and self.analyze.test_number_of_empty_mesh == self.analyze.test_number_of_normal + self.analyze.test_number_of_no_index)
     ############################################
