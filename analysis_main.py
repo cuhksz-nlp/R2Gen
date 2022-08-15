@@ -2,8 +2,8 @@ import argparse
 import time
 
 import timer
-from analysis.analysis import Analysis
-from data_processors.data_processors import DataProcessor
+from analytics.analyze import Analyze
+from data_processors.data_processor import DataProcessor
 
 
 def parse_agrs():
@@ -37,8 +37,8 @@ def main():
     # Process data to get additional info
     data_processor = DataProcessor(args)
 
-    # analysis
-    analysis = Analysis(args)
+    # analytics
+    analysis = Analyze(args)
     analysis.print_normal_percentage()
     analysis.print_no_index_percentage()
     analysis.print_empty_mesh_asc_percentage()

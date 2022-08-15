@@ -5,7 +5,8 @@ import numpy as np
 import torch
 
 import timer
-from data_processors.data_processors import DataProcessor
+from analytics.analyze import Analyze
+from data_processors.data_processor import DataProcessor
 from models.r2gen import R2GenModel
 from modules.dataloaders import R2DataLoader
 from modules.loss import compute_loss
@@ -164,6 +165,9 @@ def main():
     # exp setup
     # Process data to get additional info
     data_processor = DataProcessor(args)
+
+    if data_processor.validate_association():
+        raise Exception("Association file is not valid")
 
     # create tokenizer
     tokenizer = Tokenizer(args, data_processor)

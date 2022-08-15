@@ -2,6 +2,8 @@ import csv
 import json
 import os
 
+from analytics.analyze import Analyze
+
 
 class DataProcessor(object):
     # exp setup
@@ -11,6 +13,7 @@ class DataProcessor(object):
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression = dict()
+        self.analyze = Analyze(args)
         if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         else:
@@ -99,4 +102,14 @@ class DataProcessor(object):
             elif exp == 8:
                 return report + self.iu_mesh_impression[split][r2gen_id]['mesh_attr']
         return report
+
+    def validate_association(self):
+        self.get_number_of_normal()
+        self.get_number_of_no_index()
+        self.get_number_of_empty_mesh_asc()
+
+        return (self.total_number_of_empty_mesh == self.total_number_of_normal + self.total_number_of_no_index
+                and self.train_number_of_empty_mesh == self.train_number_of_normal + self.train_number_of_no_index
+                and self.val_number_of_empty_mesh == self.val_number_of_normal + self.val_number_of_no_index
+                and self.test_number_of_empty_mesh == self.test_number_of_normal + self.test_number_of_no_index)
     ############################################

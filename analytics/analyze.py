@@ -1,7 +1,7 @@
 import json
 
 
-class Analysis(object):
+class Analyze(object):
     def __init__(self, args):
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
         # size
@@ -123,12 +123,3 @@ class Analysis(object):
             self.total_number_of_empty_mesh = \
                 self.train_number_of_empty_mesh + self.val_number_of_empty_mesh + self.test_number_of_empty_mesh
 
-    def validate_association(self):
-        self.get_number_of_normal()
-        self.get_number_of_no_index()
-        self.get_number_of_empty_mesh_asc()
-        
-        return (self.total_number_of_empty_mesh == self.total_number_of_normal + self.total_number_of_no_index
-                and self.train_number_of_empty_mesh == self.train_number_of_normal + self.train_number_of_no_index
-                and self.val_number_of_empty_mesh == self.val_number_of_normal + self.val_number_of_no_index
-                and self.test_number_of_empty_mesh == self.test_number_of_normal + self.test_number_of_no_index)
