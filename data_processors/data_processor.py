@@ -11,12 +11,16 @@ class DataProcessor(object):
         self.r2gen_ann_path = args.ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
+        self.iu_mesh_impression_path = args.iu_mesh_impression_path
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression_split = dict()
-        if self.create_r2gen_kaggle_association == 0 and os.path.exists(self.iu_mesh_impression_path_split):
+        self.iu_mesh_impression = dict()
+        if self.create_r2gen_kaggle_association == 0 and \
+                os.path.exists(self.iu_mesh_impression_path_split) and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
+            self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         else:
-            self.iu_mesh_impression_split = self.associate_iu_r2gen_kaggle_by_id()
+            self.iu_mesh_impression_split, self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
         self.analyze = Analyze(args)
 
     def associate_iu_r2gen_kaggle_by_id(self):
@@ -89,7 +93,10 @@ class DataProcessor(object):
         if not os.path.exists(self.iu_mesh_impression_path_split):
             os.mknod(self.iu_mesh_impression_path_split)
         json.dump(matched_split, open(self.iu_mesh_impression_path_split, 'w'))
-        return matched_split
+        if not os.path.exists(self.iu_mesh_impression_path):
+            os.mknod(self.iu_mesh_impression_path)
+        json.dump(matched, open(self.iu_mesh_impression_path, 'w'))
+        return matched_split, matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if split == 'train' and 4 < exp < 9:
