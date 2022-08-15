@@ -2,7 +2,7 @@ import argparse
 import time
 
 import timer
-from analysis import Analysis
+from analysis.analysis import Analysis
 from data_processors.data_processors import DataProcessor
 
 
