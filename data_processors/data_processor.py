@@ -9,25 +9,18 @@ from analytics.analyze import Analyze
 class DataProcessor(object):
     def __init__(self, args):
         self.r2gen_ann_path = args.ann_path
-        self.r2gen_kaggle_ann_path = args.r2gen_kaggle_ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression_split = dict()
         self.iu_mesh_impression = dict()
-        self.r2gen_kaggle_annotation = list()
         if self.create_r2gen_kaggle_association == 0 and \
-                os.path.exists(self.iu_mesh_impression_path_split) and \
-                os.path.exists(self.iu_mesh_impression_path) and os.path.exists(self.r2gen_kaggle_ann_path):
+                os.path.exists(self.iu_mesh_impression_path_split) and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
             self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
-            self.self.r2gen_kaggle_annotation = json.loads(open(self.r2gen_kaggle_ann_path, 'r').read())
-
-
         else:
-            self.iu_mesh_impression_split, self.iu_mesh_impression, self.r2gen_kaggle_annotation = \
-                self.associate_iu_r2gen_kaggle_by_id()
+            self.iu_mesh_impression_split, self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
         self.analyze = Analyze(args)
 
     def associate_iu_r2gen_kaggle_by_id(self):
@@ -48,7 +41,6 @@ class DataProcessor(object):
         matched_split = dict(train={}, val={}, test={})
         unmatched = dict()
         matched = dict()
-        r2gen_kaggle = list()
         for split, samples in r2gen_splits_ids_reports.items():
             for sample in samples:
                 for r2gen_id, r2gen_value in sample.items():
@@ -80,16 +72,12 @@ class DataProcessor(object):
                                     attr_text += seq_attr_text
 
                                     mesh_attr_text += "{}{}".format(seq_mesh_text, seq_attr_text)
-                            matched_split[split][r2gen_id] = {
+                            r2gen_value.update({
                                 "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
                                 "mesh_attr": mesh_attr_text,
-                                "impression": kaggle_uids_mesh_impression[uid]["impression"]}
-                            matched[r2gen_id] = {
-                                "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
-                                "mesh_attr": mesh_attr_text,
-                                "impression": kaggle_uids_mesh_impression[uid]["impression"]}
-                            r2gen_value.update(matched[r2gen_id])
-                            r2gen_kaggle.append(r2gen_value)
+                                "impression": kaggle_uids_mesh_impression[uid]["impression"]})
+                            matched_split[split][r2gen_id] = r2gen_value
+                            matched[r2gen_id] = r2gen_value
                         else:
                             unmatched_split[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_value,
                                                                 "kaggle_report": kaggle_report}
@@ -106,10 +94,7 @@ class DataProcessor(object):
         if not os.path.exists(self.iu_mesh_impression_path):
             os.mknod(self.iu_mesh_impression_path)
         json.dump(matched, open(self.iu_mesh_impression_path, 'w'))
-        if not os.path.exists(self.r2gen_kaggle_ann_path):
-            os.mknod(self.r2gen_kaggle_ann_path)
-        json.dump(r2gen_kaggle, open(self.r2gen_kaggle_ann_path, 'w'))
-        return matched_split, matched, r2gen_kaggle
+        return matched_split, matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
         if split == 'train' and 4 < exp < 9:
