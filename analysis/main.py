@@ -12,7 +12,8 @@ def parse_agrs():
     parser.add_argument('--ann_path', type=str, default='../../data/iu_xray/r2gen/annotation.json',
                         help='the path to the directory containing the data.')
     # Reports path kaggle iu xray
-    parser.add_argument('--kaggle_iu_projections_path', type=str, default='../../data/iu_xray/kaggle/iu_projections.csv',
+    parser.add_argument('--kaggle_iu_projections_path', type=str,
+                        default='../../data/iu_xray/kaggle/iu_projections.csv',
                         help='the path to the directory containing the projections data.')
     parser.add_argument('--kaggle_iu_reports_path', type=str, default='../../data/iu_xray/kaggle/iu_reports.csv',
                         help='the path to the directory containing the reports.')
@@ -38,14 +39,10 @@ def main():
 
     # analysis
     analysis = Analysis(args)
-    prcntg_dataclass = analysis.get_normal_sample_percentage()
-    print("train_normal: ", prcntg_dataclass.train_normal_prcn, "% ", "val_normal: ", prcntg_dataclass.val_normal_prcn,
-          "% ", "test_normal: ", prcntg_dataclass.test_normal_prcn, "% ", "dataset_normal: ",
-          prcntg_dataclass.dataset_normal_prcn, "% ")
-    print("train_no_index: ", prcntg_dataclass.train_no_index_prcn, "% ", "val_no_index: ",
-          prcntg_dataclass.val_no_index_prcn, "% ", "test_no_index: ", prcntg_dataclass.test_no_index_prcn, "% ",
-          "dataset_no_index: ", prcntg_dataclass.dataset_no_index_prcn, "% ")
-    print(analysis.validate_association())
+    analysis.print_normal_percentage()
+    analysis.print_no_index_percentage()
+    analysis.print_empty_mesh_asc_percentage()
+    print("Is association file valid: ", analysis.validate_association())
     timer.time_executed(start_time, "R2Gen.Analysis")
 
 

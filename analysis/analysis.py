@@ -1,7 +1,5 @@
 import json
 
-from prcntg_data_class import PrcntgDataclass
-
 
 class Analysis(object):
     def __init__(self, args):
@@ -27,31 +25,56 @@ class Analysis(object):
         self.val_number_of_empty_mesh = 0
         self.test_number_of_empty_mesh = 0
 
-    def open_association_file(self):
         with open(self.iu_mesh_impression_path, "rt") as datasetFile:
-            dataset = json.load(datasetFile)
-        return dataset
+            self.dataset = json.load(datasetFile)
 
-    def get_normal_sample_percentage(self):
+    def get_normal_percentage(self):
         self.get_samples_size()
         self.get_number_of_normal()
-        self.get_number_of_no_index()
 
         train_normal_prcn = self.train_number_of_normal / self.train_size * 100
         val_normal_prcn = self.val_number_of_normal / self.val_size * 100
         test_normal_prcn = self.test_number_of_normal / self.test_size * 100
         dataset_normal_prcn = self.total_number_of_normal / self.dataset_size * 100
+        return train_normal_prcn, val_normal_prcn, test_normal_prcn, dataset_normal_prcn
+
+    def print_normal_percentage(self):
+        normal_prcn_tuple = self.get_normal_percentage()
+        print("train_normal: ", normal_prcn_tuple[0], "% ", "val_normal: ", normal_prcn_tuple[1], "% ", "test_normal: ",
+              normal_prcn_tuple[2], "% ", "dataset_normal: ", normal_prcn_tuple[3], "% ")
+
+    def get_no_index_percentage(self):
+        self.get_samples_size()
+        self.get_number_of_no_index()
+
         train_no_index_prcn = self.train_number_of_no_index / self.train_size * 100
         val_no_index_prcn = self.val_number_of_no_index / self.val_size * 100
         test_no_index_prcn = self.test_number_of_no_index / self.test_size * 100
         dataset_no_index_prcn = self.total_number_of_no_index / self.dataset_size * 100
-        return PrcntgDataclass(train_normal_prcn, val_normal_prcn, test_normal_prcn, dataset_normal_prcn,
-                               train_no_index_prcn, val_no_index_prcn, test_no_index_prcn, dataset_no_index_prcn)
+        return train_no_index_prcn, val_no_index_prcn, test_no_index_prcn, dataset_no_index_prcn
+
+    def print_no_index_percentage(self):
+        no_index_prcn_tuple = self.get_no_index_percentage()
+        print("train_no_index: ", no_index_prcn_tuple[0], "% ", "val_no_index: ", no_index_prcn_tuple[1], "% ",
+              "test_no_index: ", no_index_prcn_tuple[2], "% ", "dataset_no_index: ", no_index_prcn_tuple[3], "% ")
+
+    def get_empty_mesh_asc_percentage(self):
+        self.get_samples_size()
+        self.get_number_of_empty_mesh_asc()
+
+        train_empty_mesh_prcn = self.train_number_of_empty_mesh / self.train_size * 100
+        val_empty_mesh_prcn = self.val_number_of_empty_mesh / self.val_size * 100
+        test_empty_mesh_prcn = self.test_number_of_empty_mesh / self.test_size * 100
+        dataset_empty_mesh_prcn = self.total_number_of_empty_mesh / self.dataset_size * 100
+        return train_empty_mesh_prcn, val_empty_mesh_prcn, test_empty_mesh_prcn, dataset_empty_mesh_prcn
+
+    def print_empty_mesh_asc_percentage(self):
+        empty_mesh_prcn_tuple = self.get_empty_mesh_asc_percentage()
+        print("train_empty_mesh: ", empty_mesh_prcn_tuple[0], "% ", "val_empty_mesh: ", empty_mesh_prcn_tuple[1], "% ",
+              "test_empty_mesh: ", empty_mesh_prcn_tuple[2], "% ", "dataset_empty_mesh: ", empty_mesh_prcn_tuple[3], "% ")
 
     def get_samples_size(self):
-        dataset = self.open_association_file()
-
-        for split, samples in dataset.items():
+        for split, samples in self.dataset.items():
             if split == "train":
                 self.train_size = len(samples)
             if split == "val":
@@ -62,9 +85,7 @@ class Analysis(object):
             self.dataset_size = self.train_size + self.val_size + self.test_size
 
     def get_number_of_normal(self):
-        dataset = self.open_association_file()
-
-        for split, samples in dataset.items():
+        for split, samples in self.dataset.items():
             if split == "train":
                 self.train_number_of_normal = len([s for s in samples.keys() if samples[s].get("iu_mesh") == "normal"])
             if split == "val":
@@ -76,9 +97,7 @@ class Analysis(object):
                 self.train_number_of_normal + self.val_number_of_normal + self.test_number_of_normal
 
     def get_number_of_no_index(self):
-        dataset = self.open_association_file()
-
-        for split, samples in dataset.items():
+        for split, samples in self.dataset.items():
             if split == "train":
                 self.train_number_of_no_index = len(
                     [s for s in samples.keys() if samples[s].get("iu_mesh") == "No Indexing"])
@@ -91,10 +110,8 @@ class Analysis(object):
             self.total_number_of_no_index = \
                 self.train_number_of_no_index + self.val_number_of_no_index + self.test_number_of_no_index
 
-    def get_number_of_empty_mesh(self):
-        dataset = self.open_association_file()
-
-        for split, samples in dataset.items():
+    def get_number_of_empty_mesh_asc(self):
+        for split, samples in self.dataset.items():
             if split == "train":
                 self.train_number_of_empty_mesh = len([s for s in samples.keys() if samples[s].get("mesh") == ""])
             if split == "val":
@@ -107,8 +124,5 @@ class Analysis(object):
     def validate_association(self):
         self.get_number_of_normal()
         self.get_number_of_no_index()
-        self.get_number_of_empty_mesh()
+        self.get_number_of_empty_mesh_asc()
         return self.total_number_of_empty_mesh == self.total_number_of_normal + self.total_number_of_no_index
-
-# train_normal:  32.96278395360077 %  val_normal:  33.108108108108105 %  test_normal:  52.03389830508475 %  dataset_normal:  36.78510998307953 %
-# train_no_index:  1.9816336394393428 %  val_no_index:  1.3513513513513513 %  test_no_index:  4.23728813559322 %  dataset_no_index:  2.3688663282571913 %
