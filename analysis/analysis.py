@@ -32,46 +32,48 @@ class Analysis(object):
         self.get_samples_size()
         self.get_number_of_normal()
 
-        train_normal_prcn = self.train_number_of_normal / self.train_size * 100
-        val_normal_prcn = self.val_number_of_normal / self.val_size * 100
-        test_normal_prcn = self.test_number_of_normal / self.test_size * 100
-        dataset_normal_prcn = self.total_number_of_normal / self.dataset_size * 100
+        train_normal_prcn = self.train_number_of_normal / self.train_size
+        val_normal_prcn = self.val_number_of_normal / self.val_size
+        test_normal_prcn = self.test_number_of_normal / self.test_size
+        dataset_normal_prcn = self.total_number_of_normal / self.dataset_size
         return train_normal_prcn, val_normal_prcn, test_normal_prcn, dataset_normal_prcn
 
     def print_normal_percentage(self):
         normal_prcn_tuple = self.get_normal_percentage()
-        print("train_normal: ", normal_prcn_tuple[0], "% ", "val_normal: ", normal_prcn_tuple[1], "% ", "test_normal: ",
-              normal_prcn_tuple[2], "% ", "dataset_normal: ", normal_prcn_tuple[3], "% ")
+        print("train_normal: ", normal_prcn_tuple[0] * 100, "% ", "val_normal: ", normal_prcn_tuple[1] * 100, "% ",
+              "test_normal: ", normal_prcn_tuple[2] * 100, "% ", "dataset_normal: ", normal_prcn_tuple[3] * 100, "% ")
 
     def get_no_index_percentage(self):
         self.get_samples_size()
         self.get_number_of_no_index()
 
-        train_no_index_prcn = self.train_number_of_no_index / self.train_size * 100
-        val_no_index_prcn = self.val_number_of_no_index / self.val_size * 100
-        test_no_index_prcn = self.test_number_of_no_index / self.test_size * 100
-        dataset_no_index_prcn = self.total_number_of_no_index / self.dataset_size * 100
+        train_no_index_prcn = self.train_number_of_no_index / self.train_size
+        val_no_index_prcn = self.val_number_of_no_index / self.val_size
+        test_no_index_prcn = self.test_number_of_no_index / self.test_size
+        dataset_no_index_prcn = self.total_number_of_no_index / self.dataset_size
         return train_no_index_prcn, val_no_index_prcn, test_no_index_prcn, dataset_no_index_prcn
 
     def print_no_index_percentage(self):
         no_index_prcn_tuple = self.get_no_index_percentage()
-        print("train_no_index: ", no_index_prcn_tuple[0], "% ", "val_no_index: ", no_index_prcn_tuple[1], "% ",
-              "test_no_index: ", no_index_prcn_tuple[2], "% ", "dataset_no_index: ", no_index_prcn_tuple[3], "% ")
+        print("train_no_index: ", no_index_prcn_tuple[0] * 100, "% ", "val_no_index: ", no_index_prcn_tuple[1] * 100,
+              "% ", "test_no_index: ", no_index_prcn_tuple[2] * 100, "% ", "dataset_no_index: ",
+              no_index_prcn_tuple[3] * 100, "% ")
 
     def get_empty_mesh_asc_percentage(self):
         self.get_samples_size()
         self.get_number_of_empty_mesh_asc()
 
-        train_empty_mesh_prcn = self.train_number_of_empty_mesh / self.train_size * 100
-        val_empty_mesh_prcn = self.val_number_of_empty_mesh / self.val_size * 100
-        test_empty_mesh_prcn = self.test_number_of_empty_mesh / self.test_size * 100
-        dataset_empty_mesh_prcn = self.total_number_of_empty_mesh / self.dataset_size * 100
+        train_empty_mesh_prcn = self.train_number_of_empty_mesh / self.train_size
+        val_empty_mesh_prcn = self.val_number_of_empty_mesh / self.val_size
+        test_empty_mesh_prcn = self.test_number_of_empty_mesh / self.test_size
+        dataset_empty_mesh_prcn = self.total_number_of_empty_mesh / self.dataset_size
         return train_empty_mesh_prcn, val_empty_mesh_prcn, test_empty_mesh_prcn, dataset_empty_mesh_prcn
 
     def print_empty_mesh_asc_percentage(self):
         empty_mesh_prcn_tuple = self.get_empty_mesh_asc_percentage()
-        print("train_empty_mesh: ", empty_mesh_prcn_tuple[0], "% ", "val_empty_mesh: ", empty_mesh_prcn_tuple[1], "% ",
-              "test_empty_mesh: ", empty_mesh_prcn_tuple[2], "% ", "dataset_empty_mesh: ", empty_mesh_prcn_tuple[3], "% ")
+        print("train_empty_mesh: ", empty_mesh_prcn_tuple[0] * 100, "% ", "val_empty_mesh: ",
+              empty_mesh_prcn_tuple[1] * 100, "% ", "test_empty_mesh: ", empty_mesh_prcn_tuple[2] * 100, "% ",
+              "dataset_empty_mesh: ", empty_mesh_prcn_tuple[3] * 100, "% ")
 
     def get_samples_size(self):
         for split, samples in self.dataset.items():
