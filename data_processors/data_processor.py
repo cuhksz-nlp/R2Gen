@@ -10,6 +10,7 @@ from analytics.analyze import Analyze
 
 class DataProcessor(object):
     def __init__(self, args):
+        self.args = args
         self.r2gen_ann_path = args.ann_path
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
@@ -144,6 +145,7 @@ class DataProcessor(object):
         json.dump(split_data, open(self.r2gen_ann_path, 'w'))
 
     def validate_association(self):
+        self.analyze = Analyze(self.args)
         self.analyze.get_number_of_normal()
         self.analyze.get_number_of_no_index()
         self.analyze.get_number_of_empty_mesh_asc()
