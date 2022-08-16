@@ -133,6 +133,16 @@ class DataProcessor(object):
             os.mknod(self.iu_mesh_impression_path_split)
         json.dump(split_data, open(self.iu_mesh_impression_path_split, 'w'))
 
+        split_data = dict(train=[], val=[], test=[])
+        split_data["train"] = [self.iu_mesh_impression[k] for k in train_set]
+        split_data["val"] = [self.iu_mesh_impression[k] for k in val_set]
+        split_data["test"] = [self.iu_mesh_impression[k] for k in test_set]
+
+        self.r2gen_ann_path = self.r2gen_ann_path.replace("r2gen", "kaggle")
+        if not os.path.exists(self.r2gen_ann_path):
+            os.mknod(self.r2gen_ann_path)
+        json.dump(split_data, open(self.r2gen_ann_path, 'w'))
+
     def validate_association(self):
         self.analyze.get_number_of_normal()
         self.analyze.get_number_of_no_index()
