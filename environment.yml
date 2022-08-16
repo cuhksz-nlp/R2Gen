@@ -57,4 +57,5 @@ dependencies:
     - pillow==9.0.1
     - torch==1.5.1
     - torchvision==0.6.1
+    - seaborn==0.11.2
 prefix: /media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen
