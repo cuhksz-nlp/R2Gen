@@ -77,8 +77,8 @@ def parse_agrs():
 
     # exp setup
     # Data input settings
-    data_iu_xray_path = '../data/iu_xray'
-    parser.add_argument('--image_dir', type=str, default=('%s/r2gen/images/' % data_iu_xray_path),
+    data_iu_xray_path = 'data/iu_xray'
+    parser.add_argument('--image_dir', type=str, default='../data/iu_xray/r2gen/images/',
                         help='the path to the directory containing the data.')
     parser.add_argument('--ann_path', type=str, default=('%s/r2gen/annotation.json' % data_iu_xray_path),
                         help='the path to the directory containing the data.')
