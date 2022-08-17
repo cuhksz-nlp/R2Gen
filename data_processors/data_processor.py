@@ -12,18 +12,28 @@ class DataProcessor(object):
     def __init__(self, args):
         self.args = args
         self.r2gen_ann_path = args.ann_path
+        self.kaggle_ann_path = self.r2gen_ann_path.replace("r2gen", "kaggle")
+        self.is_new_random_split = args.is_new_random_split
         self.kaggle_iu_reports_path = args.kaggle_iu_reports_path
         self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
+        self.iu_mesh_impression_path_new_split = args.iu_mesh_impression_path.replace(".json", "_new_split.json")
         self.iu_mesh_impression_path = args.iu_mesh_impression_path
         self.create_r2gen_kaggle_association = args.create_r2gen_kaggle_association
         self.iu_mesh_impression_split = dict()
         self.iu_mesh_impression = dict()
+
         if self.create_r2gen_kaggle_association == 0 and \
                 os.path.exists(self.iu_mesh_impression_path_split) and os.path.exists(self.iu_mesh_impression_path):
             self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_split, 'r').read())
             self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         else:
             self.iu_mesh_impression_split, self.iu_mesh_impression = self.associate_iu_r2gen_kaggle_by_id()
+
+        if self.is_new_random_split == 1:
+            if os.path.exists(self.iu_mesh_impression_path_new_split) and os.path.exists(self.kaggle_ann_path):
+                self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_new_split, 'r').read())
+            else:
+                self.iu_mesh_impression_split = self.split_dataset()
         self.analyze = Analyze(args)
 
     def associate_iu_r2gen_kaggle_by_id(self):
@@ -125,24 +135,25 @@ class DataProcessor(object):
         val_size = len(dataset_keys) - train_size - test_size  # 296
 
         train_set, val_set, test_set = random_split(dataset_keys, [train_size, val_size, test_size])
-        split_data = dict(train={}, val={}, test={})
-        split_data["train"] = {k: self.iu_mesh_impression[k] for k in train_set}
-        split_data["val"] = {k: self.iu_mesh_impression[k] for k in val_set}
-        split_data["test"] = {k: self.iu_mesh_impression[k] for k in test_set}
+        iu_mesh_impression_split = dict(train={}, val={}, test={})
+        iu_mesh_impression_split["train"] = {k: self.iu_mesh_impression[k] for k in train_set}
+        iu_mesh_impression_split["val"] = {k: self.iu_mesh_impression[k] for k in val_set}
+        iu_mesh_impression_split["test"] = {k: self.iu_mesh_impression[k] for k in test_set}
 
-        if not os.path.exists(self.iu_mesh_impression_path_split):
-            os.mknod(self.iu_mesh_impression_path_split)
-        json.dump(split_data, open(self.iu_mesh_impression_path_split, 'w'))
+        if not os.path.exists(self.iu_mesh_impression_path_new_split):
+            os.mknod(self.iu_mesh_impression_path_new_split)
+        json.dump(iu_mesh_impression_split, open(self.iu_mesh_impression_path_new_split, 'w'))
 
-        split_data = dict(train=[], val=[], test=[])
-        split_data["train"] = [self.iu_mesh_impression[k] for k in train_set]
-        split_data["val"] = [self.iu_mesh_impression[k] for k in val_set]
-        split_data["test"] = [self.iu_mesh_impression[k] for k in test_set]
+        iu_mesh_impression_ann = dict(train=[], val=[], test=[])
+        iu_mesh_impression_ann["train"] = list(iu_mesh_impression_split["train"].values())
+        iu_mesh_impression_ann["val"] = list(iu_mesh_impression_split["val"].values())
+        iu_mesh_impression_ann["test"] = list(iu_mesh_impression_split["test"].values())
 
-        self.r2gen_ann_path = self.r2gen_ann_path.replace("r2gen", "kaggle")
-        if not os.path.exists(self.r2gen_ann_path):
-            os.mknod(self.r2gen_ann_path)
-        json.dump(split_data, open(self.r2gen_ann_path, 'w'))
+        if not os.path.exists(self.kaggle_ann_path):
+            os.mknod(self.kaggle_ann_path)
+        json.dump(iu_mesh_impression_ann, open(self.kaggle_ann_path, 'w'))
+
+        return iu_mesh_impression_split
 
     def validate_association(self):
         self.analyze = Analyze(self.args)

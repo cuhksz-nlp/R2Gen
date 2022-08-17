@@ -82,8 +82,6 @@ def parse_agrs():
                         help='the path to the directory containing the data.')
     parser.add_argument('--ann_path', type=str, default=('%s/r2gen/annotation.json' % data_iu_xray_path),
                         help='the path to the directory containing the data.')
-    parser.add_argument('--r2gen_kaggle_ann_path', type=str, default=('%s/kaggle/r2gen_kaggle_annotation.json' % data_iu_xray_path),
-                        help='the path to the directory containing the data.')
 
     # Reports path kaggle iu xray
     parser.add_argument('--kaggle_iu_projections_path', type=str,
@@ -116,6 +114,11 @@ def parse_agrs():
     parser.add_argument('--create_r2gen_kaggle_association', type=int, default=1,
                         help='0 to not create association'
                              '1 to create association'
+                        )
+    # Create new random split to kaggle/annotation.json
+    parser.add_argument('--is_new_random_split', type=int, default=1,
+                        help='0 to not create new random split'
+                             '1 to create new random split'
                         )
 
     # Experiment number

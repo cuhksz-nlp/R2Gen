@@ -29,11 +29,12 @@ def main():
     # exp setup
     # Process data to get additional info
     data_processor = DataProcessor(args)
-
-    data_processor.split_dataset()
-
     if not data_processor.validate_association():
         raise Exception("Association file is not valid")
+
+    # change annotation path to new split annotation.json
+    if args.is_new_random_split == 1:
+        args.ann_path = args.ann_path.replace("r2gen", "kaggle")
 
     # create tokenizer
     tokenizer = Tokenizer(args, data_processor)
