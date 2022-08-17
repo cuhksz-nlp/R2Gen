@@ -34,7 +34,7 @@ class DataProcessor(object):
                 self.iu_mesh_impression_split = json.loads(open(self.iu_mesh_impression_path_new_split, 'r').read())
             else:
                 self.iu_mesh_impression_split = self.split_dataset()
-        self.analyze = Analyze(args)
+        self.analyze = Analyze(args, self.iu_mesh_impression_split)
 
     def associate_iu_r2gen_kaggle_by_id(self):
         kaggle_iu_reports = csv.reader(open(self.kaggle_iu_reports_path, 'r'))
@@ -156,7 +156,6 @@ class DataProcessor(object):
         return iu_mesh_impression_split
 
     def validate_association(self):
-        self.analyze = Analyze(self.args)
         self.analyze.get_number_of_normal()
         self.analyze.get_number_of_no_index()
         self.analyze.get_number_of_empty_mesh_asc()
