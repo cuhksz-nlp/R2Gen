@@ -3,8 +3,8 @@ import json
 
 
 class Analyze(object):
-    def __init__(self, args):
-        self.iu_mesh_impression_path_split = args.iu_mesh_impression_path.replace(".json", "_split.json")
+    def __init__(self, args, dataset):
+        self.dataset = dataset
         # size
         self.dataset_size = 0
         self.train_size = 0
@@ -25,9 +25,6 @@ class Analyze(object):
         self.train_number_of_empty_mesh = 0
         self.val_number_of_empty_mesh = 0
         self.test_number_of_empty_mesh = 0
-
-        with open(self.iu_mesh_impression_path_split, "rt") as datasetFile:
-            self.dataset = json.load(datasetFile)
 
     def get_normal_ratio(self):
         self.get_samples_size()
@@ -85,7 +82,7 @@ class Analyze(object):
             if split == "test":
                 self.test_size = len(samples)
 
-            self.dataset_size = self.train_size + self.val_size + self.test_size
+        self.dataset_size = self.train_size + self.val_size + self.test_size
 
     def get_number_of_normal(self):
         for split, samples in self.dataset.items():
@@ -96,8 +93,8 @@ class Analyze(object):
             if split == "test":
                 self.test_number_of_normal = len([s for s in samples.keys() if samples[s].get("iu_mesh") == "normal"])
 
-            self.total_number_of_normal = \
-                self.train_number_of_normal + self.val_number_of_normal + self.test_number_of_normal
+        self.total_number_of_normal = \
+            self.train_number_of_normal + self.val_number_of_normal + self.test_number_of_normal
 
     def get_number_of_no_index(self):
         for split, samples in self.dataset.items():
@@ -110,8 +107,8 @@ class Analyze(object):
             if split == "test":
                 self.test_number_of_no_index = len(
                     [s for s in samples.keys() if samples[s].get("iu_mesh") == "No Indexing"])
-            self.total_number_of_no_index = \
-                self.train_number_of_no_index + self.val_number_of_no_index + self.test_number_of_no_index
+        self.total_number_of_no_index = \
+            self.train_number_of_no_index + self.val_number_of_no_index + self.test_number_of_no_index
 
     def get_number_of_empty_mesh_asc(self):
         for split, samples in self.dataset.items():
@@ -121,7 +118,7 @@ class Analyze(object):
                 self.val_number_of_empty_mesh = len([s for s in samples.keys() if samples[s].get("mesh") == ""])
             if split == "test":
                 self.test_number_of_empty_mesh = len([s for s in samples.keys() if samples[s].get("mesh") == ""])
-            self.total_number_of_empty_mesh = \
-                self.train_number_of_empty_mesh + self.val_number_of_empty_mesh + self.test_number_of_empty_mesh
+        self.total_number_of_empty_mesh = \
+            self.train_number_of_empty_mesh + self.val_number_of_empty_mesh + self.test_number_of_empty_mesh
 
 ################################################################################################################################
