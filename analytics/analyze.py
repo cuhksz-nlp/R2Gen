@@ -110,6 +110,7 @@ class Analyze(object):
         self.total_number_of_no_index = \
             self.train_number_of_no_index + self.val_number_of_no_index + self.test_number_of_no_index
 
+    # asc = association file
     def get_number_of_empty_mesh_asc(self):
         for split, samples in self.dataset.items():
             if split == "train":
