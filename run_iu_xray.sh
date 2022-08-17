@@ -12,14 +12,15 @@ cd "$HOME/projects/R2Gen"
 
 time python main.py \
 --image_dir ../data/iu_xray/r2gen/images/ \
---ann_path ../data/iu_xray/kaggle/annotation.json \
+--ann_path ../data/iu_xray/r2gen/annotation.json \
 --dataset_name iu_xray \
 --is_print 0 \
 --remove_annotation 1 \
 --train_sample 0 \
 --val_sample 0 \
 --test_sample 0 \
---create_r2gen_kaggle_association 1 \
+--create_r2gen_kaggle_association 0 \
+--is_new_random_split 0 \
 --max_seq_length 100 \
 --threshold 3 \
 --batch_size 16 \
