@@ -12,7 +12,7 @@ cd "$HOME/projects/R2Gen"
 
 time python main.py \
 --image_dir ../data/iu_xray/r2gen/images/ \
---ann_path ../data/iu_xray/r2gen/annotation.json \
+--ann_path data/iu_xray/r2gen/annotation.json \
 --dataset_name iu_xray \
 --is_print 0 \
 --remove_annotation 1 \
