@@ -90,18 +90,18 @@ def parse_agrs():
     parser.add_argument('--kaggle_iu_reports_path', type=str,
                         default=('%s/kaggle/iu_reports.csv' % data_iu_xray_path),
                         help='the path to the directory containing the reports.')
-
+    # Path for the generated association file
     parser.add_argument('--iu_mesh_impression_path', type=str,
                         default=('%s/kaggle/iu_mesh_impression.json' % data_iu_xray_path),
                         help='the path to the directory containing the mesh and impression for r2gen dataset.')
 
     # To print and debug
-    parser.add_argument('--is_print', type=int, default=0,
+    parser.add_argument('--is_print', type=int, default=0, choices=[0, 1],
                         help='0 to not print the validation and test output with ground truth'
                              '1 to print the validation and test output with ground truth'
                         )
     # Remove annotation for evaluation
-    parser.add_argument('--remove_annotation', type=int, default=1,
+    parser.add_argument('--remove_annotation', type=int, default=1, choices=[0, 1],
                         help='0 to not remove annotation'
                              '1 to remove annotation'
                         )
@@ -111,18 +111,18 @@ def parse_agrs():
     parser.add_argument('--test_sample', type=int, default=0, help='number of sample for test dataset')
 
     # Create iu_mesh_impression.json
-    parser.add_argument('--create_r2gen_kaggle_association', type=int, default=1,
+    parser.add_argument('--create_r2gen_kaggle_association', type=int, default=1, choices=[0, 1],
                         help='0 to not create association'
                              '1 to create association'
                         )
     # Create new random split to kaggle/annotation.json
-    parser.add_argument('--is_new_random_split', type=int, default=1,
+    parser.add_argument('--is_new_random_split', type=int, default=1, choices=[0, 1],
                         help='0 to not create new random split'
                              '1 to create new random split'
                         )
 
     # Experiment number
-    parser.add_argument('--exp', type=int, default=1,
+    parser.add_argument('--exp', type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7, 8],
                         help='exp is between 1-8 '
                              '1. Reproduce the result for R2Gen. '
                              '2. Add `MeSH` information provided in the `IU-Xray` dataset from kaggle. '
@@ -133,7 +133,7 @@ def parse_agrs():
                              '7. Add `attributes` and `impression`. '
                              '8. Add `MeSH`, `attributes` and `impression`.')
     # dataloader settings
-    parser.add_argument('--max_seq_length', type=int, default=60,
+    parser.add_argument('--max_seq_length', type=int, default=60, choices=[1, 2, 3, 4, 5, 6, 7, 8],
                         help='1. 60(paper) train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
@@ -145,6 +145,7 @@ def parse_agrs():
     ###################################################################################################################
     args = parser.parse_args()
     return args
+
 
 # exp setup
 class ArgumentParser(object):
