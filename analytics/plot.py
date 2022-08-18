@@ -41,6 +41,9 @@ class Plot(object):
                           "sample_size": self.analyze.test_size, "t_ratio": 1})
 
         dataset = pd.DataFrame(data_dict)
+        dataset.loc[3] = pd.Series(
+            ["total", dataset["normal"].sum(), dataset["no_index"].sum(), dataset["no_mesh"].sum(),
+             dataset["sample_size"].sum(), 1], index=data_dict[0].keys())
         dataset["normal_ratio"] = dataset["normal"] / dataset["sample_size"]
         dataset["no_index_ratio"] = dataset["no_index"] / dataset["sample_size"]
         dataset["no_mesh_ratio"] = dataset["no_mesh"] / dataset["sample_size"]
@@ -67,4 +70,4 @@ class Plot(object):
                    ncol=number_of_col_in_legend, fancybox=True, shadow=True, handles=bar_legends)
         plt.title(plot_name, pad=28)
         if self.is_save_plot:
-            plt.savefig("plot_assets/"+plot_name.lower().replace(" ", "_") + ".png")
+            plt.savefig("plot_assets/" + plot_name.lower().replace(" ", "_") + ".png")
