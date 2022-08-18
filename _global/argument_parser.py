@@ -133,7 +133,7 @@ def parse_agrs():
                              '7. Add `attributes` and `impression`. '
                              '8. Add `MeSH`, `attributes` and `impression`.')
     # dataloader settings
-    parser.add_argument('--max_seq_length', type=int, default=60, choices=[1, 2, 3, 4, 5, 6, 7, 8],
+    parser.add_argument('--max_seq_length', type=int, default=60,
                         help='1. 60(paper) train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
