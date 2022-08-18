@@ -10,12 +10,12 @@ class Plot(object):
     def __init__(self, args, analyze):
         self.is_save_plot = args.is_save_plot
         self.analyze = analyze
-        self.normal_color = "#4eabb6"
-        self.abnormal_color = "#b6a8eb"
-        self.indexed_color = "#4bc938"
-        self.no_index_color = "#e82007"
-        self.mesh_color = "#8b2be2"
-        self.no_mesh_color = "#9f4700"
+        self.normal_color = "#64B5CD"
+        self.abnormal_color = "#4C72B0"
+        self.indexed_color = "#CCB974"
+        self.no_index_color = "#DD8452"
+        self.mesh_color = "#8172B3"
+        self.no_mesh_color = "#DA8BC3"
         self.dataset = self.get_info_dict()
 
     def populate_analyze(self):
