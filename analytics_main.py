@@ -1,12 +1,12 @@
 # exp setup
 import time
 
+import matplotlib.pyplot as plt
+
 import timer
 from _global.argument_parser import ArgumentParser
-from analytics.analyze import Analyze
 from analytics.plot import Plot
 from data_processors.data_processor import DataProcessor
-import matplotlib.pyplot as plt
 
 
 def main():
@@ -26,14 +26,17 @@ def main():
 
     plot = Plot(args, data_processor.analyze)
     # normal ratio
-    plot.plot_duel_stacked_bar(num=1, x="split", ys=["t_ratio", "normal_ratio"],
-                               colors=[plot.abnormal_color, plot.normal_color], labels=['Normal', 'Abnormal'])
+    plot.plot_stacked_bar(num=1, xs=["t_ratio", "normal_ratio"], ys=["split"],
+                          colors=[plot.abnormal_color, plot.normal_color], labels=['Abnormal', 'Normal'],
+                          number_of_col_in_legend=2, plot_name="[R2gen Split]Normal to Abnormal ratio")
     # indexed ratio
-    plot.plot_duel_stacked_bar(num=2, x="split", ys=["t_ratio", "no_index_ratio"],
-                               colors=[plot.indexed_color, plot.no_index_color], labels=['No Indexing', 'Indexed'])
+    plot.plot_stacked_bar(num=2, xs=["t_ratio", "no_index_ratio"], ys=["split"],
+                          colors=[plot.indexed_color, plot.no_index_color], labels=['Indexed', 'No Indexing'],
+                          number_of_col_in_legend=2, plot_name="[R2gen Split]Indexed to No Indexing ratio")
     # empty mesh ratio
-    plot.plot_duel_stacked_bar(num=3, x="split", ys=["t_ratio", "empty_mesh_ratio"],
-                               colors=[plot.with_mesh_color, plot.empty_mesh_color], labels=['MeSH', 'No MeSH'])
+    plot.plot_stacked_bar(num=3, xs=["t_ratio", "no_mesh_ratio"], ys=["split"],
+                          colors=[plot.mesh_color, plot.no_mesh_color], labels=['MeSH', 'No MeSH'],
+                          number_of_col_in_legend=2, plot_name="[R2gen Split]Mesh to No MeSH ratio")
 
     # new split
     args.is_new_random_split = 1
@@ -46,14 +49,17 @@ def main():
 
     plot = Plot(args, data_processor.analyze)
     # normal ratio
-    plot.plot_duel_stacked_bar(num=4, x="split", ys=["t_ratio", "normal_ratio"],
-                               colors=[plot.abnormal_color, plot.normal_color], labels=['Normal', 'Abnormal'])
+    plot.plot_stacked_bar(num=4, xs=["t_ratio", "normal_ratio"], ys=["split"],
+                          colors=[plot.abnormal_color, plot.normal_color], labels=['Abnormal', 'Normal'],
+                          number_of_col_in_legend=2, plot_name="[New Split]Normal to Abnormal ratio")
     # indexed ratio
-    plot.plot_duel_stacked_bar(num=5, x="split", ys=["t_ratio", "no_index_ratio"],
-                               colors=[plot.indexed_color, plot.no_index_color], labels=['No Indexing', 'Indexed'])
+    plot.plot_stacked_bar(num=5, xs=["t_ratio", "no_index_ratio"], ys=["split"],
+                          colors=[plot.indexed_color, plot.no_index_color], labels=['Indexed', 'No Indexing'],
+                          number_of_col_in_legend=2, plot_name="[New Split]Indexed to No Indexing ratio")
     # empty mesh ratio
-    plot.plot_duel_stacked_bar(num=6, x="split", ys=["t_ratio", "empty_mesh_ratio"],
-                               colors=[plot.with_mesh_color, plot.empty_mesh_color], labels=['MeSH', 'No MeSH'])
+    plot.plot_stacked_bar(num=6, xs=["t_ratio", "no_mesh_ratio"], ys=["split"],
+                          colors=[plot.mesh_color, plot.no_mesh_color], labels=['MeSH', 'No MeSH'],
+                          number_of_col_in_legend=2, plot_name="[New Split]MeSH to No MeSH ratio")
     plt.show()
     timer.time_executed(start_time, "R2Gen.Analysis")
 

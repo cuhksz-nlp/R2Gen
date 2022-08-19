@@ -120,6 +120,11 @@ def parse_agrs():
                         help='0 to not create new random split'
                              '1 to create new random split'
                         )
+    # Save graphs
+    parser.add_argument('--is_save_plot', type=int, default=1, choices=[0, 1],
+                        help='0 to not save generated plot'
+                             '1 to save generated plot'
+                        )
 
     # Experiment number
     parser.add_argument('--exp', type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7, 8],

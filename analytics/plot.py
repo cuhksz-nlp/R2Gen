@@ -1,28 +1,22 @@
-import seaborn as sns
-import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 sns.set_theme(style="ticks", color_codes=True)
 
 
-# palette = ["#273eff", "#f37c04", "#4bc938", "#e82007", "#8b2be2", "#9f4700", "#f24cc1", "#a3a3a3", "#f7c401",
-#                "#56d8fe", "#cd88a8", "#5ea55a", "#f15357", "#2d70b1", "#000200"]
-
 class Plot(object):
     def __init__(self, args, analyze):
-        self.args = args
+        self.is_save_plot = args.is_save_plot
         self.analyze = analyze
-        self.normal_color = "#4eabb6"
-        self.abnormal_color = "#b6a8eb"
-        self.indexed_color = "#4bc938"
-        self.no_index_color = "#e82007"
-        self.with_mesh_color = "#8b2be2"
-        self.empty_mesh_color = "#9f4700"
+        self.normal_color = "#64B5CD"
+        self.abnormal_color = "#4C72B0"
+        self.indexed_color = "#CCB974"
+        self.no_index_color = "#DD8452"
+        self.mesh_color = "#8172B3"
+        self.no_mesh_color = "#DA8BC3"
         self.dataset = self.get_info_dict()
-        # self.normal_abnormal = self.get_normal_abnormal()
-        # self.indexed_no_index = self.get_indexed_no_index()
-        # self.with_mesh_empty_mesh = self.get_with_mesh_empty_mesh()
 
     def populate_analyze(self):
         self.analyze.get_number_of_normal()
@@ -35,29 +29,45 @@ class Plot(object):
         data_dict = list(dict())
         data_dict.append({"split": "train", "normal": self.analyze.train_number_of_normal,
                           "no_index": self.analyze.train_number_of_no_index,
-                          "empty_mesh": self.analyze.train_number_of_empty_mesh,
+                          "no_mesh": self.analyze.train_number_of_empty_mesh,
                           "sample_size": self.analyze.train_size, "t_ratio": 1})
         data_dict.append({"split": "val", "normal": self.analyze.val_number_of_normal,
                           "no_index": self.analyze.val_number_of_no_index,
-                          "empty_mesh": self.analyze.val_number_of_empty_mesh,
+                          "no_mesh": self.analyze.val_number_of_empty_mesh,
                           "sample_size": self.analyze.val_size, "t_ratio": 1})
         data_dict.append({"split": "test", "normal": self.analyze.test_number_of_normal,
                           "no_index": self.analyze.test_number_of_no_index,
-                          "empty_mesh": self.analyze.test_number_of_empty_mesh,
+                          "no_mesh": self.analyze.test_number_of_empty_mesh,
                           "sample_size": self.analyze.test_size, "t_ratio": 1})
 
         dataset = pd.DataFrame(data_dict)
+        dataset.loc[3] = pd.Series(
+            ["total", dataset["normal"].sum(), dataset["no_index"].sum(), dataset["no_mesh"].sum(),
+             dataset["sample_size"].sum(), 1], index=data_dict[0].keys())
         dataset["normal_ratio"] = dataset["normal"] / dataset["sample_size"]
         dataset["no_index_ratio"] = dataset["no_index"] / dataset["sample_size"]
-        dataset["empty_mesh_ratio"] = dataset["empty_mesh"] / dataset["sample_size"]
+        dataset["no_mesh_ratio"] = dataset["no_mesh"] / dataset["sample_size"]
 
         return dataset
 
-    def plot_duel_stacked_bar(self, num, x, ys, colors, labels):
+    def plot_stacked_bar(self, num, xs, ys, colors, labels, number_of_col_in_legend, plot_name):
         plt.figure(num=num)
-        sns.barplot(x=x, y=ys[0], data=self.dataset, estimator=sum, ci=None, color=colors[0])
-        sns.barplot(x=x, y=ys[1], data=self.dataset, color=colors[1])
-
-        top_bar = mpatches.Patch(color=colors[1], label=labels[0])
-        bottom_bar = mpatches.Patch(color=colors[0], label=labels[1])
-        plt.legend(handles=[top_bar, bottom_bar])
+        bar_legends = []
+        if len(xs) == len(ys) == len(colors) == len(labels):
+            for i in range(len(xs)):
+                sns.barplot(x=xs[i], y=ys[i], data=self.dataset, color=colors[i])
+                bar_legends.append(mpatches.Patch(color=colors[i], label=labels[i]))
+        else:
+            if len(xs) == 1 and len(ys) == len(colors) == len(labels):
+                for i in range(len(ys)):
+                    sns.barplot(x=xs[0], y=ys[i], data=self.dataset, color=colors[i])
+                    bar_legends.append(mpatches.Patch(color=colors[i], label=labels[i]))
+            if len(ys) == 1 and len(xs) == len(colors) == len(labels):
+                for i in range(len(xs)):
+                    sns.barplot(x=xs[i], y=ys[0], data=self.dataset, color=colors[i])
+                    bar_legends.append(mpatches.Patch(color=colors[i], label=labels[i]))
+        plt.legend(loc='upper right', bbox_to_anchor=(1.01, 1.11),
+                   ncol=number_of_col_in_legend, fancybox=True, shadow=True, handles=bar_legends)
+        plt.title(plot_name, pad=28)
+        if self.is_save_plot:
+            plt.savefig("plot_assets/" + plot_name.lower().replace(" ", "_") + ".png")
