@@ -128,25 +128,27 @@ def parse_agrs():
 
     # Experiment number
     parser.add_argument('--exp', type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7, 8],
-                        help='exp is between 1-8 '
-                             '1. Reproduce the result for R2Gen. '
-                             '2. Add `MeSH` information provided in the `IU-Xray` dataset from kaggle. '
-                             '3. Add `attributes` provided in the `IU-Xray` dataset from kaggle. '
-                             '4. Add `MeSH` and `attributes` both. '
-                             '5. Add `impression` provided in the `IU-Xray` dataset from kaggle. '
-                             '6. Add `MeSH` and `impression`. '
-                             '7. Add `attributes` and `impression`. '
-                             '8. Add `MeSH`, `attributes` and `impression`.')
+                        help='exp is between 1-8'
+                             '1. Reproduce the result for R2Gen.'
+                             '2. Add `MeSH` information provided in the `IU-Xray` dataset from kaggle.'
+                             '3. Add `attributes` provided in the `IU-Xray` dataset from kaggle.'
+                             '4. Add `MeSH` and `attributes` both.'
+                             '5. Train and Predict `impression` provided in the `IU-Xray` dataset from kaggle.'
+                             '6. Add `MeSH` to 5.'
+                             '7. Add `attributes` to 5.'
+                             '8. Add `MeSH` and `attributes` to 5.')
     # dataloader settings
     parser.add_argument('--max_seq_length', type=int, default=60,
                         help='1. 60(paper) train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
-                             '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
-                             '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             # '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             # '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              '4. train max 165 mean 41 median 37 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
-                             '5. train max 191 mean 45 median 40 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
-                             '6. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
-                             '7. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
-                             '8. train max 202 mean 49 median 43 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38')
+                             # '5. train max 191 mean 45 median 40 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             '5. train max 129 mean 10 median 6 mode 5 # val max 48 mean 10 median 6 mode 5 # test max 59 mean 9 median 5 mode 5'
+                             # '6. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             # '7. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
+                             # '8. train max 202 mean 49 median 43 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38')
+                             '8. train max 147 mean 16 median 11 mode 5 # val max 48 mean 10 median 6 mode 5 # test max 59 mean 9 median 5 mode 5')
     ###################################################################################################################
     args = parser.parse_args()
     return args
