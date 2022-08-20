@@ -114,29 +114,21 @@ class DataProcessor(object):
             report = self.iu_mesh_impression_split[split][r2gen_id]['impression']
 
         if split == 'train':
-            mesh = self.iu_mesh_impression_split[split][r2gen_id]['mesh']
-            if mesh != "":
-                mesh = " <sep>" + mesh
-
-            attr = self.iu_mesh_impression_split[split][r2gen_id]['attr']
-            if attr != "":
-                attr = " <sep>" + attr
-
-            mesh_attr = self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
-            if mesh_attr != "":
-                mesh_attr = " <sep>" + mesh_attr
-
-            if exp == 2:
+            sep_ = " <sep>"
+            if exp == 2 or exp == 6:
+                mesh = self.iu_mesh_impression_split[split][r2gen_id]['mesh']
+                if mesh != "":
+                    mesh = sep_ + mesh
                 return report + mesh
-            elif exp == 3:
+            elif exp == 3 or exp == 7:
+                attr = self.iu_mesh_impression_split[split][r2gen_id]['attr']
+                if attr != "":
+                    attr = sep_ + attr
                 return report + attr
-            elif exp == 4:
-                return report + mesh_attr
-            elif exp == 6:
-                return report + mesh
-            elif exp == 7:
-                return report + attr
-            elif exp == 8:
+            elif exp == 4 or exp == 8:
+                mesh_attr = self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
+                if mesh_attr != "":
+                    mesh_attr = sep_ + mesh_attr
                 return report + mesh_attr
         return report
 
