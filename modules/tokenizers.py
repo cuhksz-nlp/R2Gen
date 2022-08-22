@@ -7,8 +7,6 @@ class Tokenizer(object):
     def __init__(self, args, data_processor):
         # exp setup
         self.exp = args.exp
-        self.iu_mesh_impression_path = args.iu_mesh_impression_path
-        self.iu_mesh_impression = json.loads(open(self.iu_mesh_impression_path, 'r').read())
         self.data_processor = data_processor
         #############################################################
         self.ann_path = args.ann_path
