@@ -164,9 +164,23 @@ class DataProcessor(object):
         self.analyze.get_number_of_no_index()
         self.analyze.get_number_of_empty_mesh_asc()
 
+        r2gen_ann = json.loads(open(self.r2gen_ann_path, 'r').read())
+        flag = True
+        if self.is_new_random_split == 0:
+            unmatched = list()
+            for split, split_data in r2gen_ann.items():
+                for sample in split_data:
+                    if split in self.iu_mesh_impression_split and sample["id"] in self.iu_mesh_impression_split[split] \
+                            and split == sample["split"]:
+                        continue
+                    else:
+                        unmatched.append(sample["id"])
+            flag = len(unmatched) == 0
+
         return (
                 self.analyze.total_number_of_empty_mesh == self.analyze.total_number_of_normal + self.analyze.total_number_of_no_index
                 and self.analyze.train_number_of_empty_mesh == self.analyze.train_number_of_normal + self.analyze.train_number_of_no_index
                 and self.analyze.val_number_of_empty_mesh == self.analyze.val_number_of_normal + self.analyze.val_number_of_no_index
-                and self.analyze.test_number_of_empty_mesh == self.analyze.test_number_of_normal + self.analyze.test_number_of_no_index)
+                and self.analyze.test_number_of_empty_mesh == self.analyze.test_number_of_normal + self.analyze.test_number_of_no_index
+                and flag)
     ############################################
