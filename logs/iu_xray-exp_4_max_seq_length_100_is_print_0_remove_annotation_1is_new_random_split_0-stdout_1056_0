@@ -1,0 +1,1368 @@
++ export PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
++ PATH=/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ pyenv init -
++ eval 'export PYENV_SHELL=bash
+source '\''/media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command
+  command="${1:-}"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /media/compute/homes/tmandal/.pyenv/libexec/../completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command
+++ command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
+++ pyenv virtualenv-init -
++ eval 'export PATH="/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "$VIRTUAL_ENV" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND";
+fi'
+++ export PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ PATH=/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/envs/r2gen/bin:/media/compute/homes/tmandal/.local/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/condabin:/media/compute/homes/tmandal/.pyenv/plugins/pyenv-virtualenv/shims:/media/compute/homes/tmandal/.pyenv/bin:/media/compute/homes/tmandal/.pyenv/versions/miniconda3-latest/bin:/media/compute/homes/tmandal/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/thinlinc/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ pyenv local miniconda3-latest
++ local command
++ command=local
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv local miniconda3-latest
++ pyenv local miniconda3-latest
++ cd /media/compute/homes/tmandal/projects/R2Gen
++ python main.py --image_dir ../data/iu_xray/r2gen/images/ --ann_path data/iu_xray/r2gen/annotation.json --dataset_name iu_xray --is_print 0 --remove_annotation 1 --train_sample 0 --val_sample 0 --test_sample 0 --create_r2gen_kaggle_association 0 --is_new_random_split 0 --max_seq_length 100 --threshold 3 --batch_size 16 --epochs 100 --save_dir ../r2gen_results/iu_xray --step_size 50 --gamma 0.1 --seed 9223 --exp 4
+	epoch          : 1
+	train_loss     : 4.284471557690547
+	val_BLEU_1     : 0.2943608510430873
+	val_BLEU_2     : 0.19158469536925618
+	val_BLEU_3     : 0.1375592409395477
+	val_BLEU_4     : 0.10083942623302516
+	val_METEOR     : 0.11174046697832515
+	val_ROUGE_L    : 0.36012468837160105
+	test_BLEU_1    : 0.33097489364952126
+	test_BLEU_2    : 0.2158056099797498
+	test_BLEU_3    : 0.15744989748778584
+	test_BLEU_4    : 0.11713675784899857
+	test_METEOR    : 0.12208235128910205
+	test_ROUGE_L   : 0.36981733736109124
+epoch: 1 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=20, tm_min=11, tm_sec=39, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 1', ' executed for 00:11:00.37')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 2
+	train_loss     : 2.90468087379749
+	val_BLEU_1     : 0.1740983030079613
+	val_BLEU_2     : 0.1007576175041886
+	val_BLEU_3     : 0.07071676449326889
+	val_BLEU_4     : 0.05390766101942869
+	val_METEOR     : 0.0958557724178735
+	val_ROUGE_L    : 0.3088521898627593
+	test_BLEU_1    : 0.21479284769884574
+	test_BLEU_2    : 0.12694564116361262
+	test_BLEU_3    : 0.09065830273949006
+	test_BLEU_4    : 0.06903897472888254
+	test_METEOR    : 0.1102903534614525
+	test_ROUGE_L   : 0.3262152494973926
+epoch: 2 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=20, tm_min=23, tm_sec=1, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 2', ' executed for 00:11:09.14')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 3
+	train_loss     : 2.4308241779987627
+	val_BLEU_1     : 0.1740983030079613
+	val_BLEU_2     : 0.1007576175041886
+	val_BLEU_3     : 0.07071676449326889
+	val_BLEU_4     : 0.05390766101942869
+	val_METEOR     : 0.0958557724178735
+	val_ROUGE_L    : 0.3088521898627593
+	test_BLEU_1    : 0.21479284769884574
+	test_BLEU_2    : 0.12694564116361262
+	test_BLEU_3    : 0.09065830273949006
+	test_BLEU_4    : 0.06903897472888254
+	test_METEOR    : 0.1102903534614525
+	test_ROUGE_L   : 0.3262152494973926
+epoch: 3 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=20, tm_min=34, tm_sec=8, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 3', ' executed for 00:11:07.74')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 4
+	train_loss     : 2.174602319644048
+	val_BLEU_1     : 0.1740983030079613
+	val_BLEU_2     : 0.1007576175041886
+	val_BLEU_3     : 0.07071676449326889
+	val_BLEU_4     : 0.05390766101942869
+	val_METEOR     : 0.0958557724178735
+	val_ROUGE_L    : 0.3088521898627593
+	test_BLEU_1    : 0.21479284769884574
+	test_BLEU_2    : 0.12694564116361262
+	test_BLEU_3    : 0.09065830273949006
+	test_BLEU_4    : 0.06903897472888254
+	test_METEOR    : 0.1102903534614525
+	test_ROUGE_L   : 0.3262152494973926
+epoch: 4 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=20, tm_min=45, tm_sec=19, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 4', ' executed for 00:11:10.32')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 5
+	train_loss     : 2.005321934589973
+	val_BLEU_1     : 0.1740983030079613
+	val_BLEU_2     : 0.1007576175041886
+	val_BLEU_3     : 0.07071676449326889
+	val_BLEU_4     : 0.05390766101942869
+	val_METEOR     : 0.0958557724178735
+	val_ROUGE_L    : 0.3088521898627593
+	test_BLEU_1    : 0.21479284769884574
+	test_BLEU_2    : 0.12694564116361262
+	test_BLEU_3    : 0.09065830273949006
+	test_BLEU_4    : 0.06903897472888254
+	test_METEOR    : 0.1102903534614525
+	test_ROUGE_L   : 0.3262152494973926
+epoch: 5 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=20, tm_min=56, tm_sec=33, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 5', ' executed for 00:11:14.23')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 6
+	train_loss     : 1.8736417917104868
+	val_BLEU_1     : 0.1740983030079613
+	val_BLEU_2     : 0.1007576175041886
+	val_BLEU_3     : 0.07071676449326889
+	val_BLEU_4     : 0.05390766101942869
+	val_METEOR     : 0.0958557724178735
+	val_ROUGE_L    : 0.3088521898627593
+	test_BLEU_1    : 0.21479284769884574
+	test_BLEU_2    : 0.12694564116361262
+	test_BLEU_3    : 0.09065830273949006
+	test_BLEU_4    : 0.06903897472888254
+	test_METEOR    : 0.1102903534614525
+	test_ROUGE_L   : 0.3262152494973926
+epoch: 6 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=21, tm_min=7, tm_sec=49, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 6', ' executed for 00:11:16.49')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 7
+	train_loss     : 1.7657251678980315
+	val_BLEU_1     : 0.18451867663382188
+	val_BLEU_2     : 0.10648229806591386
+	val_BLEU_3     : 0.07410962020995045
+	val_BLEU_4     : 0.055870930205518254
+	val_METEOR     : 0.09739409537190984
+	val_ROUGE_L    : 0.308065490610198
+	test_BLEU_1    : 0.234931386075031
+	test_BLEU_2    : 0.14021371454840265
+	test_BLEU_3    : 0.10071947335434749
+	test_BLEU_4    : 0.07717848518837493
+	test_METEOR    : 0.11523737671536903
+	test_ROUGE_L   : 0.3292268422086782
+epoch: 7 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=21, tm_min=18, tm_sec=55, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 7', ' executed for 00:11:05.14')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 8
+	train_loss     : 1.6678448640383208
+	val_BLEU_1     : 0.19798211168625193
+	val_BLEU_2     : 0.11599353273502813
+	val_BLEU_3     : 0.08081136682793125
+	val_BLEU_4     : 0.060987543856859
+	val_METEOR     : 0.10263527749464557
+	val_ROUGE_L    : 0.3139031088773951
+	test_BLEU_1    : 0.23747576931772085
+	test_BLEU_2    : 0.14059087109186957
+	test_BLEU_3    : 0.0994159680704523
+	test_BLEU_4    : 0.07481883870963951
+	test_METEOR    : 0.11597089811230758
+	test_ROUGE_L   : 0.32956790843989303
+epoch: 8 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=21, tm_min=30, tm_sec=6, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 8', ' executed for 00:11:11.67')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 9
+	train_loss     : 1.5793861315800592
+	val_BLEU_1     : 0.17895572673106683
+	val_BLEU_2     : 0.10361059595504846
+	val_BLEU_3     : 0.07246489740238606
+	val_BLEU_4     : 0.055095930103341344
+	val_METEOR     : 0.09709703446364469
+	val_ROUGE_L    : 0.3090741084646694
+	test_BLEU_1    : 0.22257564683898837
+	test_BLEU_2    : 0.13145775503056448
+	test_BLEU_3    : 0.09351660849239668
+	test_BLEU_4    : 0.07099636397151507
+	test_METEOR    : 0.1122001404803618
+	test_ROUGE_L   : 0.3269685046294629
+epoch: 9 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=21, tm_min=41, tm_sec=16, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 9', ' executed for 00:11:10.23')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 10
+	train_loss     : 1.496829185119042
+	val_BLEU_1     : 0.1796833713184313
+	val_BLEU_2     : 0.10428550315518786
+	val_BLEU_3     : 0.0731054095742639
+	val_BLEU_4     : 0.055562102605310866
+	val_METEOR     : 0.09756539389637119
+	val_ROUGE_L    : 0.3097931464492317
+	test_BLEU_1    : 0.21659107027084024
+	test_BLEU_2    : 0.1277602380223979
+	test_BLEU_3    : 0.09113936072406253
+	test_BLEU_4    : 0.06934853675309136
+	test_METEOR    : 0.11063967958732576
+	test_ROUGE_L   : 0.3260624366543604
+epoch: 10 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=21, tm_min=52, tm_sec=28, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 10', ' executed for 00:11:11.19')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 11
+	train_loss     : 1.4201709201702706
+	val_BLEU_1     : 0.18016845733405384
+	val_BLEU_2     : 0.1041139063333314
+	val_BLEU_3     : 0.07266257175689433
+	val_BLEU_4     : 0.055083240212627504
+	val_METEOR     : 0.09749313940947944
+	val_ROUGE_L    : 0.30919443433678834
+	test_BLEU_1    : 0.22574396054119153
+	test_BLEU_2    : 0.13381639566376732
+	test_BLEU_3    : 0.0952674010886446
+	test_BLEU_4    : 0.07225376402756341
+	test_METEOR    : 0.11320778578138106
+	test_ROUGE_L   : 0.32741603904909933
+epoch: 11 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=22, tm_min=3, tm_sec=44, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 11', ' executed for 00:11:16.39')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 12
+	train_loss     : 1.3513642980502203
+	val_BLEU_1     : 0.18472809510799204
+	val_BLEU_2     : 0.10753559933818778
+	val_BLEU_3     : 0.07501935915085861
+	val_BLEU_4     : 0.056858830802806556
+	val_METEOR     : 0.09885975856236454
+	val_ROUGE_L    : 0.3106062707954083
+	test_BLEU_1    : 0.23441498338431133
+	test_BLEU_2    : 0.13978291063910203
+	test_BLEU_3    : 0.09955066363209703
+	test_BLEU_4    : 0.07556653253346385
+	test_METEOR    : 0.1153810415658856
+	test_ROUGE_L   : 0.3287458525419532
+epoch: 12 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=22, tm_min=15, tm_sec=3, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 12', ' executed for 00:11:19.24')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 13
+	train_loss     : 1.282261510995718
+	val_BLEU_1     : 0.1939115599018537
+	val_BLEU_2     : 0.11239057334058375
+	val_BLEU_3     : 0.07799516105820777
+	val_BLEU_4     : 0.05883719202666811
+	val_METEOR     : 0.10125511823870734
+	val_ROUGE_L    : 0.31246720823021723
+	test_BLEU_1    : 0.24547846802735276
+	test_BLEU_2    : 0.1457413525510593
+	test_BLEU_3    : 0.10331741144007295
+	test_BLEU_4    : 0.07811306311326686
+	test_METEOR    : 0.1177689967376895
+	test_ROUGE_L   : 0.33003228561820386
+epoch: 13 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=22, tm_min=26, tm_sec=22, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 13', ' executed for 00:11:19.01')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 14
+	train_loss     : 1.2085179017140315
+	val_BLEU_1     : 0.2348352489092068
+	val_BLEU_2     : 0.13897709989713936
+	val_BLEU_3     : 0.09615269620206067
+	val_BLEU_4     : 0.07179484866846599
+	val_METEOR     : 0.11139074630386092
+	val_ROUGE_L    : 0.3200425282437717
+	test_BLEU_1    : 0.27420025609793375
+	test_BLEU_2    : 0.16585329892190107
+	test_BLEU_3    : 0.11792256083813059
+	test_BLEU_4    : 0.08893906296375041
+	test_METEOR    : 0.12507097182352703
+	test_ROUGE_L   : 0.3351243342417332
+epoch: 14 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=22, tm_min=37, tm_sec=32, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 14', ' executed for 00:11:10.13')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 15
+	train_loss     : 1.144780003107511
+	val_BLEU_1     : 0.29290099139070186
+	val_BLEU_2     : 0.18460908037815169
+	val_BLEU_3     : 0.13190839758721487
+	val_BLEU_4     : 0.10167893395109212
+	val_METEOR     : 0.13696601739123102
+	val_ROUGE_L    : 0.34231791506436116
+	test_BLEU_1    : 0.33758825262454195
+	test_BLEU_2    : 0.21155488856753457
+	test_BLEU_3    : 0.15158766760978137
+	test_BLEU_4    : 0.11570612099904096
+	test_METEOR    : 0.14996935774911335
+	test_ROUGE_L   : 0.35745803436816215
+epoch: 15 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=22, tm_min=48, tm_sec=43, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 15', ' executed for 00:11:10.66')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 16
+	train_loss     : 1.0819936848603762
+	val_BLEU_1     : 0.3303206952184999
+	val_BLEU_2     : 0.19881786799840095
+	val_BLEU_3     : 0.13693145870787116
+	val_BLEU_4     : 0.10172395079197534
+	val_METEOR     : 0.1403767362606054
+	val_ROUGE_L    : 0.33763639787363997
+	test_BLEU_1    : 0.3795803607755557
+	test_BLEU_2    : 0.23777258122963704
+	test_BLEU_3    : 0.17102359411353593
+	test_BLEU_4    : 0.13191187580878996
+	test_METEOR    : 0.15899547745184353
+	test_ROUGE_L   : 0.3537075394368622
+epoch: 16 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=0, tm_sec=6, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 16', ' executed for 00:11:11.17')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 17
+	train_loss     : 1.0220473459133734
+	val_BLEU_1     : 0.2719151441529693
+	val_BLEU_2     : 0.1623016969115702
+	val_BLEU_3     : 0.11194525035443996
+	val_BLEU_4     : 0.08278369926863273
+	val_METEOR     : 0.1232252236935386
+	val_ROUGE_L    : 0.3204132419356178
+	test_BLEU_1    : 0.31557786015358624
+	test_BLEU_2    : 0.1970680883854952
+	test_BLEU_3    : 0.1440450467829976
+	test_BLEU_4    : 0.11263385229880754
+	test_METEOR    : 0.13962211341098021
+	test_ROUGE_L   : 0.3491230822912443
+epoch: 17 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=11, tm_sec=32, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 17', ' executed for 00:11:13.88')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 18
+	train_loss     : 0.964169879601552
+	val_BLEU_1     : 0.3052948969709524
+	val_BLEU_2     : 0.17754628810111242
+	val_BLEU_3     : 0.11909973828306243
+	val_BLEU_4     : 0.08601298916077585
+	val_METEOR     : 0.12855585473427075
+	val_ROUGE_L    : 0.3247561376823929
+	test_BLEU_1    : 0.34834004651410244
+	test_BLEU_2    : 0.21205230777195347
+	test_BLEU_3    : 0.15127166408867052
+	test_BLEU_4    : 0.11691683473304439
+	test_METEOR    : 0.14417971362179724
+	test_ROUGE_L   : 0.34987341549963186
+epoch: 18 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=22, tm_sec=43, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 18', ' executed for 00:11:10.77')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 19
+	train_loss     : 0.9096033843664023
+	val_BLEU_1     : 0.3506014875886897
+	val_BLEU_2     : 0.21156726410379903
+	val_BLEU_3     : 0.14473320462075334
+	val_BLEU_4     : 0.10636854136777885
+	val_METEOR     : 0.14579154664385882
+	val_ROUGE_L    : 0.33923674324782793
+	test_BLEU_1    : 0.3946351762718801
+	test_BLEU_2    : 0.24972423780603226
+	test_BLEU_3    : 0.18192124350580544
+	test_BLEU_4    : 0.14297931487272147
+	test_METEOR    : 0.16558951470772545
+	test_ROUGE_L   : 0.3657568011878429
+epoch: 19 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=33, tm_sec=53, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 19', ' executed for 00:11:10.76')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 20
+	train_loss     : 0.847649157505769
+	val_BLEU_1     : 0.36218707203925743
+	val_BLEU_2     : 0.21767796150114735
+	val_BLEU_3     : 0.14749885193783396
+	val_BLEU_4     : 0.10825078134367103
+	val_METEOR     : 0.15043799704512573
+	val_ROUGE_L    : 0.3454921830742192
+	test_BLEU_1    : 0.4071974182379387
+	test_BLEU_2    : 0.2560817631987749
+	test_BLEU_3    : 0.1837321429848872
+	test_BLEU_4    : 0.1425670125325138
+	test_METEOR    : 0.16811885218178946
+	test_ROUGE_L   : 0.36910515568305324
+epoch: 20 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=45, tm_sec=19, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 20', ' executed for 00:11:13.51')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 21
+	train_loss     : 0.7983653967197125
+	val_BLEU_1     : 0.25533290417535576
+	val_BLEU_2     : 0.15473822447452298
+	val_BLEU_3     : 0.10835938507000363
+	val_BLEU_4     : 0.08131303460447575
+	val_METEOR     : 0.11847520229806857
+	val_ROUGE_L    : 0.3258240819121513
+	test_BLEU_1    : 0.28479727541297634
+	test_BLEU_2    : 0.16914146048711476
+	test_BLEU_3    : 0.11766481902249369
+	test_BLEU_4    : 0.08723916434232903
+	test_METEOR    : 0.12731586650293655
+	test_ROUGE_L   : 0.3318145843998526
+epoch: 21 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=21, tm_hour=23, tm_min=56, tm_sec=42, tm_wday=6, tm_yday=233, tm_isdst=1)
+('epoch: 21', ' executed for 00:11:10.71')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 22
+	train_loss     : 0.7559673611934369
+	val_BLEU_1     : 0.3836924649555097
+	val_BLEU_2     : 0.23208865981919485
+	val_BLEU_3     : 0.15488691269588842
+	val_BLEU_4     : 0.11136306704178184
+	val_METEOR     : 0.15717948693380573
+	val_ROUGE_L    : 0.3474405705683219
+	test_BLEU_1    : 0.4086229927784126
+	test_BLEU_2    : 0.25625277640823124
+	test_BLEU_3    : 0.18054074071280748
+	test_BLEU_4    : 0.13684119075396187
+	test_METEOR    : 0.1674848433800249
+	test_ROUGE_L   : 0.36930002461108247
+epoch: 22 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=0, tm_min=7, tm_sec=53, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 22', ' executed for 00:11:11.46')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 23
+	train_loss     : 0.7069318562746048
+	val_BLEU_1     : 0.37920875376498886
+	val_BLEU_2     : 0.23193986869616898
+	val_BLEU_3     : 0.1610438947379832
+	val_BLEU_4     : 0.12062717347188828
+	val_METEOR     : 0.15582113558727825
+	val_ROUGE_L    : 0.35300325936190785
+	test_BLEU_1    : 0.41583817872094564
+	test_BLEU_2    : 0.25984082517232243
+	test_BLEU_3    : 0.18472142995900637
+	test_BLEU_4    : 0.14146219241056257
+	test_METEOR    : 0.1692812434739187
+	test_ROUGE_L   : 0.3647966609293343
+epoch: 23 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=0, tm_min=19, tm_sec=16, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 23', ' executed for 00:11:10.88')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+Saving current best: model_best.pth ...
+	epoch          : 24
+	train_loss     : 0.6587617195569552
+	val_BLEU_1     : 0.33261688871171613
+	val_BLEU_2     : 0.1913921459575735
+	val_BLEU_3     : 0.12637191037517997
+	val_BLEU_4     : 0.08936669369694887
+	val_METEOR     : 0.1379391629489199
+	val_ROUGE_L    : 0.33302003914659556
+	test_BLEU_1    : 0.36780890779962916
+	test_BLEU_2    : 0.21827940596181497
+	test_BLEU_3    : 0.14780051651927648
+	test_BLEU_4    : 0.1067419461083425
+	test_METEOR    : 0.1509387557742343
+	test_ROUGE_L   : 0.34962934525029127
+epoch: 24 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=0, tm_min=30, tm_sec=40, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 24', ' executed for 00:11:11.76')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 25
+	train_loss     : 0.6130492127858675
+	val_BLEU_1     : 0.36318519584470216
+	val_BLEU_2     : 0.2176282135903203
+	val_BLEU_3     : 0.1463717012366267
+	val_BLEU_4     : 0.10571158980079055
+	val_METEOR     : 0.14771621699731213
+	val_ROUGE_L    : 0.3390944146172668
+	test_BLEU_1    : 0.3857007109938513
+	test_BLEU_2    : 0.2360578046680964
+	test_BLEU_3    : 0.16777227763306116
+	test_BLEU_4    : 0.12918145153858257
+	test_METEOR    : 0.15732324203241077
+	test_ROUGE_L   : 0.3540588485665559
+epoch: 25 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=0, tm_min=41, tm_sec=50, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 25', ' executed for 00:11:09.98')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 26
+	train_loss     : 0.5725148246838496
+	val_BLEU_1     : 0.3215413153989492
+	val_BLEU_2     : 0.19479075567850698
+	val_BLEU_3     : 0.13367602787258742
+	val_BLEU_4     : 0.09840469450885223
+	val_METEOR     : 0.13703053934879117
+	val_ROUGE_L    : 0.3349753113633089
+	test_BLEU_1    : 0.36325911214005296
+	test_BLEU_2    : 0.22464608844291573
+	test_BLEU_3    : 0.1589681170069968
+	test_BLEU_4    : 0.12076521873494057
+	test_METEOR    : 0.15116910858001353
+	test_ROUGE_L   : 0.3522535994048283
+epoch: 26 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=0, tm_min=53, tm_sec=1, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 26', ' executed for 00:11:11.64')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 27
+	train_loss     : 0.5356910065962718
+	val_BLEU_1     : 0.3168015350030024
+	val_BLEU_2     : 0.19015804668707206
+	val_BLEU_3     : 0.13136701118779703
+	val_BLEU_4     : 0.0980519204324532
+	val_METEOR     : 0.13507720743546028
+	val_ROUGE_L    : 0.33414938850734327
+	test_BLEU_1    : 0.3669804706273446
+	test_BLEU_2    : 0.21584654223807723
+	test_BLEU_3    : 0.1478334772333452
+	test_BLEU_4    : 0.11020942099382078
+	test_METEOR    : 0.14818507133217934
+	test_ROUGE_L   : 0.3507185426047844
+epoch: 27 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=4, tm_sec=12, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 27', ' executed for 00:11:10.40')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 28
+	train_loss     : 0.5040416694604434
+	val_BLEU_1     : 0.3457113297017727
+	val_BLEU_2     : 0.20904718594642355
+	val_BLEU_3     : 0.14314314755222293
+	val_BLEU_4     : 0.10505669986650484
+	val_METEOR     : 0.14326790218688976
+	val_ROUGE_L    : 0.33862457660330847
+	test_BLEU_1    : 0.3655649941644703
+	test_BLEU_2    : 0.22298854160422651
+	test_BLEU_3    : 0.15567381658756183
+	test_BLEU_4    : 0.11678053243446491
+	test_METEOR    : 0.152009537890231
+	test_ROUGE_L   : 0.3491273516826076
+epoch: 28 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=15, tm_sec=22, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 28', ' executed for 00:11:10.13')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 29
+	train_loss     : 0.471991702914238
+	val_BLEU_1     : 0.3561918872554138
+	val_BLEU_2     : 0.21722253361299387
+	val_BLEU_3     : 0.15110884892948545
+	val_BLEU_4     : 0.11160735215502099
+	val_METEOR     : 0.1447437826645441
+	val_ROUGE_L    : 0.34483716995040803
+	test_BLEU_1    : 0.37969328233500893
+	test_BLEU_2    : 0.23012790372082362
+	test_BLEU_3    : 0.1593920291734786
+	test_BLEU_4    : 0.11864172871874995
+	test_METEOR    : 0.15210501748125294
+	test_ROUGE_L   : 0.3510296298350328
+epoch: 29 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=26, tm_sec=33, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 29', ' executed for 00:11:11.04')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 30
+	train_loss     : 0.4360220796786822
+	val_BLEU_1     : 0.3686912597669733
+	val_BLEU_2     : 0.21822795317802993
+	val_BLEU_3     : 0.14308204085040002
+	val_BLEU_4     : 0.09822323450283384
+	val_METEOR     : 0.14653406217157636
+	val_ROUGE_L    : 0.33541990296330965
+	test_BLEU_1    : 0.4094886261684951
+	test_BLEU_2    : 0.25270041711841107
+	test_BLEU_3    : 0.1768676527465091
+	test_BLEU_4    : 0.13253567628794927
+	test_METEOR    : 0.1628276890129136
+	test_ROUGE_L   : 0.3549952725168611
+epoch: 30 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=37, tm_sec=45, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 30', ' executed for 00:11:11.69')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 31
+	train_loss     : 0.41179434427848227
+	val_BLEU_1     : 0.3683424802248241
+	val_BLEU_2     : 0.21859492559566282
+	val_BLEU_3     : 0.1451032011716676
+	val_BLEU_4     : 0.10388647421491971
+	val_METEOR     : 0.14530063611178115
+	val_ROUGE_L    : 0.3263745429454972
+	test_BLEU_1    : 0.39465352870268816
+	test_BLEU_2    : 0.24618641327663557
+	test_BLEU_3    : 0.17614509060212571
+	test_BLEU_4    : 0.13582485752577148
+	test_METEOR    : 0.16075367541581956
+	test_ROUGE_L   : 0.35321077884681035
+epoch: 31 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=48, tm_sec=51, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 31', ' executed for 00:11:06.36')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 32
+	train_loss     : 0.38933316010695235
+	val_BLEU_1     : 0.2999530434701257
+	val_BLEU_2     : 0.17358291581196408
+	val_BLEU_3     : 0.1144036954560324
+	val_BLEU_4     : 0.0798178127727735
+	val_METEOR     : 0.1270090392140999
+	val_ROUGE_L    : 0.31526288800229374
+	test_BLEU_1    : 0.3449811478490112
+	test_BLEU_2    : 0.2163721020748536
+	test_BLEU_3    : 0.15680909278400781
+	test_BLEU_4    : 0.12228389649238354
+	test_METEOR    : 0.1461474534804953
+	test_ROUGE_L   : 0.35088057995280625
+epoch: 32 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=1, tm_min=59, tm_sec=59, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 32', ' executed for 00:11:08.20')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 33
+	train_loss     : 0.358703773526045
+	val_BLEU_1     : 0.3385253356109623
+	val_BLEU_2     : 0.20881743633236
+	val_BLEU_3     : 0.1452902553589151
+	val_BLEU_4     : 0.10810007170692269
+	val_METEOR     : 0.14313088404888932
+	val_ROUGE_L    : 0.33758668757875876
+	test_BLEU_1    : 0.35252595904184386
+	test_BLEU_2    : 0.21401252894050152
+	test_BLEU_3    : 0.14827771806489792
+	test_BLEU_4    : 0.10971674548848595
+	test_METEOR    : 0.14746291517475235
+	test_ROUGE_L   : 0.34087024536380367
+epoch: 33 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=2, tm_min=11, tm_sec=6, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 33', ' executed for 00:11:06.56')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 34
+	train_loss     : 0.34210482216798344
+	val_BLEU_1     : 0.3831681899786761
+	val_BLEU_2     : 0.2324965298757171
+	val_BLEU_3     : 0.1578698097773873
+	val_BLEU_4     : 0.1134423637029854
+	val_METEOR     : 0.15670773060248633
+	val_ROUGE_L    : 0.3340409017793342
+	test_BLEU_1    : 0.42013529229779684
+	test_BLEU_2    : 0.26614555149691616
+	test_BLEU_3    : 0.18954090221054717
+	test_BLEU_4    : 0.14424228652397686
+	test_METEOR    : 0.17251072209594936
+	test_ROUGE_L   : 0.3590128298661112
+epoch: 34 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=2, tm_min=22, tm_sec=11, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 34', ' executed for 00:11:05.25')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 35
+	train_loss     : 0.32618826971604276
+	val_BLEU_1     : 0.3764066782449074
+	val_BLEU_2     : 0.22851060285124594
+	val_BLEU_3     : 0.1571421553572283
+	val_BLEU_4     : 0.11595858789956508
+	val_METEOR     : 0.15384900828077666
+	val_ROUGE_L    : 0.3368440148884239
+	test_BLEU_1    : 0.3974929294508374
+	test_BLEU_2    : 0.24130354701432433
+	test_BLEU_3    : 0.16628535889306692
+	test_BLEU_4    : 0.12389871471632943
+	test_METEOR    : 0.16133712675927417
+	test_ROUGE_L   : 0.3498486816505903
+epoch: 35 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=2, tm_min=33, tm_sec=24, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 35', ' executed for 00:11:12.63')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 36
+	train_loss     : 0.30810560286045074
+	val_BLEU_1     : 0.3471610837880289
+	val_BLEU_2     : 0.2055290443306011
+	val_BLEU_3     : 0.13792461582497204
+	val_BLEU_4     : 0.09989788231351023
+	val_METEOR     : 0.143274933518545
+	val_ROUGE_L    : 0.32273885086075194
+	test_BLEU_1    : 0.3757325114930018
+	test_BLEU_2    : 0.22913060204153168
+	test_BLEU_3    : 0.15961088806292498
+	test_BLEU_4    : 0.11997940076110987
+	test_METEOR    : 0.15385811556280046
+	test_ROUGE_L   : 0.3417555520591259
+epoch: 36 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=2, tm_min=44, tm_sec=32, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 36', ' executed for 00:11:08.49')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 37
+	train_loss     : 0.28513430815476637
+	val_BLEU_1     : 0.345191527006699
+	val_BLEU_2     : 0.20351303645057486
+	val_BLEU_3     : 0.1359582154139033
+	val_BLEU_4     : 0.09748072477197495
+	val_METEOR     : 0.14193346937385307
+	val_ROUGE_L    : 0.32748297406428195
+	test_BLEU_1    : 0.3855165001273147
+	test_BLEU_2    : 0.2372772755085483
+	test_BLEU_3    : 0.1643762291187192
+	test_BLEU_4    : 0.12290781878947678
+	test_METEOR    : 0.1590644081740313
+	test_ROUGE_L   : 0.3512493575741537
+epoch: 37 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=2, tm_min=55, tm_sec=40, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 37', ' executed for 00:11:07.88')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 38
+	train_loss     : 0.2725372416468767
+	val_BLEU_1     : 0.35892652854945123
+	val_BLEU_2     : 0.2044980242824441
+	val_BLEU_3     : 0.13211181042171077
+	val_BLEU_4     : 0.0929848939268517
+	val_METEOR     : 0.14097252805512267
+	val_ROUGE_L    : 0.3214174229080152
+	test_BLEU_1    : 0.374457294674558
+	test_BLEU_2    : 0.2180282118386899
+	test_BLEU_3    : 0.14613193498563687
+	test_BLEU_4    : 0.10694805296587455
+	test_METEOR    : 0.14990814659574164
+	test_ROUGE_L   : 0.3369346754393036
+epoch: 38 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=3, tm_min=6, tm_sec=46, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 38', ' executed for 00:11:05.66')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 39
+	train_loss     : 0.26303720703491795
+	val_BLEU_1     : 0.3512518390426531
+	val_BLEU_2     : 0.20754064321520116
+	val_BLEU_3     : 0.1408587641314329
+	val_BLEU_4     : 0.10365747032258063
+	val_METEOR     : 0.14491621043883876
+	val_ROUGE_L    : 0.3264983623984413
+	test_BLEU_1    : 0.3774878682375537
+	test_BLEU_2    : 0.23077100063995792
+	test_BLEU_3    : 0.16194313844289193
+	test_BLEU_4    : 0.12275993718782213
+	test_METEOR    : 0.15678139986033984
+	test_ROUGE_L   : 0.3594948120929253
+epoch: 39 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=3, tm_min=18, tm_sec=9, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 39', ' executed for 00:11:23.79')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 40
+	train_loss     : 0.2477901517198636
+	val_BLEU_1     : 0.36883491144271047
+	val_BLEU_2     : 0.22099881094022697
+	val_BLEU_3     : 0.1482100555728603
+	val_BLEU_4     : 0.10681004895059705
+	val_METEOR     : 0.15023293757688772
+	val_ROUGE_L    : 0.3416839604028761
+	test_BLEU_1    : 0.3878376291316253
+	test_BLEU_2    : 0.2369093349907182
+	test_BLEU_3    : 0.1636710485950367
+	test_BLEU_4    : 0.12140225015069965
+	test_METEOR    : 0.15927435775311966
+	test_ROUGE_L   : 0.35072820883856226
+epoch: 40 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=3, tm_min=29, tm_sec=22, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 40', ' executed for 00:11:12.44')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 41
+	train_loss     : 0.23880078414311776
+	val_BLEU_1     : 0.3626506465338727
+	val_BLEU_2     : 0.21498763144845062
+	val_BLEU_3     : 0.14233177176570816
+	val_BLEU_4     : 0.10127052772546925
+	val_METEOR     : 0.14887820623468148
+	val_ROUGE_L    : 0.3270299304663423
+	test_BLEU_1    : 0.4003461967537616
+	test_BLEU_2    : 0.24565392871149805
+	test_BLEU_3    : 0.1709666094962493
+	test_BLEU_4    : 0.12795624971295544
+	test_METEOR    : 0.1637775074436575
+	test_ROUGE_L   : 0.3536359829171186
+epoch: 41 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=3, tm_min=40, tm_sec=33, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 41', ' executed for 00:11:11.00')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 42
+	train_loss     : 0.22900757892773702
+	val_BLEU_1     : 0.3663228721506246
+	val_BLEU_2     : 0.2252515486811428
+	val_BLEU_3     : 0.15788015426553592
+	val_BLEU_4     : 0.11927797871764267
+	val_METEOR     : 0.1500006996134061
+	val_ROUGE_L    : 0.33591387152826574
+	test_BLEU_1    : 0.38655546483659436
+	test_BLEU_2    : 0.22981309378275808
+	test_BLEU_3    : 0.15493323832580624
+	test_BLEU_4    : 0.11314168856405704
+	test_METEOR    : 0.1556632920277267
+	test_ROUGE_L   : 0.3423810961204938
+epoch: 42 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=3, tm_min=51, tm_sec=42, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 42', ' executed for 00:11:08.98')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 43
+	train_loss     : 0.21386642765540342
+	val_BLEU_1     : 0.3775632299926983
+	val_BLEU_2     : 0.21731502038034983
+	val_BLEU_3     : 0.1398138933453888
+	val_BLEU_4     : 0.09613522690218813
+	val_METEOR     : 0.14470417057858181
+	val_ROUGE_L    : 0.3217533259393015
+	test_BLEU_1    : 0.4161493202547504
+	test_BLEU_2    : 0.2532043729807039
+	test_BLEU_3    : 0.17550993423255115
+	test_BLEU_4    : 0.1310378568354854
+	test_METEOR    : 0.1629979757387167
+	test_ROUGE_L   : 0.34694030830000594
+epoch: 43 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=2, tm_sec=55, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 43', ' executed for 00:11:12.83')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 44
+	train_loss     : 0.21233009638694617
+	val_BLEU_1     : 0.35563635759517376
+	val_BLEU_2     : 0.2115707021678201
+	val_BLEU_3     : 0.14013053988537477
+	val_BLEU_4     : 0.09961151989516291
+	val_METEOR     : 0.14429875271339881
+	val_ROUGE_L    : 0.3256235122205764
+	test_BLEU_1    : 0.38656520859931776
+	test_BLEU_2    : 0.2334586182159791
+	test_BLEU_3    : 0.15972365940965455
+	test_BLEU_4    : 0.11824416351934572
+	test_METEOR    : 0.157515297679452
+	test_ROUGE_L   : 0.34672349961625104
+epoch: 44 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=14, tm_sec=1, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 44', ' executed for 00:11:06.50')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 45
+	train_loss     : 0.20276786673527497
+	val_BLEU_1     : 0.3599019735554817
+	val_BLEU_2     : 0.21132997048432042
+	val_BLEU_3     : 0.14220071425400224
+	val_BLEU_4     : 0.10381237627004165
+	val_METEOR     : 0.14646605086823158
+	val_ROUGE_L    : 0.3242946959853847
+	test_BLEU_1    : 0.3996864899208242
+	test_BLEU_2    : 0.24681161390885942
+	test_BLEU_3    : 0.17181070321660835
+	test_BLEU_4    : 0.1289256793327784
+	test_METEOR    : 0.16371702718742243
+	test_ROUGE_L   : 0.35519127422044433
+epoch: 45 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=25, tm_sec=9, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 45', ' executed for 00:11:07.44')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 46
+	train_loss     : 0.19185680517783532
+	val_BLEU_1     : 0.3825566679049846
+	val_BLEU_2     : 0.22034690205065602
+	val_BLEU_3     : 0.14120323176467417
+	val_BLEU_4     : 0.09541010418757244
+	val_METEOR     : 0.15280084740544472
+	val_ROUGE_L    : 0.318904908135996
+	test_BLEU_1    : 0.40534975844390253
+	test_BLEU_2    : 0.24428291973566948
+	test_BLEU_3    : 0.1667051944581833
+	test_BLEU_4    : 0.12285085568620692
+	test_METEOR    : 0.16137864041333583
+	test_ROUGE_L   : 0.343462630173729
+epoch: 46 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=36, tm_sec=19, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 46', ' executed for 00:11:10.30')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 47
+	train_loss     : 0.19136339850150622
+	val_BLEU_1     : 0.3500024402460425
+	val_BLEU_2     : 0.21184979639422383
+	val_BLEU_3     : 0.14219821200578056
+	val_BLEU_4     : 0.10203556078320039
+	val_METEOR     : 0.1458150348178475
+	val_ROUGE_L    : 0.32954604630308004
+	test_BLEU_1    : 0.38532214274471177
+	test_BLEU_2    : 0.23451305643940104
+	test_BLEU_3    : 0.16329115149559226
+	test_BLEU_4    : 0.12163198571351697
+	test_METEOR    : 0.16005792467905083
+	test_ROUGE_L   : 0.3523061434149714
+epoch: 47 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=47, tm_sec=30, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 47', ' executed for 00:11:11.23')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 48
+	train_loss     : 0.18034220395179895
+	val_BLEU_1     : 0.38686117431821115
+	val_BLEU_2     : 0.2222609269494464
+	val_BLEU_3     : 0.1442784178711556
+	val_BLEU_4     : 0.09999353657383678
+	val_METEOR     : 0.15363344264663872
+	val_ROUGE_L    : 0.3156152293240273
+	test_BLEU_1    : 0.40862504794122456
+	test_BLEU_2    : 0.24818456567398658
+	test_BLEU_3    : 0.1684673571173174
+	test_BLEU_4    : 0.12168733193921
+	test_METEOR    : 0.16322037646406312
+	test_ROUGE_L   : 0.34417157132477055
+epoch: 48 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=4, tm_min=58, tm_sec=42, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 48', ' executed for 00:11:11.80')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 49
+	train_loss     : 0.17612670281758674
+	val_BLEU_1     : 0.37129424817425216
+	val_BLEU_2     : 0.21686257973349707
+	val_BLEU_3     : 0.13979515161664996
+	val_BLEU_4     : 0.09544595304948854
+	val_METEOR     : 0.14749607842558643
+	val_ROUGE_L    : 0.3171546598054879
+	test_BLEU_1    : 0.3915226158786325
+	test_BLEU_2    : 0.2296081876197194
+	test_BLEU_3    : 0.14940874561904918
+	test_BLEU_4    : 0.10345516481070757
+	test_METEOR    : 0.1574190827151417
+	test_ROUGE_L   : 0.3350978883371882
+epoch: 49 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=5, tm_min=9, tm_sec=51, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 49', ' executed for 00:11:09.28')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 50
+	train_loss     : 0.17118284644988868
+	val_BLEU_1     : 0.3757796871410955
+	val_BLEU_2     : 0.2196393736065776
+	val_BLEU_3     : 0.14501303227239326
+	val_BLEU_4     : 0.10209762632945625
+	val_METEOR     : 0.1467716110455379
+	val_ROUGE_L    : 0.31220709680375086
+	test_BLEU_1    : 0.40309072725716977
+	test_BLEU_2    : 0.23761935855605815
+	test_BLEU_3    : 0.16019259392345042
+	test_BLEU_4    : 0.11625386030413304
+	test_METEOR    : 0.15836428801979963
+	test_ROUGE_L   : 0.33168885552534033
+epoch: 50 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=5, tm_min=20, tm_sec=57, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 50', ' executed for 00:11:05.93')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 51
+	train_loss     : 0.13467701197816775
+	val_BLEU_1     : 0.38848478053903657
+	val_BLEU_2     : 0.23357476237858493
+	val_BLEU_3     : 0.1574615624809516
+	val_BLEU_4     : 0.11356155023537993
+	val_METEOR     : 0.1544687626060577
+	val_ROUGE_L    : 0.32654950986205405
+	test_BLEU_1    : 0.40955890110169013
+	test_BLEU_2    : 0.24656792072214734
+	test_BLEU_3    : 0.16987218989513359
+	test_BLEU_4    : 0.12560530102145512
+	test_METEOR    : 0.16268525208474105
+	test_ROUGE_L   : 0.3391416564443514
+epoch: 51 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=5, tm_min=32, tm_sec=15, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 51', ' executed for 00:11:17.95')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 52
+	train_loss     : 0.12196926543345818
+	val_BLEU_1     : 0.3774207741076798
+	val_BLEU_2     : 0.22168611578217262
+	val_BLEU_3     : 0.1479847086074949
+	val_BLEU_4     : 0.10622009530722226
+	val_METEOR     : 0.14993369407089485
+	val_ROUGE_L    : 0.3206752412078248
+	test_BLEU_1    : 0.4162546563681024
+	test_BLEU_2    : 0.2529388993431537
+	test_BLEU_3    : 0.17324178775244634
+	test_BLEU_4    : 0.12723293888392895
+	test_METEOR    : 0.1648404380894662
+	test_ROUGE_L   : 0.33733467211679435
+epoch: 52 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=5, tm_min=43, tm_sec=25, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 52', ' executed for 00:11:10.18')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 53
+	train_loss     : 0.11476673684441126
+	val_BLEU_1     : 0.3866443263491675
+	val_BLEU_2     : 0.23355710504179047
+	val_BLEU_3     : 0.1588898667307069
+	val_BLEU_4     : 0.11629209452878665
+	val_METEOR     : 0.1529591593616916
+	val_ROUGE_L    : 0.3279799743776665
+	test_BLEU_1    : 0.4194859058606453
+	test_BLEU_2    : 0.2572402309403575
+	test_BLEU_3    : 0.17834243383687448
+	test_BLEU_4    : 0.13276242242841302
+	test_METEOR    : 0.16661556600589433
+	test_ROUGE_L   : 0.34161808673210603
+epoch: 53 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=5, tm_min=54, tm_sec=45, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 53', ' executed for 00:11:19.67')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 54
+	train_loss     : 0.1111834809757196
+	val_BLEU_1     : 0.37846122739015414
+	val_BLEU_2     : 0.22520025738076116
+	val_BLEU_3     : 0.150475010978992
+	val_BLEU_4     : 0.1076309838553878
+	val_METEOR     : 0.15012996257193265
+	val_ROUGE_L    : 0.323547447405702
+	test_BLEU_1    : 0.4103350103540888
+	test_BLEU_2    : 0.24473382938507487
+	test_BLEU_3    : 0.16564726730624843
+	test_BLEU_4    : 0.12111214803659841
+	test_METEOR    : 0.16252488733658857
+	test_ROUGE_L   : 0.3394755689995866
+epoch: 54 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=6, tm_min=5, tm_sec=56, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 54', ' executed for 00:11:11.34')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 55
+	train_loss     : 0.10723465440364985
+	val_BLEU_1     : 0.37716403416835664
+	val_BLEU_2     : 0.21814237462427505
+	val_BLEU_3     : 0.1428077515063036
+	val_BLEU_4     : 0.10123992532401573
+	val_METEOR     : 0.1504186698852107
+	val_ROUGE_L    : 0.3181287846842492
+	test_BLEU_1    : 0.4110477386245212
+	test_BLEU_2    : 0.25198508403853676
+	test_BLEU_3    : 0.17722453023055199
+	test_BLEU_4    : 0.13477968690303804
+	test_METEOR    : 0.1647795990688331
+	test_ROUGE_L   : 0.3472394403837735
+epoch: 55 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=6, tm_min=17, tm_sec=11, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 55', ' executed for 00:11:15.22')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 56
+	train_loss     : 0.1051477948633524
+	val_BLEU_1     : 0.3815782410839419
+	val_BLEU_2     : 0.22559238276657503
+	val_BLEU_3     : 0.15251440083576898
+	val_BLEU_4     : 0.11163242599385553
+	val_METEOR     : 0.15083075834491574
+	val_ROUGE_L    : 0.32063789407338966
+	test_BLEU_1    : 0.41214098777944824
+	test_BLEU_2    : 0.248426959852762
+	test_BLEU_3    : 0.17026340440597326
+	test_BLEU_4    : 0.1253177370212421
+	test_METEOR    : 0.16446189951198142
+	test_ROUGE_L   : 0.3415175553851215
+epoch: 56 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=6, tm_min=28, tm_sec=20, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 56', ' executed for 00:11:08.56')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 57
+	train_loss     : 0.10318405840259331
+	val_BLEU_1     : 0.37270026106873616
+	val_BLEU_2     : 0.22049185408131114
+	val_BLEU_3     : 0.14679628524226862
+	val_BLEU_4     : 0.10455242328989367
+	val_METEOR     : 0.14776160737478536
+	val_ROUGE_L    : 0.31896374608123
+	test_BLEU_1    : 0.42326240023722267
+	test_BLEU_2    : 0.2576909339345434
+	test_BLEU_3    : 0.17621522036637646
+	test_BLEU_4    : 0.12915462850273243
+	test_METEOR    : 0.16696799284963035
+	test_ROUGE_L   : 0.3424671393476718
+epoch: 57 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=6, tm_min=39, tm_sec=37, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 57', ' executed for 00:11:17.05')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 58
+	train_loss     : 0.10067562053983029
+	val_BLEU_1     : 0.384866013295857
+	val_BLEU_2     : 0.22815653420950993
+	val_BLEU_3     : 0.15341751012710506
+	val_BLEU_4     : 0.1110862887226061
+	val_METEOR     : 0.15295410318210004
+	val_ROUGE_L    : 0.3260742642549099
+	test_BLEU_1    : 0.41380693222768244
+	test_BLEU_2    : 0.25054121598473
+	test_BLEU_3    : 0.17172114149452897
+	test_BLEU_4    : 0.1265631827538039
+	test_METEOR    : 0.1636788223948895
+	test_ROUGE_L   : 0.34132747804510605
+epoch: 58 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=6, tm_min=50, tm_sec=55, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 58', ' executed for 00:11:17.64')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 59
+	train_loss     : 0.09859518334269524
+	val_BLEU_1     : 0.36804251473569344
+	val_BLEU_2     : 0.21519020432658983
+	val_BLEU_3     : 0.1433486594833278
+	val_BLEU_4     : 0.10311764980550753
+	val_METEOR     : 0.14705255384633195
+	val_ROUGE_L    : 0.31721366871302076
+	test_BLEU_1    : 0.41133490758116453
+	test_BLEU_2    : 0.25043739422782
+	test_BLEU_3    : 0.1733521488600777
+	test_BLEU_4    : 0.1291771019053679
+	test_METEOR    : 0.16389237757797784
+	test_ROUGE_L   : 0.3421514485060544
+epoch: 59 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=2, tm_sec=0, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 59', ' executed for 00:11:04.77')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 60
+	train_loss     : 0.09601885366898316
+	val_BLEU_1     : 0.369424008171309
+	val_BLEU_2     : 0.2177507332235822
+	val_BLEU_3     : 0.14737845197378882
+	val_BLEU_4     : 0.10811881570065755
+	val_METEOR     : 0.14888721534658997
+	val_ROUGE_L    : 0.32009191776544893
+	test_BLEU_1    : 0.40149850418814986
+	test_BLEU_2    : 0.24090185948965992
+	test_BLEU_3    : 0.16471424364802248
+	test_BLEU_4    : 0.12070244165807283
+	test_METEOR    : 0.16027573215778826
+	test_ROUGE_L   : 0.3354921258488757
+epoch: 60 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=13, tm_sec=8, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 60', ' executed for 00:11:08.46')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 61
+	train_loss     : 0.09346369292873602
+	val_BLEU_1     : 0.3751045190662448
+	val_BLEU_2     : 0.2211359527377836
+	val_BLEU_3     : 0.14936157880723536
+	val_BLEU_4     : 0.11028818925282464
+	val_METEOR     : 0.14987407423373353
+	val_ROUGE_L    : 0.3243631079896607
+	test_BLEU_1    : 0.4143778613545421
+	test_BLEU_2    : 0.2549568069826905
+	test_BLEU_3    : 0.17884429004579352
+	test_BLEU_4    : 0.13563643604163508
+	test_METEOR    : 0.16575130045340236
+	test_ROUGE_L   : 0.3476312254893914
+epoch: 61 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=24, tm_sec=15, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 61', ' executed for 00:11:07.48')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 62
+	train_loss     : 0.09115714751757108
+	val_BLEU_1     : 0.38643744521215245
+	val_BLEU_2     : 0.2278449759034602
+	val_BLEU_3     : 0.15266253028447513
+	val_BLEU_4     : 0.11081602228611832
+	val_METEOR     : 0.15495380627071825
+	val_ROUGE_L    : 0.3282785447993984
+	test_BLEU_1    : 0.4189231853143981
+	test_BLEU_2    : 0.257975987212777
+	test_BLEU_3    : 0.1799204794221231
+	test_BLEU_4    : 0.1351515703963028
+	test_METEOR    : 0.16626750495932185
+	test_ROUGE_L   : 0.3483091694880386
+epoch: 62 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=35, tm_sec=25, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 62', ' executed for 00:11:09.39')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 63
+	train_loss     : 0.09099592428940993
+	val_BLEU_1     : 0.3917363920981274
+	val_BLEU_2     : 0.23093083404737416
+	val_BLEU_3     : 0.15546539727554062
+	val_BLEU_4     : 0.11412431988763391
+	val_METEOR     : 0.15456762535972784
+	val_ROUGE_L    : 0.32421511117829965
+	test_BLEU_1    : 0.4147876076053305
+	test_BLEU_2    : 0.25068534943903725
+	test_BLEU_3    : 0.17105633996853029
+	test_BLEU_4    : 0.12608922525896452
+	test_METEOR    : 0.16439522141540902
+	test_ROUGE_L   : 0.338496047778251
+epoch: 63 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=46, tm_sec=34, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 63', ' executed for 00:11:09.58')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 64
+	train_loss     : 0.0885718611570505
+	val_BLEU_1     : 0.38357496380304235
+	val_BLEU_2     : 0.2222347086775614
+	val_BLEU_3     : 0.1465721629203371
+	val_BLEU_4     : 0.10524120188983806
+	val_METEOR     : 0.15313314105272316
+	val_ROUGE_L    : 0.3242347451432548
+	test_BLEU_1    : 0.40798805707444746
+	test_BLEU_2    : 0.24964377672276286
+	test_BLEU_3    : 0.1725067409635662
+	test_BLEU_4    : 0.1283096351045075
+	test_METEOR    : 0.16232379653103232
+	test_ROUGE_L   : 0.34019600999031746
+epoch: 64 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=7, tm_min=57, tm_sec=41, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 64', ' executed for 00:11:06.74')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 65
+	train_loss     : 0.08764650735717554
+	val_BLEU_1     : 0.39895004276865886
+	val_BLEU_2     : 0.2323800262198062
+	val_BLEU_3     : 0.15418143858655467
+	val_BLEU_4     : 0.11105537961707994
+	val_METEOR     : 0.15708381951187378
+	val_ROUGE_L    : 0.32178824040216886
+	test_BLEU_1    : 0.4225463770413602
+	test_BLEU_2    : 0.2577455053877841
+	test_BLEU_3    : 0.17732348896582514
+	test_BLEU_4    : 0.1313997905633634
+	test_METEOR    : 0.1698146304146904
+	test_ROUGE_L   : 0.3466666643188794
+epoch: 65 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=8, tm_min=8, tm_sec=49, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 65', ' executed for 00:11:07.36')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 66
+	train_loss     : 0.08617598572029517
+	val_BLEU_1     : 0.3778935012348846
+	val_BLEU_2     : 0.21763852335544576
+	val_BLEU_3     : 0.14414863968983388
+	val_BLEU_4     : 0.10371799559312679
+	val_METEOR     : 0.15343000722912656
+	val_ROUGE_L    : 0.32271111797628466
+	test_BLEU_1    : 0.41297835730371923
+	test_BLEU_2    : 0.2532496743957587
+	test_BLEU_3    : 0.17497911452523943
+	test_BLEU_4    : 0.12957837216502613
+	test_METEOR    : 0.16521716639720752
+	test_ROUGE_L   : 0.34491334945334384
+epoch: 66 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=8, tm_min=19, tm_sec=54, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 66', ' executed for 00:11:04.99')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 67
+	train_loss     : 0.08369725449727132
+	val_BLEU_1     : 0.3822446668191511
+	val_BLEU_2     : 0.22558495026969702
+	val_BLEU_3     : 0.15225719347218417
+	val_BLEU_4     : 0.11216719089870646
+	val_METEOR     : 0.15276919255294039
+	val_ROUGE_L    : 0.3233084625399961
+	test_BLEU_1    : 0.42068436907551204
+	test_BLEU_2    : 0.25765828283961895
+	test_BLEU_3    : 0.17902474738200072
+	test_BLEU_4    : 0.13440462815427762
+	test_METEOR    : 0.16850467329490162
+	test_ROUGE_L   : 0.3482511367223273
+epoch: 67 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=8, tm_min=31, tm_sec=5, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 67', ' executed for 00:11:11.79')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 68
+	train_loss     : 0.08348424534958143
+	val_BLEU_1     : 0.3783931368223889
+	val_BLEU_2     : 0.21993867059267463
+	val_BLEU_3     : 0.1465933266831989
+	val_BLEU_4     : 0.10618183416793804
+	val_METEOR     : 0.15149856855154645
+	val_ROUGE_L    : 0.32107409639060913
+	test_BLEU_1    : 0.41341533448036893
+	test_BLEU_2    : 0.24860192171835913
+	test_BLEU_3    : 0.16882540618722167
+	test_BLEU_4    : 0.12365561337545192
+	test_METEOR    : 0.1646950182961781
+	test_ROUGE_L   : 0.33917162082191027
+epoch: 68 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=8, tm_min=42, tm_sec=12, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 68', ' executed for 00:11:06.84')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 69
+	train_loss     : 0.08161180944970022
+	val_BLEU_1     : 0.3827097997112618
+	val_BLEU_2     : 0.22985294447041416
+	val_BLEU_3     : 0.15695894256264284
+	val_BLEU_4     : 0.11489206092544596
+	val_METEOR     : 0.15346236090068593
+	val_ROUGE_L    : 0.32193883539277046
+	test_BLEU_1    : 0.42322398395124117
+	test_BLEU_2    : 0.25903368145874056
+	test_BLEU_3    : 0.17928770483150097
+	test_BLEU_4    : 0.13411080485924984
+	test_METEOR    : 0.16795636974674558
+	test_ROUGE_L   : 0.34535848482748377
+epoch: 69 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=8, tm_min=53, tm_sec=22, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 69', ' executed for 00:11:09.56')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 70
+	train_loss     : 0.08065094698507053
+	val_BLEU_1     : 0.3785104850179675
+	val_BLEU_2     : 0.22301097157993863
+	val_BLEU_3     : 0.14786805252688243
+	val_BLEU_4     : 0.10630125315352144
+	val_METEOR     : 0.15200545949613847
+	val_ROUGE_L    : 0.31956820783465845
+	test_BLEU_1    : 0.4140875676200578
+	test_BLEU_2    : 0.2525365041347301
+	test_BLEU_3    : 0.17454740951577868
+	test_BLEU_4    : 0.1300423502948164
+	test_METEOR    : 0.16461238442386397
+	test_ROUGE_L   : 0.3402477709178393
+epoch: 70 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=9, tm_min=4, tm_sec=32, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 70', ' executed for 00:11:09.95')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 71
+	train_loss     : 0.07860775942412707
+	val_BLEU_1     : 0.390920008987377
+	val_BLEU_2     : 0.2330633989894458
+	val_BLEU_3     : 0.15694659660963153
+	val_BLEU_4     : 0.11488072127307813
+	val_METEOR     : 0.15730535301272178
+	val_ROUGE_L    : 0.3224370648519869
+	test_BLEU_1    : 0.41382253986755635
+	test_BLEU_2    : 0.2538361807976242
+	test_BLEU_3    : 0.17793328693134358
+	test_BLEU_4    : 0.13471090337908784
+	test_METEOR    : 0.16530199988681327
+	test_ROUGE_L   : 0.34353476619732537
+epoch: 71 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=9, tm_min=15, tm_sec=43, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 71', ' executed for 00:11:11.46')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 72
+	train_loss     : 0.07927061196130056
+	val_BLEU_1     : 0.38557922484246304
+	val_BLEU_2     : 0.22708737487338385
+	val_BLEU_3     : 0.15089091011479472
+	val_BLEU_4     : 0.10740823146913907
+	val_METEOR     : 0.15229758959539005
+	val_ROUGE_L    : 0.31974349484860526
+	test_BLEU_1    : 0.42006041871598504
+	test_BLEU_2    : 0.2529723785130474
+	test_BLEU_3    : 0.1719762261703219
+	test_BLEU_4    : 0.12603910833553006
+	test_METEOR    : 0.16514179813391663
+	test_ROUGE_L   : 0.33788614075869544
+epoch: 72 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=9, tm_min=26, tm_sec=52, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 72', ' executed for 00:11:08.45')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+	epoch          : 73
+	train_loss     : 0.07748616996866006
+	val_BLEU_1     : 0.39192020175083475
+	val_BLEU_2     : 0.23118842151302696
+	val_BLEU_3     : 0.15465665187087468
+	val_BLEU_4     : 0.1121749039630162
+	val_METEOR     : 0.15506435049523792
+	val_ROUGE_L    : 0.3198463907912382
+	test_BLEU_1    : 0.41520498183703086
+	test_BLEU_2    : 0.253098650864215
+	test_BLEU_3    : 0.1744793832832349
+	test_BLEU_4    : 0.12954944895019893
+	test_METEOR    : 0.16751343916850756
+	test_ROUGE_L   : 0.3436971082620133
+epoch: 73 ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=9, tm_min=37, tm_sec=57, tm_wday=0, tm_yday=234, tm_isdst=1)
+('epoch: 73', ' executed for 00:11:05.85')
+Saving checkpoint: ../r2gen_results/iu_xray/current_checkpoint.pth ...
+/media/compute/homes/tmandal/projects/R2Gen/modules/trainer.py:123: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+  record_table = record_table.append(self.best_recorder['val'], ignore_index=True)
+/media/compute/homes/tmandal/projects/R2Gen/modules/trainer.py:124: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+  record_table = record_table.append(self.best_recorder['test'], ignore_index=True)
+	epoch          : 74
+	train_loss     : 0.0758639549693236
+	val_BLEU_1     : 0.38536850544181817
+	val_BLEU_2     : 0.22812042230467308
+	val_BLEU_3     : 0.1535496283129341
+	val_BLEU_4     : 0.11240619313358724
+	val_METEOR     : 0.15447050295936826
+	val_ROUGE_L    : 0.3244988842794892
+	test_BLEU_1    : 0.41536307872004485
+	test_BLEU_2    : 0.25065799524478605
+	test_BLEU_3    : 0.17136109439507727
+	test_BLEU_4    : 0.1258728273980249
+	test_METEOR    : 0.16416518911580982
+	test_ROUGE_L   : 0.3395849512560338
+Validation performance didn't improve for 50 epochs. Training stops.
+Best results (w.r.t BLEU_4) in validation set:
+	val_BLEU_4     : 0.12062717347188828
+	epoch          : 23
+	train_loss     : 0.7069318562746048
+	val_BLEU_1     : 0.37920875376498886
+	val_BLEU_2     : 0.23193986869616898
+	val_BLEU_3     : 0.1610438947379832
+	val_METEOR     : 0.15582113558727825
+	val_ROUGE_L    : 0.35300325936190785
+	test_BLEU_1    : 0.41583817872094564
+	test_BLEU_2    : 0.25984082517232243
+	test_BLEU_3    : 0.18472142995900637
+	test_BLEU_4    : 0.14146219241056257
+	test_METEOR    : 0.1692812434739187
+	test_ROUGE_L   : 0.3647966609293343
+Best results (w.r.t BLEU_4) in test set:
+	test_BLEU_4    : 0.14424228652397686
+	epoch          : 34
+	train_loss     : 0.34210482216798344
+	val_BLEU_1     : 0.3831681899786761
+	val_BLEU_2     : 0.2324965298757171
+	val_BLEU_3     : 0.1578698097773873
+	val_BLEU_4     : 0.1134423637029854
+	val_METEOR     : 0.15670773060248633
+	val_ROUGE_L    : 0.3340409017793342
+	test_BLEU_1    : 0.42013529229779684
+	test_BLEU_2    : 0.26614555149691616
+	test_BLEU_3    : 0.18954090221054717
+	test_METEOR    : 0.17251072209594936
+	test_ROUGE_L   : 0.3590128298661112
+R2Gen ended: time.struct_time(tm_year=2022, tm_mon=8, tm_mday=22, tm_hour=9, tm_min=49, tm_sec=15, tm_wday=0, tm_yday=234, tm_isdst=1)
+('R2Gen', ' executed for 13:48:40.59')
+
+real	828m50.037s
+user	12919m59.465s
+sys	640m58.582s
