@@ -21,7 +21,7 @@ time python main.py \
 --test_sample 0 \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 0 \
---max_seq_length 60 \
+--max_seq_length 130 \
 --threshold 3 \
 --batch_size 16 \
 --epochs 100 \
