@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 import timer
 from _global.argument_parser import ArgumentParser
+from analytics.experiments_statistics import ExperimentsStatistics
 from analytics.plot import Plot
 from data_processors.data_processor import DataProcessor
 from modules.tokenizers import Tokenizer
@@ -20,16 +21,9 @@ def main():
     args.is_new_random_split = 0
     data_processor = DataProcessor(args)
 
-    # tokenizer = Tokenizer(args, data_processor)
-    #
-    # counts = {split: [
-    #     len(data_processor.get_reports_by_exp(8, split, rid, tokenizer.clean_report(sample["impression"])).split())
-    #     for rid, sample in split_sample.items()]
-    #           for split, split_sample in data_processor.iu_mesh_impression_split.items()}
-    # stats = {
-    #     split: {"max": max(split_count), "mean": statistics.mean(split_count), "meidan": statistics.median(split_count),
-    #             "mode": statistics.mode(split_count)} for split, split_count in counts.items()}
-    # print(stats)
+    tokenizer = Tokenizer(args, data_processor)
+    exp_stats = ExperimentsStatistics(tokenizer, 4)
+    print("exp: 4", exp_stats.stats)
 
     print("######### before split#########")
     data_processor.analyze.print_normal_percentage()
