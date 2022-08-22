@@ -142,7 +142,7 @@ def parse_agrs():
                         help='1. 60(paper) train max 162 mean 37 median 34 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              # '2. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              # '3. train max 164 mean 39 median 35 mode 34 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
-                             '4. train max 1656 mean 43 median 38 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
+                             '4. train max 166 mean 43 median 38 mode 33 # val max 95 mean 36 median 33 mode 26 # test max 106 mean 33 median 30 mode 33'
                              # '5. train max 191 mean 45 median 40 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
                              '5. train max 129 mean 10 median 6 mode 5 # val max 48 mean 10 median 6 mode 5 # test max 59 mean 9 median 5 mode 5'
                              # '6. train max 197 mean 47 median 42 mode 38 # val max 114 mean 44 median 40 mode 50 # test max 154 mean 40 median 35 mode 38'
