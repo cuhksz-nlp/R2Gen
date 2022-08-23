@@ -112,7 +112,7 @@ class BaseTrainer(object):
         # exp setup
         record_path = os.path.join(
             self.args.record_dir,
-            "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}is_new_random_split_{}-.csv".format(
+            "{}-exp_{}_max_seq_length_{}_is_print_{}_remove_annotation_{}_is_new_random_split_{}-.csv".format(
                 self.args.dataset_name, self.args.exp, self.args.max_seq_length, self.args.is_print,
                 self.args.remove_annotation, self.args.is_new_random_split))
         ########################################################################################################
