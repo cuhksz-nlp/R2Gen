@@ -21,7 +21,7 @@ time python main.py \
 --seed 9223 \
 --ann_path data/iu_xray/r2gen/annotation.json \
 --save_dir ../r2gen_results/iu_xray \
---iu_mesh_impression_path data/iu_xray/kaggle/[DP_bug]iu_mesh_impression_split.json \
+--iu_mesh_impression_path data/iu_xray/kaggle/[DP_bug]iu_mesh_impression.json \
 --is_print 0 \
 --remove_annotation 1 \
 --train_sample 0 \
