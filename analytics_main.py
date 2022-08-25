@@ -1,5 +1,8 @@
 # exp setup
+import csv
+import os
 import statistics
+import json
 import time
 
 import matplotlib.pyplot as plt
@@ -19,8 +22,14 @@ def main():
 
     # r2gen split
     args.is_new_random_split = 0
-    data_processor = DataProcessor(args)
 
+    # associate_iu_r2gen_kaggle_by_id(args)
+    # mip_j_split = json.loads(open(args.iu_mesh_impression_path, 'r').read())
+    # mip_j = {sid: sample for split, split_sample in mip_j_split.items() for sid, sample in split_sample.items()}
+    # json.dump(mip_j, open(args.iu_mesh_impression_path.replace("_split", ""), 'w'))
+
+    data_processor = DataProcessor(args)
+    # print("Is association file valid: ", data_processor.validate_association())
     tokenizer = Tokenizer(args, data_processor)
     exp_stats = ExperimentsStatistics(tokenizer, 4)
     print("exp: 4", exp_stats.stats)
@@ -70,6 +79,65 @@ def main():
     plt.show()
     timer.time_executed(start_time, "R2Gen.Analysis")
 
+
+
+# def associate_iu_r2gen_kaggle_by_id(args):
+#     kaggle_iu_reports = csv.reader(open(args.kaggle_iu_reports_path, 'r'))
+#     r2gen_ann = json.loads(open(args.ann_path, 'r').read())
+#     next(kaggle_iu_reports)
+#     r2gen_splits_ids_reports = {
+#         split: [{sample["id"]: sample["report"]} for sample in samples]
+#         for split, samples in r2gen_ann.items()
+#     }
+#
+#     kaggle_uids_mesh_impression = {
+#         line[0]: {"MeSH": line[1], "report": line[6], "impression": line[7]}
+#         for line in kaggle_iu_reports
+#     }
+#
+#     unmatched = dict(train=[], val=[], test=[])
+#     matched = dict(train={}, val={}, test={})
+#     for split, samples in r2gen_splits_ids_reports.items():
+#         for sample in samples:
+#             for r2gen_id, r2gen_report in sample.items():
+#                 uid = r2gen_id.split('_')[0].replace("CXR", "")
+#                 if uid in kaggle_uids_mesh_impression:
+#                     kaggle_report = kaggle_uids_mesh_impression[uid]["report"]
+#                     if r2gen_report == kaggle_report:
+#                         iu_mesh = kaggle_uids_mesh_impression[uid]["MeSH"]
+#                         mesh_text = ""
+#                         attr_text = ""
+#                         mesh_attr_text = ""
+#                         for mesh_info in iu_mesh.split(';'):
+#                             if '/' in mesh_info:
+#                                 mesh_attr = mesh_info.split('/')
+#                                 ma_text = ""
+#                                 if ',' in mesh_attr[0]:
+#                                     for ma in mesh_attr[0].split(','):
+#                                         ma_text += " <mesh:{}>".format(ma.strip().replace(' ', '_'))
+#                                 else:
+#                                     ma_text = " <mesh:{}>".format(mesh_attr[0].strip().replace(' ', '_'))
+#                                 mesh_text += ma_text
+#                                 attr_text += " <attr:{}>".format(mesh_attr[1].strip().replace(' ', '_'))
+#                                 mesh_attr_text += "{} <attr:{}>".format(ma_text,
+#                                                                         mesh_attr[1].strip().replace(' ', '_'))
+#                         matched[split][r2gen_id] = {
+#                             "iu_mesh": iu_mesh, "mesh": mesh_text, "attr": attr_text,
+#                             "mesh_attr": mesh_attr_text,
+#                             "impression": kaggle_uids_mesh_impression[uid]["impression"]}
+#                         # matched[split].append(matched_info)
+#                     else:
+#                         unmatched[split][r2gen_id] = {"r2gen_uid": uid, "r2gen_report": r2gen_report,
+#                                                       "kaggle_report": kaggle_report}
+#                         # unmatched[split].append(unmatched_info)
+#                 else:
+#                     unmatched_info = {
+#                         r2gen_id: {"r2gen_uid": uid, "r2gen_report": r2gen_report, "kaggle_report": ""}}
+#                     unmatched[split].append(unmatched_info)
+#     if not os.path.exists(args.iu_mesh_impression_path):
+#         os.mknod(args.iu_mesh_impression_path)
+#     json.dump(matched, open(args.iu_mesh_impression_path, 'w'))
+#     return matched
 
 if __name__ == '__main__':
     main()
