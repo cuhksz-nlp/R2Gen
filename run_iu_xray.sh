@@ -12,8 +12,16 @@ cd "$HOME/projects/R2Gen"
 
 time python main.py \
 --image_dir ../data/iu_xray/r2gen/images/ \
---ann_path data/iu_xray/r2gen/annotation.json \
 --dataset_name iu_xray \
+--threshold 3 \
+--batch_size 16 \
+--epochs 100 \
+--step_size 50 \
+--gamma 0.1 \
+--seed 9223 \
+--ann_path data/iu_xray/r2gen/annotation.json \
+--save_dir ../r2gen_results/iu_xray \
+--iu_mesh_impression_path data/iu_xray/kaggle/[DP_bug]iu_mesh_impression_split.json \
 --is_print 0 \
 --remove_annotation 1 \
 --train_sample 0 \
@@ -22,11 +30,4 @@ time python main.py \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 0 \
 --max_seq_length 130 \
---threshold 3 \
---batch_size 16 \
---epochs 100 \
---save_dir ../r2gen_results/iu_xray \
---step_size 50 \
---gamma 0.1 \
---seed 9223 \
 --exp 4
