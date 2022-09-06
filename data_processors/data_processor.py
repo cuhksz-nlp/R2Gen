@@ -108,25 +108,15 @@ class DataProcessor(object):
         return matched_split, matched
 
     def get_reports_by_exp(self, exp, split, r2gen_id, report):
-        if 4 < exp < 9:
+        if 3 < exp < 7:
             report = self.iu_mesh_impression_split[split][r2gen_id]['impression']
 
         if split == 'train':
-            sep_ = " <sep>"
-            if exp == 2 or exp == 6:
-                mesh = self.iu_mesh_impression_split[split][r2gen_id]['mesh']
-                if mesh != "":
-                    mesh = sep_ + mesh
-                return report + mesh
-            elif exp == 3 or exp == 7:
-                attr = self.iu_mesh_impression_split[split][r2gen_id]['attr']
-                if attr != "":
-                    attr = sep_ + attr
-                return report + attr
-            elif exp == 4 or exp == 8:
-                mesh_attr = self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
-                if mesh_attr != "":
-                    mesh_attr = sep_ + mesh_attr
+            if exp == 2 or exp == 5:
+                mesh_attr = " <sep>" + self.iu_mesh_impression_split[split][r2gen_id]['mesh_attr']
+                return report + mesh_attr
+            elif exp == 3 or exp == 6:
+                mesh_attr = " <sep>" + self.iu_mesh_impression_split[split][r2gen_id]['ag_mesh_attr']
                 return report + mesh_attr
         return report
 
