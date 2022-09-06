@@ -31,8 +31,8 @@ def main():
     data_processor = DataProcessor(args)
     # print("Is association file valid: ", data_processor.validate_association())
     tokenizer = Tokenizer(args, data_processor)
-    exp_stats = ExperimentsStatistics(tokenizer, 4)
-    print("exp: 4", exp_stats.stats)
+    exp_stats = ExperimentsStatistics(tokenizer, args.exp)
+    print("exp: ", args.exp, " ", exp_stats.stats)
 
     print("######### before split#########")
     data_processor.analyze.print_normal_percentage()
