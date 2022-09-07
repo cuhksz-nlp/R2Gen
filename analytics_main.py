@@ -1,8 +1,4 @@
 # exp setup
-import csv
-import os
-import statistics
-import json
 import time
 
 import matplotlib.pyplot as plt
@@ -12,6 +8,7 @@ from _global.argument_parser import ArgumentParser
 from analytics.experiments_statistics import ExperimentsStatistics
 from analytics.plot import Plot
 from data_processors.data_processor import DataProcessor
+from data_processors.negation_detection import NegationDetection
 from modules.tokenizers import Tokenizer
 
 
@@ -31,6 +28,10 @@ def main():
     data_processor = DataProcessor(args)
     # print("Is association file valid: ", data_processor.validate_association())
     tokenizer = Tokenizer(args, data_processor)
+    negation_detection = NegationDetection(args)
+    for split, split_sample in data_processor.iu_mesh_impression_split.items():
+        for kid, sample in split_sample.items():
+            negation_detection.print_negation(negation_detection.get_lemmatize_doc_object(sample["report"]))
     exp_stats = ExperimentsStatistics(tokenizer, args.exp)
     print("exp: ", args.exp, " ", exp_stats.stats)
 
@@ -78,7 +79,6 @@ def main():
                           number_of_col_in_legend=2, plot_name="[New Split]MeSH to No MeSH ratio")
     plt.show()
     timer.time_executed(start_time, "R2Gen.Analysis")
-
 
 
 # def associate_iu_r2gen_kaggle_by_id(args):
