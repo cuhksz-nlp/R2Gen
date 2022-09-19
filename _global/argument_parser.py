@@ -99,11 +99,13 @@ def parse_agrs():
     parser.add_argument('--is_print', type=int, default=0, choices=[0, 1],
                         help='0 to not print the validation and test output with ground truth'
                              '1 to print the validation and test output with ground truth'
+                             'to print <sep> and mesh annotation remove_annotation needs to be 1'
                         )
     # Remove annotation for evaluation
     parser.add_argument('--remove_annotation', type=int, default=1, choices=[0, 1],
                         help='0 to not remove annotation'
                              '1 to remove annotation'
+                             'to print <sep> and mesh annotation remove_annotation needs to be 1'
                         )
     # specify sample size for train, val and test
     parser.add_argument('--train_sample', type=int, default=0, help='number of sample for training dataset')
