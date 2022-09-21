@@ -30,4 +30,4 @@ time python main.py \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 0 \
 --max_seq_length 100 \
---exp 1
+--exp 2
