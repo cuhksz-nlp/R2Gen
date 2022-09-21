@@ -22,12 +22,12 @@ time python main.py \
 --ann_path data/iu_xray/r2gen/annotation.json \
 --save_dir ../r2gen_results/iu_xray \
 --iu_mesh_impression_path data/iu_xray/kaggle/iu_mesh_impression.json \
---is_print 0 \
+--is_print 1 \
 --remove_annotation 1 \
 --train_sample 0 \
 --val_sample 0 \
 --test_sample 0 \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 0 \
---max_seq_length 10 \
---exp 4
+--max_seq_length 100 \
+--exp 1
