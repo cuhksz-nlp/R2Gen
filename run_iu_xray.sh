@@ -29,7 +29,7 @@ time python main.py \
 --test_sample 0 \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 1 \
---resume ../r2gen_results/iu_xray/iu_xray-exp_2_max_seq_length_100_is_print_0_remove_annotation_1_is_new_random_split_0-stdout_1597_0-model_best \
---val_test_partial_data 0 \
+--resume ../r2gen_results/iu_xray/iu_xray-exp_2_max_seq_length_100_is_print_0_remove_annotation_1_is_new_random_split_0-stdout_1597_0-model_best.pth \
+--val_test_partial_data 2 \
 --max_seq_length 90 \
 --exp 2
