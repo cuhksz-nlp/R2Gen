@@ -31,5 +31,5 @@ time python main.py \
 --is_new_random_split 1 \
 --resume ../r2gen_results/iu_xray/iu_xray-exp_2_max_seq_length_100_is_print_0_remove_annotation_1_is_new_random_split_0-stdout_1597_0-model_best.pth \
 --val_test_partial_data 2 \
---max_seq_length 90 \
+--max_seq_length 100 \
 --exp 2
