@@ -14,6 +14,7 @@ class BaseDataset(Dataset):
         self.train_sample = args.train_sample
         self.val_sample = args.val_sample
         self.test_sample = args.test_sample
+        self.val_test_partial_data = args.val_test_partial_data
         ####################################
         self.image_dir = args.image_dir
         self.ann_path = args.ann_path
@@ -24,6 +25,52 @@ class BaseDataset(Dataset):
         self.ann = json.loads(open(self.ann_path, 'r').read())
 
         # exp setup
+        # partial dataset for test and val
+        if self.val_test_partial_data == 1:
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['val'].items()
+                          if sample['iu_mesh'] == 'normal'
+                          for asample in self.ann['val'] if asample['id'] == ids]
+            self.ann['val'] = normal_ann
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['test'].items()
+                          if sample['iu_mesh'] == 'normal'
+                          for asample in self.ann['test'] if asample['id'] == ids]
+            self.ann['test'] = normal_ann
+        elif self.val_test_partial_data == 2:
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['val'].items()
+                          if sample['iu_mesh'] == 'No Indexing'
+                          for asample in self.ann['val'] if asample['id'] == ids]
+            self.ann['val'] = normal_ann
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['test'].items()
+                          if sample['iu_mesh'] == 'No Indexing'
+                          for asample in self.ann['test'] if asample['id'] == ids]
+            self.ann['test'] = normal_ann
+        elif self.val_test_partial_data == 3:
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['val'].items()
+                          if sample['iu_mesh'] != 'normal' and sample['iu_mesh'] != 'No Indexing'
+                          for asample in self.ann['val'] if asample['id'] == ids]
+            self.ann['val'] = normal_ann
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['test'].items()
+                          if sample['iu_mesh'] != 'normal' and sample['iu_mesh'] != 'No Indexing'
+                          for asample in self.ann['test'] if asample['id'] == ids]
+            self.ann['test'] = normal_ann
+        elif self.val_test_partial_data == 4:
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['val'].items()
+                          if sample['iu_mesh'] != 'normal'
+                          for asample in self.ann['val'] if asample['id'] == ids]
+            self.ann['val'] = normal_ann
+            normal_ann = [asample
+                          for ids, sample in self.data_processor.iu_mesh_impression_split['test'].items()
+                          if sample['iu_mesh'] != 'normal'
+                          for asample in self.ann['test'] if asample['id'] == ids]
+            self.ann['test'] = normal_ann
+
         # random sample for smaller dataset
         if self.split == 'train' and self.train_sample > 0:
             self.examples = random.sample(self.ann[self.split], self.train_sample)

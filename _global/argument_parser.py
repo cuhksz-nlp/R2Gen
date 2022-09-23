@@ -127,6 +127,14 @@ def parse_agrs():
                         help='0 to not save generated plot'
                              '1 to save generated plot'
                         )
+    # val and test whole dataset; only normal; only abnormal(with no indexing);
+    parser.add_argument('--val_test_partial_data', type=int, default=0, choices=[0, 1, 2, 3, 4],
+                        help='0 whole dataset' '296 590'
+                             '1 only normal' '98 307'
+                             '2 only no indexing' '4 25'
+                             '3 only abnormal(without no indexing)' '194 258'
+                             '4 only abnormal(with no indexing)' '198 283'
+                        )
 
     # Experiment number
     parser.add_argument('--exp', type=int, default=1, choices=[1, 2, 3, 4, 5, 6],

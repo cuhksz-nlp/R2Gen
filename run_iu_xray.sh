@@ -29,5 +29,6 @@ time python main.py \
 --test_sample 0 \
 --create_r2gen_kaggle_association 0 \
 --is_new_random_split 0 \
+--val_test_partial_data 0 \
 --max_seq_length 90 \
 --exp 2
