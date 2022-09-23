@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 from numpy import inf
 
-import timer
+from _global import timer
 
 
 class BaseTrainer(object):

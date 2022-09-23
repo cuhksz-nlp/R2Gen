@@ -3,7 +3,7 @@ import time
 import numpy as np
 import torch
 
-import timer
+from _global import timer
 from _global.argument_parser import ArgumentParser
 from data_processors.data_processor import DataProcessor
 from models.r2gen import R2GenModel

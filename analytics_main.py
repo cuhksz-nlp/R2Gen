@@ -1,12 +1,8 @@
 # exp setup
 import time
 
-import matplotlib.pyplot as plt
-
-import timer
+from _global import timer
 from _global.argument_parser import ArgumentParser
-from analytics.experiments_statistics import ExperimentsStatistics
-from analytics.plot import Plot
 from data_processors.data_processor import DataProcessor
 from data_processors.negation_detection import NegationDetection
 from modules.tokenizers import Tokenizer
