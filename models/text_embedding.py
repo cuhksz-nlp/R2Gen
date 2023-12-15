@@ -1,0 +1,57 @@
+import json
+from modules.reference_sentences_loader import reference_sentences_loader
+from modules.sentence_refiner import sentence_refiner
+
+
+class TextEmbeddingModel():
+    def __init__(self, ann_path, data_path, api_key):
+        self.ann_path = ann_path
+        self.data_path = data_path
+        self.api_key = api_key
+
+        self.reference_sentences = []
+        self.__load_reference_sentences()
+
+        self.ground_truth_reports = {'train': [], 'val': [], 'test': []}
+        self.target_reports = {'train': [], 'val': [], 'test': []}
+        self.__load_data()
+
+        self.refined_reports = {'train': [], 'val': [], 'test': []}
+
+    def __load_reference_sentences(self):
+        self.reference_sentences = reference_sentences_loader(self.ann_path)
+
+    def __load_data(self):
+        with open(self.data_path, 'r') as f:
+            data = json.load(f)
+        for t in ['train', 'val', 'test']:
+            self.ground_truth_reports[t] = [item['ground_truth'] for item in data[t]]
+            self.target_reports[t] = [item['report'] for item in data[t]]
+
+    def __report_to_sentences(self, report):
+        sentences = report.split(' . ')
+        sentences[-1] = sentences[-1].replace(' .', '')
+        return sentences
+
+    def __refine_sentence(self, sentence):
+        refined_sentence = sentence_refiner(sentence, self.reference_sentences, self.api_key)
+        return refined_sentence
+
+    def __sentences_to_report(self, sentences):
+        report = ' . '.join(sentences)
+        report += ' .'
+        return report
+
+    def refine(self, dataset_type):
+        result = {'train': [], 'val': [], 'test': []}
+        for t in dataset_type:
+            for target_report in self.target_reports[t]:
+                target_sentences = self.__report_to_sentences(target_report)
+                refined_sentences = []
+                for target_sentence in target_sentences:
+                    refined_sentence = self.__refine_sentence(target_sentence)
+                    refined_sentences.append(refined_sentence)
+                refined_report = self.__sentences_to_report(refined_sentences)
+                self.refined_reports[t].append(refined_report)
+            result[t] = [{'ground_truth': gt, 'report': re} for gt, re in zip(self.ground_truth_reports[t], self.refined_reports[t])]
+        return result

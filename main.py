@@ -7,7 +7,9 @@ from modules.metrics import compute_scores
 from modules.optimizers import build_optimizer, build_lr_scheduler
 from modules.trainer import Trainer
 from modules.loss import compute_loss
+from modules.utilities import evaluate, store
 from models.r2gen import R2GenModel
+from models.text_embedding import TextEmbeddingModel
 
 
 def parse_agrs():
@@ -87,8 +89,20 @@ def parse_agrs():
 
 
 def main():
+    # finish settings
+    data_src = 'iu_xray'      # ['iu_xray', 'mimic_cxr', 'standardized_iu_xray', 'standardized_mimic_cxr']
+    dataset_type = ['test']   # ['train', 'val', 'test']
+    whether_to_train = False  # [True, False]
+    api_key = 'empty'         # 
+
     # parse arguments
     args = parse_agrs()
+    args.image_dir = 'data/' + data_src + '/images'
+    args.ann_path = 'data/' + data_src + '/annotation.json'
+    args.dataset_name = data_src
+    args.save_dir = 'results/' + data_src
+    if whether_to_train == False:
+        args.resume = 'output/pth/model_' + data_src + '.pth'
 
     # fix random seeds
     torch.manual_seed(args.seed)
@@ -117,7 +131,31 @@ def main():
 
     # build trainer and start to train
     trainer = Trainer(model, criterion, metrics, optimizer, args, lr_scheduler, train_dataloader, val_dataloader, test_dataloader)
-    trainer.train()
+    if whether_to_train == True:
+        trainer.train()
+
+    # generate r2gen model result
+    r2gen_result = trainer.predict(dataset_type)
+    store(r2gen_result, 'output/r2gen_result/' + data_src + '_result.json')
+
+    # compute r2gen model score
+    r2gen_score = evaluate(r2gen_result, dataset_type)
+    store(r2gen_score, 'output/r2gen_score/' + data_src + '_score.json')
+
+    # bulid text embedding model
+    ann_path = 'data/' + data_src + '/annotation.json'
+    data_path = 'output/r2gen_result/' + data_src + '_result.json'
+    text_embedding_model = TextEmbeddingModel(ann_path, data_path, api_key)
+
+    # generate text embedding model result
+    if api_key != 'empty':
+        text_embedding_result = text_embedding_model.refine(dataset_type)
+        store(text_embedding_result, 'output/text_embedding_result/' + data_src + '_result.json')
+
+    # compute text embedding model score
+    if api_key != 'empty':
+        text_embedding_score = evaluate(text_embedding_result, dataset_type)
+        store(text_embedding_score, 'output/text_embedding_score/' + data_src + '_score.json')
 
 
 if __name__ == '__main__':
