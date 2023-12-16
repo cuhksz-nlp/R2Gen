@@ -38,7 +38,7 @@ def sentence_refiner(report,ground_truths,key):
 
         if iters == 0 : original_value = max_value , ground_truths[max_index]
 
-        if (len(dots) > 1 ) : print(f" Iters : {iters} , Values : {dots} , cur_Threshold: {abs(max_value - (sum(dots)/len(dots))) / np.std(dots)}")
+        # if (len(dots) > 1 ) : print(f" Iters : {iters} , Values : {dots} , cur_Threshold: {abs(max_value - (sum(dots)/len(dots))) / np.std(dots)}")
 
         # check if fulfill target
 

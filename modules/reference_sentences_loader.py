@@ -41,7 +41,7 @@ def create_reference_report_set(data_path):
             reference_report = reference_report.replace("\n", "")
             reference_report_set.append(reference_report)
         else: reference_report_set.append(reference_report)
-  return reference_report_set
+    return reference_report_set
 
 
 def reference_sentences_loader(data_path):
