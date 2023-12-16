@@ -1,3 +1,4 @@
+import os
 import json
 from modules.metrics import compute_scores
 
@@ -16,6 +17,8 @@ def evaluate(result, dataset_type):
     return score
 
 
-def store(data, path):
-    with open(path, 'w') as f:
+def store(data, dir_name, file_name):
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    with open(dir_name + '/' + file_name, 'w') as f:
         json.dump(data, f)

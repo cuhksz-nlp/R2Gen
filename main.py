@@ -136,11 +136,11 @@ def main():
 
     # generate r2gen model result
     r2gen_result = trainer.predict(dataset_type)
-    store(r2gen_result, 'output/r2gen_result/' + data_src + '_result.json')
+    store(r2gen_result, 'output/r2gen_result', data_src + '_result.json')
 
     # compute r2gen model score
     r2gen_score = evaluate(r2gen_result, dataset_type)
-    store(r2gen_score, 'output/r2gen_score/' + data_src + '_score.json')
+    store(r2gen_score, 'output/r2gen_score', data_src + '_score.json')
 
     # bulid text embedding model
     ann_path = 'data/' + data_src + '/annotation.json'
@@ -150,12 +150,12 @@ def main():
     # generate text embedding model result
     if api_key != 'empty':
         text_embedding_result = text_embedding_model.refine(dataset_type)
-        store(text_embedding_result, 'output/text_embedding_result/' + data_src + '_result.json')
+        store(text_embedding_result, 'output/text_embedding_result', data_src + '_result.json')
 
     # compute text embedding model score
     if api_key != 'empty':
         text_embedding_score = evaluate(text_embedding_result, dataset_type)
-        store(text_embedding_score, 'output/text_embedding_score/' + data_src + '_score.json')
+        store(text_embedding_score, 'output/text_embedding_score', data_src + '_score.json')
 
 
 if __name__ == '__main__':
