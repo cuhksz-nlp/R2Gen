@@ -1,4 +1,5 @@
 import json
+import openai
 from modules.reference_sentences_loader import reference_sentences_loader
 from modules.sentence_refiner import sentence_refiner
 
