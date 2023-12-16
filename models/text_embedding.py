@@ -18,6 +18,9 @@ class TextEmbeddingModel():
 
         self.refined_reports = {'train': [], 'val': [], 'test': []}
 
+        self.client = None
+        self.__create_client()
+
     def __load_reference_sentences(self):
         self.reference_sentences = reference_sentences_loader(self.ann_path)
 
@@ -28,14 +31,18 @@ class TextEmbeddingModel():
             self.ground_truth_reports[t] = [item['ground_truth'] for item in data[t]]
             self.target_reports[t] = [item['report'] for item in data[t]]
 
+    def __create_client(self):
+        self.client = openai.OpenAI(
+            api_key=self.api_key
+        )
+
     def __report_to_sentences(self, report):
         sentences = report.split(' . ')
         sentences[-1] = sentences[-1].replace(' .', '')
         return sentences
 
     def __refine_sentence(self, sentence):
-        refined_sentence = sentence_refiner(sentence, self.reference_sentences, self.api_key)
-        return refined_sentence
+        return sentence_refiner(self.client, sentence, self.reference_sentences)
 
     def __sentences_to_report(self, sentences):
         report = ' . '.join(sentences)
@@ -45,7 +52,7 @@ class TextEmbeddingModel():
     def refine(self, dataset_type):
         result = {'train': [], 'val': [], 'test': []}
         for t in dataset_type:
-            for target_report in self.target_reports[t]:
+            for i, target_report in enumerate(self.target_reports[t]):
                 target_sentences = self.__report_to_sentences(target_report)
                 refined_sentences = []
                 for target_sentence in target_sentences:

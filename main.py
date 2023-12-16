@@ -93,7 +93,7 @@ def main():
     data_src = 'iu_xray'      # ['iu_xray', 'mimic_cxr', 'standardized_iu_xray', 'standardized_mimic_cxr']
     dataset_type = ['test']   # ['train', 'val', 'test']
     whether_to_train = False  # [True, False]
-    api_key = 'empty'         # 
+    api_key = 'empty'         # ['empty', '<your_api_key>']
 
     # parse arguments
     args = parse_agrs()
@@ -143,9 +143,10 @@ def main():
     store(r2gen_score, 'output/r2gen_score', data_src + '_score.json')
 
     # bulid text embedding model
-    ann_path = 'data/' + data_src + '/annotation.json'
-    data_path = 'output/r2gen_result/' + data_src + '_result.json'
-    text_embedding_model = TextEmbeddingModel(ann_path, data_path, api_key)
+    if api_key != 'empty':
+        ann_path = 'data/' + data_src + '/annotation.json'
+        data_path = 'output/r2gen_result/' + data_src + '_result.json'
+        text_embedding_model = TextEmbeddingModel(ann_path, data_path, api_key)
 
     # generate text embedding model result
     if api_key != 'empty':
