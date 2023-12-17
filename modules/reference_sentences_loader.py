@@ -13,10 +13,10 @@ def sanity_check(data):
         if item[0]==" ": continue
         else: tmp_data.append(item)
     if len(tmp_data) > 2000:
-      for report in tmp_data:
-         if len(report) < 100: continue
-         if contains_number(report): continue
-         else: rtn_data.append(report)
+        for report in tmp_data:
+            if len(report) < 183: continue
+            if contains_number(report): continue
+            else: rtn_data.append(report)
     else:rtn_data = tmp_data
     return rtn_data
 
