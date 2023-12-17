@@ -1,16 +1,24 @@
 import json
 
+def contains_number(string):
+    return any(char.isdigit() for char in string)
 
 def sanity_check(data):
     rtn_data = []
+    tmp_data = []
     data = list(set(data))
     for item in data:
         if len(item)==0: continue
-        elif item[0]==".": continue
-        elif item[0]==" ": continue
-        else: rtn_data.append(item)
+        if item[0]==".": continue
+        if item[0]==" ": continue
+        else: tmp_data.append(item)
+    if len(tmp_data) > 2000:
+      for report in tmp_data:
+         if len(report) < 100: continue
+         if contains_number(report): continue
+         else: rtn_data.append(report)
+    else:rtn_data = tmp_data
     return rtn_data
-
 
 def report_to_sentences(report):
     sentences = report.split(' . ')

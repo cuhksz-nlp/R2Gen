@@ -29,6 +29,11 @@ class TextEmbeddingModel():
 
     def __load_reference_sentences(self):
         self.reference_sentences = reference_sentences_loader(self.ann_path)
+        print()
+        print('about reference sentences ...')
+        print('length:', len(self.reference_sentences))
+        print('type:', type(self.reference_sentences))
+        print()
 
     def __load_data(self):
         with open(self.data_path, 'r') as f:
