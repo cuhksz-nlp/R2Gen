@@ -5,10 +5,11 @@ from modules.sentence_refiner import sentence_refiner
 
 
 class TextEmbeddingModel():
-    def __init__(self, ann_path, data_path, record_path, api_key):
+    def __init__(self, ann_path, data_path, record_dir, record_file, api_key):
         self.ann_path = ann_path
         self.data_path = data_path
-        self.record_path = record_path
+        self.record_dir = record_dir
+        self.record_file = record_file
         self.api_key = api_key
 
         self.reference_sentences = []
@@ -36,10 +37,11 @@ class TextEmbeddingModel():
             self.target_reports[t] = [item['report'] for item in data[t]]
 
     def __load_refined_reports(self):
-        with open(self.record_path, 'r') as f:
-            self.refined_reports = json.load(f)
-        for t in ['train', 'val', 'test']:
-            self.start_idx[t] = len(self.refined_reports[t])
+        if os.path.exists(self.record_dir + '/' + self.record_file):
+            with open(self.record_dir + '/' + self.record_file, 'r') as f:
+                self.refined_reports = json.load(f)
+            for t in ['train', 'val', 'test']:
+                self.start_idx[t] = len(self.refined_reports[t])
 
     def __create_client(self):
         self.client = openai.OpenAI(
@@ -60,7 +62,9 @@ class TextEmbeddingModel():
         return report
 
     def __store_refined_reports(self):
-        with open(record_path, 'w') as f:
+        if not os.path.exists(self.record_dir):
+            os.makedirs(self.record_dir)
+        with open(self.record_dir + '/' + self.record_file, 'w') as f:
             json.dump(self.refined_reports, f)
 
     def refine(self, dataset_type):

@@ -149,8 +149,9 @@ def main():
     if api_key != 'empty':
         ann_path = 'data/mimic_cxr/annotation.json'
         data_path = 'output/r2gen_result/' + data_src + '_result.json'
-        record_path = 'output/record/' + data_src + '_record.json'
-        text_embedding_model = TextEmbeddingModel(ann_path, data_path, record_path, api_key)
+        record_dir = 'output/record'
+        record_file = data_src + '_record.json'
+        text_embedding_model = TextEmbeddingModel(ann_path, data_path, record_dir, record_file, api_key)
 
     # generate text embedding model result
     if api_key != 'empty':
