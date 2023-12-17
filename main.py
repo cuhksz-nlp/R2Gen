@@ -90,10 +90,11 @@ def parse_agrs():
 
 def main():
     # finish settings
-    data_src = 'iu_xray'      # ['iu_xray', 'mimic_cxr', 'standardized_iu_xray', 'standardized_mimic_cxr']
-    dataset_type = ['test']   # ['train', 'val', 'test']
-    whether_to_train = False  # [True, False]
-    api_key = 'empty'         # ['empty', '<your_api_key>']
+    data_src = 'iu_xray'                     # ['iu_xray', 'standardized_iu_xray']
+    dataset_type = ['test']                  # ['train', 'val', 'test']
+    whether_to_train = False                 # [True, False]
+    whether_to_generate_r2gen_result = True  # [True, False]
+    api_key = 'empty'                        # ['empty', '<your_api_key>']
 
     # parse arguments
     args = parse_agrs()
@@ -135,18 +136,21 @@ def main():
         trainer.train()
 
     # generate r2gen model result
-    r2gen_result = trainer.predict(dataset_type)
-    store(r2gen_result, 'output/r2gen_result', data_src + '_result.json')
+    if whether_to_generate_r2gen_result == True:
+        r2gen_result = trainer.predict(dataset_type)
+        store(r2gen_result, 'output/r2gen_result', data_src + '_result.json')
 
     # compute r2gen model score
-    r2gen_score = evaluate(r2gen_result, dataset_type)
-    store(r2gen_score, 'output/r2gen_score', data_src + '_score.json')
+    if whether_to_generate_r2gen_result == True:
+        r2gen_score = evaluate(r2gen_result, dataset_type)
+        store(r2gen_score, 'output/r2gen_score', data_src + '_score.json')
 
     # bulid text embedding model
     if api_key != 'empty':
-        ann_path = 'data/' + data_src + '/annotation.json'
+        ann_path = 'data/mimic_cxr/annotation.json'
         data_path = 'output/r2gen_result/' + data_src + '_result.json'
-        text_embedding_model = TextEmbeddingModel(ann_path, data_path, api_key)
+        record_path = 'output/record/' + data_src + '_record.json'
+        text_embedding_model = TextEmbeddingModel(ann_path, data_path, record_path, api_key)
 
     # generate text embedding model result
     if api_key != 'empty':
