@@ -1,62 +1,44 @@
 import json
 
-def contains_number(string):
-    return any(char.isdigit() for char in string)
+forbidden_words = [
+    'previous', 'again', 'change', 'remain', 'past', 'prior', 'old', 'new', 'now', 'current',
+    'pa ', 'ap ', 'lateral',
+    ' and ', ' or ', ' but ', ' with ', ' without ', ' which ', ' where ', ' that ', ' although ',
+    'left', 'right', 'upper', 'lower',
+    'this',
+    'svc', 'bb', 'chf',
+    ' ize '
+]
 
-def sanity_check(data):
-    rtn_data = []
-    tmp_data = []
-    data = list(set(data))
-    for item in data:
-        if len(item)==0: continue
-        if item[0]==".": continue
-        if item[0]==" ": continue
-        else: tmp_data.append(item)
-    if len(tmp_data) > 2000:
-      for report in tmp_data:
-         if ";" in report: continue
-         if "," in report: continue 
-         if len(report) > 98 or len(report) < 94: continue
-         if contains_number(report): continue
-         else: rtn_data.append(report)
-    else:rtn_data = tmp_data
-    
-    return rtn_data
-
-def report_to_sentences(report):
-    sentences = report.split(' . ')
-    sentences[-1] = sentences[-1][:-2]
-    return sentences
-
-
-def report_set_to_sentences(report_set):
-    sentences = []
-    for report in report_set:
-        sentences += report_to_sentences(report)
-    return sentences
-
-
-def create_reference_report_set(data_path):
-    with open(data_path) as f:
+def reference_sentences_loader(ann_path):
+    with open(ann_path, 'r') as f:
         data = json.load(f)
-    training_data_list = data["train"]
-    reference_report_set = []
-    for item in training_data_list:
-        reference_report = item["report"]
-        reference_report = reference_report.lower().replace('.', ' .')
-        reference_report = reference_report.replace("/", " ")
-        if "XXXX" in reference_report: continue
-        elif "xxxx" in reference_report: continue
-        elif "___" in reference_report: continue
-        elif "\n" in reference_report:
-            reference_report = reference_report.replace("\n", "")
-            reference_report_set.append(reference_report)
-        else: reference_report_set.append(reference_report)
-    return reference_report_set
+    reference_reports = [item["report"] for item in data["train"]]
+    
+    reference_sentences = []
+    for report in reference_reports:
+        reference_sentences.extend(report.split('.'))
 
+    # 1st unique
+    reference_sentences = list(set(reference_sentences))
 
-def reference_sentences_loader(data_path):
-    reference_report_set = create_reference_report_set(data_path)
-    reference_sentences = report_set_to_sentences(reference_report_set)
-    reference_sentences = sanity_check(reference_sentences)
+    # adjust
+    reference_sentences = [sentence.replace('\n', '') for sentence in reference_sentences]
+    reference_sentences = [sentence.lower() for sentence in reference_sentences]
+    reference_sentences = [' '.join(sentence.split()) for sentence in reference_sentences]
+
+    # 2nd unique
+    reference_sentences = list(set(reference_sentences))
+
+    # sample
+    reference_sentences = reference_sentences[:int(len(reference_sentences)/10)]
+
+    # check
+    reference_sentences = [sentence for sentence in reference_sentences if all(char.isalpha() or char.isspace() for char in sentence)]
+    reference_sentences = [sentence for sentence in reference_sentences if sentence != '']
+    for word in forbidden_words:
+        reference_sentences = [sentence for sentence in reference_sentences if word not in sentence]
+    reference_sentences = [sentence for sentence in reference_sentences if len(sentence) > 15]
+    reference_sentences = [sentence for sentence in reference_sentences if len(sentence) < 50]
+
     return reference_sentences
