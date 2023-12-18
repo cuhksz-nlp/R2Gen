@@ -22,3 +22,23 @@ def store(data, dir_name, file_name):
         os.makedirs(dir_name)
     with open(dir_name + '/' + file_name, 'w') as f:
         json.dump(data, f)
+
+
+def merge(r2gen_result_path, record_path, union_result_dir_name, union_result_file_name):
+    with open(r2gen_result_path, 'r') as f:
+        r2gen_result = json.load(f)
+    ground_truth = [item['ground_truth'] for item in r2gen_result['test']]
+    target_report = [item['report'] for item in r2gen_result['test']]
+    
+    with open(record_path, 'r') as f:
+        record = json.load(f)
+    refined_report = record['test']
+
+    if not os.path.exists(union_result_dir_name):
+        os.makedirs(union_result_dir_name)
+    with open(union_result_dir_name + '/' + union_result_file_name, 'w') as f:
+        for i, (gt, tg, rf) in enumerate(zip(ground_truth, target_report, refined_report)):
+            f.write(str(i) + '\n')
+            f.write('ground_truth: ' + gt + '\n')
+            f.write('target_report: ' + tg + '\n')
+            f.write('refined_report: ' + rf + '\n')

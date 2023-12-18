@@ -7,7 +7,7 @@ from modules.metrics import compute_scores
 from modules.optimizers import build_optimizer, build_lr_scheduler
 from modules.trainer import Trainer
 from modules.loss import compute_loss
-from modules.utilities import evaluate, store
+from modules.utilities import evaluate, store, merge
 from models.r2gen import R2GenModel
 from models.text_embedding import TextEmbeddingModel
 
@@ -162,6 +162,14 @@ def main():
     if api_key != 'empty':
         text_embedding_score = evaluate(text_embedding_result, dataset_type)
         store(text_embedding_score, 'output/text_embedding_score', data_src + '_score.json')
+
+    # merge result
+    if api_key != 'empty':
+        r2gen_result_path = 'output/r2gen_result/' + data_src + '_result.json'
+        record_path = 'output/record/' + data_src + '_record.json'
+        union_result_dir_name = 'output/union_result'
+        union_result_file_name = data_src + '_result.txt'
+        merge(r2gen_result_path, record_path, union_result_dir_name, union_result_file_name)
 
 
 if __name__ == '__main__':
