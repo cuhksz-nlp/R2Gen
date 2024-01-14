@@ -1,13 +1,15 @@
 import torch
 import argparse
 import numpy as np
+import os
 from modules.tokenizers import Tokenizer
 from modules.dataloaders import R2DataLoader
 from modules.metrics import compute_scores
 from modules.optimizers import build_optimizer, build_lr_scheduler
 from modules.trainer import Trainer
 from modules.loss import compute_loss
-from modules.utilities import evaluate, store, merge
+from modules.utilities import copy_checkpoint, evaluate, store, merge, remove_temporary_folders
+from modules.image_processor import image_preprocessor
 from models.r2gen import R2GenModel
 from models.text_embedding import TextEmbeddingModel
 
@@ -89,12 +91,15 @@ def parse_agrs():
 
 
 def main():
-    # finish settings
-    data_src = 'iu_xray'                     # ['iu_xray', 'standardized_iu_xray']
-    dataset_type = ['test']                  # ['train', 'val', 'test']
-    whether_to_train = False                 # [True, False]
+    
+    # our arguments
+    data_src = 'iu_xray'     # ['iu_xray', 'standardized_iu_xray']
+    whether_to_train = True  # [True, False]
+    api_key = 'empty'        # ['empty', '<your_api_key>']
+
+    # additional arguments
     whether_to_generate_r2gen_result = True  # [True, False]
-    api_key = 'empty'                        # ['empty', '<your_api_key>']
+    dataset_type = ['test']                  # ['train', 'val', 'test']
 
     # parse arguments
     args = parse_agrs()
@@ -104,6 +109,11 @@ def main():
     args.save_dir = 'results/' + data_src
     if whether_to_train == False:
         args.resume = 'output/pth/model_' + data_src + '.pth'
+
+    # preprocess images
+    if data_src == 'standardized_iu_xray':
+        if not os.path.exists('data/standardized_iu_xray'):
+            image_preprocessor()
 
     # fix random seeds
     torch.manual_seed(args.seed)
@@ -134,6 +144,7 @@ def main():
     trainer = Trainer(model, criterion, metrics, optimizer, args, lr_scheduler, train_dataloader, val_dataloader, test_dataloader)
     if whether_to_train == True:
         trainer.train()
+        copy_checkpoint(data_src)
 
     # generate r2gen model result
     if whether_to_generate_r2gen_result == True:
@@ -170,6 +181,9 @@ def main():
         union_result_dir_name = 'output/union_result'
         union_result_file_name = data_src + '_result.txt'
         merge(r2gen_result_path, record_path, union_result_dir_name, union_result_file_name)
+    
+    # remove temporary folders
+    remove_temporary_folders(data_src)
 
 
 if __name__ == '__main__':

@@ -144,7 +144,6 @@ cython_debug/
 data/iu_xray/
 data/mimic_cxr/
 data/standardized_iu_xray/
-data/standardized_mimic_cxr/
 
 # Output
 output

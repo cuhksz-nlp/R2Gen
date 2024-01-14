@@ -1,6 +1,15 @@
 import os
 import json
+import shutil
 from modules.metrics import compute_scores
+
+
+def copy_checkpoint(data_src):
+    if not os.path.exists('output'):
+        os.makedirs('output')
+    if not os.path.exists('output/pth'):
+        os.makedirs('output/pth')
+    shutil.copy('results/' + data_src + '/model_best.pth', 'output/pth/model_' + data_src + '.pth')
 
 
 def evaluate(result, dataset_type):
@@ -42,3 +51,23 @@ def merge(r2gen_result_path, record_path, union_result_dir_name, union_result_fi
             f.write('ground_truth: ' + gt + '\n')
             f.write('target_report: ' + tg + '\n')
             f.write('refined_report: ' + rf + '\n')
+
+
+def remove_file(file_name):
+    if os.path.exists(file_name):
+        os.remove(file_name)
+
+
+def remove_folder(folder_name):
+    if os.path.exists(folder_name):
+        os.rmdir(folder_name)
+
+
+def remove_temporary_folders(data_src):
+    remove_file('results/' + data_src + '/current_checkpoint.pth')
+    remove_file('results/' + data_src + '/model_best.pth')
+    remove_folder('results/' + data_src)
+    remove_folder('results')
+
+    remove_file('output/record/' + data_src + '_record.json')
+    remove_folder('output/record')
